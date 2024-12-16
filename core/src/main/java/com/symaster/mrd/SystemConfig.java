@@ -7,6 +7,6 @@ package com.symaster.mrd;
 public class SystemConfig {
 
     public static final String TEXT_PATH = "ch/text.txt";
-    public static final String FONT_PATH = "fonts/def.ttf";
-    public static final int FONT_SIZE = 12;
+    public static final String FONT_PATH = "fonts/SweiDelLunaSansCJKsc-Black.ttf";
+    public static final int FONT_SIZE = 16;
 }
