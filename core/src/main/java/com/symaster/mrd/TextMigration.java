@@ -1,8 +1,6 @@
 package com.symaster.mrd;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
+import java.io.*;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -19,21 +17,6 @@ public class TextMigration {
     private static final String flagTo = "GdxText.get(";
 
     public static void main(String[] args) {
-
-        // String s2 = "        TextButton btn = new TextButton(GdxText.val(\"你好,世界\"), style); GdxText.val(\"你好,世界\");";
-        //
-        // List<Integer> indexList = findIndex(s2);
-        //
-        // char[] charArray = s2.toCharArray();
-        //
-        // for (Integer startIndex : indexList) {
-        //
-        //     Integer[] rtn = readRange(startIndex, charArray);
-        //
-        //     System.out.println();
-        //     System.out.println(rtn[0]);
-        //     System.out.println(rtn[1]);
-        // }
 
         Map<String, String> map;
         Map<String, String> map2;
@@ -67,6 +50,18 @@ public class TextMigration {
 
 
         directory(new File(folder), map, map2);
+
+        List<String> lines = new ArrayList<>();
+        for (String s : map.keySet()) {
+            lines.add(s + "=" + map.get(s));
+        }
+
+        String collect = lines.stream().collect(Collectors.joining(System.lineSeparator()));
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file1));) {
+            bw.write(collect);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
     }
 
     private static Integer[] readRange(Integer startIndex, char[] charArray) {
@@ -182,9 +177,6 @@ public class TextMigration {
 
                     collect.set(iii, replace);
 
-                    // System.out.println(replace);
-                    // return replace;
-
                     match = true;
                 }
             }
@@ -193,18 +185,10 @@ public class TextMigration {
                 String collect1 = collect.stream()
                         .collect(Collectors.joining(System.lineSeparator()));
 
-                System.out.println(collect1);
+                try (BufferedWriter bw = new BufferedWriter(new FileWriter(f));) {
+                    bw.write(collect1);
+                }
             }
-
-
-
-
-            // bufferedReader.lines().filter(e -> {
-            //     return e.contains("GdxText.val(");
-            // }).forEach(e -> {
-            //     System.out.println(e);
-            // });
-
         } catch (Exception e) {
             throw new RuntimeException(e);
         }

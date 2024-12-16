@@ -49,7 +49,7 @@ public class Main extends ApplicationAdapter {
         SolidColorDrawable Drawable2 = new SolidColorDrawable(Color.BLACK);
 
         TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(Drawable, Drawable1, Drawable2, font);
-        TextButton btn = new TextButton(GdxText.val("你好,世界"), style);
+        TextButton btn = new TextButton(GdxText.get("e98a245f-3f19-4132-a925-e63a44852f69"), style);
 
         // 创建一个 LabelStyle 并应用字体
         // Label.LabelStyle labelStyle = new Label.LabelStyle(font, com.badlogic.gdx.graphics.Color.WHITE);
