@@ -2,6 +2,7 @@ package com.symaster.mrd.gui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.symaster.mrd.gui.FooterMenu;
+import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.util.GdxText;
 
 /**
@@ -17,6 +18,11 @@ public class Creature implements FooterMenu {
 
     @Override
     public Actor panel() {
+        return null;
+    }
+
+    @Override
+    public LayoutConfig layoutConfig() {
         return null;
     }
 }
