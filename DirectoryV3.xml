@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+ <trees>
+     <tree path="/core/src/main/java/com/symaster/mrd/g2d/Scene.java" title="场景"/>
+     <tree path="/core/src/main/java/com/symaster/mrd/g2d/Node.java" title="场景节点"/>
+     <tree path="/core/src/main/java/com/symaster/mrd/g2d/CameraNode.java" title="相机节点" extension=""
+           presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
+     <tree path="/core/src/main/java/com/symaster/mrd/drawable/SolidColorDrawable.java" title="纯色绘制器"/>
+     <tree path="/core/src/main/java/com/symaster/mrd/g2d/SpriteNode.java" title="精灵节点"/>
+ </trees>

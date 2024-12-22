@@ -1,16 +1,13 @@
 package com.symaster.mrd.gui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.util.ClassUtil;
-import com.symaster.mrd.util.GdxText;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -31,12 +28,8 @@ public class MainStageUI extends Stage {
         super(new ScreenViewport());
     }
 
-    public static MainStageUI create(BitmapFont font) {
+    public static MainStageUI create(Skin skin) {
         MainStageUI mainStageUI = new MainStageUI();
-
-        SolidColorDrawable Drawable = new SolidColorDrawable(Color.DARK_GRAY);
-        SolidColorDrawable Drawable1 = new SolidColorDrawable(Color.GRAY);
-        TextButton.TextButtonStyle style = new TextButton.TextButtonStyle(Drawable, Drawable1, Drawable, font);
 
         mainStageUI.table = new Table();
         mainStageUI.footerMenus = new ArrayList<>();
@@ -49,16 +42,21 @@ public class MainStageUI extends Stage {
                 Constructor<?> constructor = aClass.getConstructor();
                 FooterMenu o = (FooterMenu) constructor.newInstance();
 
-                FooterMenuContainer m = new FooterMenuContainer(o, new TextButton(o.title(), style));
+                TextButton textButton = new TextButton(o.title(), skin);
+                FooterMenuContainer m = new FooterMenuContainer(o, textButton);
 
                 mainStageUI.footerMenus.add(m);
                 mainStageUI.table.add(m.getMenuBtn()).expand().fill();
+                if (m.getFooterMenu().panel() != null) {
+                    m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
+                    mainStageUI.addActor(m.getMenuActor());
+                    m.getMenuActor().setVisible(false);
+                }
             }
         } catch (NoSuchMethodException |InstantiationException | IllegalAccessException | InvocationTargetException e) {
             throw new RuntimeException(e);
         }
 
-        // 将标签添加到舞台
         mainStageUI.addActor(mainStageUI.table);
 
         return mainStageUI;
@@ -72,9 +70,18 @@ public class MainStageUI extends Stage {
     public void render() {
 
         for (FooterMenuContainer footerMenu : footerMenus) {
-            if (footerMenu.getMenuBtn().isChecked()) {
-                System.out.println("check");
+            if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
                 footerMenu.getMenuBtn().toggle();
+
+                for (FooterMenuContainer menu : footerMenus) {
+                    MenuActor menuActor = menu.getMenuActor();
+                    if (menuActor.isVisible()) {
+                        menuActor.setVisible(false);
+                    }
+                }
+
+                MenuActor menuActor = footerMenu.getMenuActor();
+                menuActor.setVisible(true);
             }
         }
 

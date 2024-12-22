@@ -11,4 +11,6 @@ public interface FooterMenu {
     String title();
 
     Actor panel();
+
+    LayoutConfig layoutConfig();
 }
