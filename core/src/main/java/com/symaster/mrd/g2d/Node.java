@@ -15,6 +15,8 @@ public class Node extends ArrayList<Node> {
 
     private float positionX;
     private float positionY;
+    private float width;
+    private float height;
     /**
      * 当前组件的父级节点
      */
@@ -41,6 +43,24 @@ public class Node extends ArrayList<Node> {
         this.positionY = 0.0f;
         this.visible = false;
         this.activityBlockSize = 0;
+        this.width = 0.0f;
+        this.height = 0.0f;
+    }
+
+    public float getHeight() {
+        return height;
+    }
+
+    public void setHeight(float height) {
+        this.height = height;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public void setWidth(float width) {
+        this.width = width;
     }
 
     public ActivityBlockSizeExtend getBse() {
