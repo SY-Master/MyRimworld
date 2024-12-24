@@ -26,7 +26,7 @@ import java.util.stream.Stream;
  */
 public class Main extends ApplicationAdapter {
 
-    private MainStageUI stage;
+    private MainStageUI gui;
     private Skin skin;
     private Scene scene;
 
@@ -34,8 +34,8 @@ public class Main extends ApplicationAdapter {
     public void create() {
         skin = defaultSkin();
 
-        stage = MainStageUI.create(skin);
-        Gdx.input.setInputProcessor(stage);
+        gui = MainStageUI.create(skin);
+        Gdx.input.setInputProcessor(gui);
 
         float w = Gdx.graphics.getWidth();
         float h = Gdx.graphics.getHeight();
@@ -91,7 +91,8 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        stage.resize(width, height);
+        gui.resize(width, height);
+        scene.resize(width, height);
     }
 
     @Override
@@ -101,12 +102,12 @@ public class Main extends ApplicationAdapter {
 
         scene.render();
 
-        stage.render();
+        gui.render();
     }
 
     @Override
     public void dispose() {
-        stage.dispose();
+        gui.dispose();
         skin.dispose();
     }
 }
