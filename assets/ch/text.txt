@@ -9,3 +9,4 @@ c3a07ee7-9058-4cf6-80b7-81bf40cc4caf=世界
 0caec5c3-e56f-4173-96c9-2fed21d721fc=历史
 bd703fa8-70b2-48a5-8db7-d4ae11338fe5=生物列表
 bd703fa8-70b2-48a5-8db7-d4ae11338fe4=管制
+bd703fa8-70b2-48a5-8db7-d4ae11338fe6=上下左右
