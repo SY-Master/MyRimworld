@@ -1,7 +1,5 @@
 package com.symaster.mrd.gui;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -67,8 +65,12 @@ public class MainStageUI extends Stage {
         table.setSize(width, 50);
     }
 
-    public void render() {
-
+    /**
+     * 逻辑处理
+     *
+     * @param delta Time in seconds since the last frame.
+     */
+    public void act(float delta) {
         for (FooterMenuContainer footerMenu : footerMenus) {
             if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
                 footerMenu.getMenuBtn().toggle();
@@ -84,10 +86,10 @@ public class MainStageUI extends Stage {
                 menuActor.setVisible(true);
             }
         }
+    }
 
-        float delta = Gdx.graphics.getDeltaTime();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        act(delta);
+    public void render() {
+        getViewport().apply();
         draw();
     }
 }

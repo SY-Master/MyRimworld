@@ -5,6 +5,7 @@ import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.symaster.mrd.Main;
 import com.symaster.mrd.test.Test001;
 import com.symaster.mrd.test.Test002;
+import com.symaster.mrd.test.Test003;
 
 
 /** Launches the desktop (LWJGL3) application. */
@@ -15,7 +16,7 @@ public class Lwjgl3Launcher {
     }
 
     private static void createApplication() {
-        new Lwjgl3Application(new Test001(), getDefaultConfiguration());
+        new Lwjgl3Application(new Main(), getDefaultConfiguration());
     }
 
     private static Lwjgl3ApplicationConfiguration getDefaultConfiguration() {

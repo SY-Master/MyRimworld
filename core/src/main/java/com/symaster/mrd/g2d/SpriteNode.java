@@ -1,6 +1,7 @@
 package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 
 /**
  * @author yinmiao
@@ -12,9 +13,20 @@ public class SpriteNode extends Node {
 
     public SpriteNode(Sprite sprite) {
         this.sprite = sprite;
+        setVisible(true);
     }
 
     public Sprite getSprite() {
         return sprite;
+    }
+
+    @Override
+    public void setGdxNodePosition(float x, float y) {
+        sprite.setPosition(x, y);
+    }
+
+    @Override
+    public void draw(SpriteBatch spriteBatch) {
+        sprite.draw(spriteBatch);
     }
 }

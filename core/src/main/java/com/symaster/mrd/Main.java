@@ -2,7 +2,8 @@ package com.symaster.mrd;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -11,9 +12,11 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.symaster.mrd.g2d.CameraNode;
 import com.symaster.mrd.g2d.Scene;
 import com.symaster.mrd.g2d.SpriteNode;
+import com.symaster.mrd.g2d.ViewportNode;
 import com.symaster.mrd.gui.MainStageUI;
 import com.symaster.mrd.util.GdxText;
 
@@ -29,6 +32,7 @@ public class Main extends ApplicationAdapter {
     private MainStageUI gui;
     private Skin skin;
     private Scene scene;
+    private ViewportNode fillViewport;
 
     @Override
     public void create() {
@@ -37,16 +41,30 @@ public class Main extends ApplicationAdapter {
         gui = MainStageUI.create(skin);
         Gdx.input.setInputProcessor(gui);
 
-        float w = Gdx.graphics.getWidth();
-        float h = Gdx.graphics.getHeight();
-        OrthographicCamera cam = new OrthographicCamera(30, 30 * (h / w));
-        cam.position.set(cam.viewportWidth / 2f, cam.viewportHeight / 2f, 0);
-        cam.update();
+        Texture texture = new Texture(Gdx.files.internal("user.png"));
 
         scene = new Scene();
-        scene.add(new SpriteNode(new Sprite(new Texture(Gdx.files.internal("male.png")))));
-        scene.add(new SpriteNode(new Sprite(new Texture(Gdx.files.internal("female.png")))));
-        scene.add(new CameraNode(cam));
+
+        Sprite sprite1 = new Sprite(texture);
+        sprite1.setColor(new Color(255, 0, 0, 255));
+
+        SpriteNode nodes = new SpriteNode(sprite1);
+        nodes.setActivityBlockSize(3);
+        nodes.setPositionX(100);
+        nodes.setPositionY(100);
+
+        Sprite sprite = new Sprite(texture);
+        sprite.setColor(new Color(0, 255, 0, 255));
+
+        SpriteNode nodes1 = new SpriteNode(sprite);
+        nodes.setPositionX(100);
+        nodes.setPositionY(200);
+
+        scene.add(nodes);
+        scene.add(nodes1);
+
+        fillViewport = new ViewportNode(1920, 1080);
+        scene.add(fillViewport);
     }
 
     Skin defaultSkin() {
@@ -91,17 +109,21 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
+        fillViewport.getViewport().update(width, height);
         gui.resize(width, height);
         scene.resize(width, height);
     }
 
     @Override
     public void render() {
-        // handleInput();
-        // cam.update();
+
+        float delta = Gdx.graphics.getDeltaTime();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        scene.act(delta);
+        gui.act(delta);
 
         scene.render();
-
         gui.render();
     }
 

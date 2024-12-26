@@ -1,8 +1,11 @@
 package com.symaster.mrd.g2d;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.List;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.symaster.mrd.api.ActivityBlockSizeExtend;
+import com.symaster.mrd.api.ChildUpdateExtend;
+import com.symaster.mrd.api.PositionUpdateExtend;
+
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -11,12 +14,14 @@ import java.util.function.Predicate;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Node extends ArrayList<Node> {
+public class Node extends LinkedList<Node> {
 
-    private float positionX;
+    private final String uid;
     private float positionY;
     private float width;
     private float height;
+    /// 节点基本信息
+    private float positionX;
     /**
      * 当前组件的父级节点
      */
@@ -37,6 +42,14 @@ public class Node extends ArrayList<Node> {
      * 激活附近区块半径更新扩展
      */
     private ActivityBlockSizeExtend bse;
+    /**
+     * 子节点改变扩展
+     */
+    private ChildUpdateExtend cue;
+    /**
+     * 渲染顺序
+     */
+    private int zIndex;
 
     public Node() {
         this.positionX = 0.0f;
@@ -45,6 +58,20 @@ public class Node extends ArrayList<Node> {
         this.activityBlockSize = 0;
         this.width = 0.0f;
         this.height = 0.0f;
+        this.zIndex = 0;
+        this.uid = UUID.randomUUID().toString();
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public int getZIndex() {
+        return zIndex;
+    }
+
+    public void setZIndex(int zIndex) {
+        this.zIndex = zIndex;
     }
 
     public float getHeight() {
@@ -79,6 +106,14 @@ public class Node extends ArrayList<Node> {
         this.pue = pue;
     }
 
+    public ChildUpdateExtend getCue() {
+        return cue;
+    }
+
+    public void setCue(ChildUpdateExtend cue) {
+        this.cue = cue;
+    }
+
     public boolean isVisible() {
         return visible;
     }
@@ -90,8 +125,10 @@ public class Node extends ArrayList<Node> {
     /**
      * 每帧调用
      */
-    public void update() {
-
+    public void act(float delta) {
+        for (Node node : this) {
+            node.act(delta);
+        }
     }
 
     public int getActivityBlockSize() {
@@ -108,7 +145,7 @@ public class Node extends ArrayList<Node> {
         this.activityBlockSize = activityBlockSize;
 
         if (bse != null) {
-            bse.update(this, old, activityBlockSize);
+            bse.afterUpdate(this, old, activityBlockSize);
         }
     }
 
@@ -130,7 +167,7 @@ public class Node extends ArrayList<Node> {
         float oldX = this.positionX;
         this.positionX = positionX;
         if (pue != null) {
-            pue.update(this, oldX, this.positionY, this.positionX, this.positionY);
+            pue.afterUpdate(this, oldX, this.positionY, this.positionX, this.positionY);
         }
     }
 
@@ -145,7 +182,7 @@ public class Node extends ArrayList<Node> {
         float oldY = this.positionY;
         this.positionY = y;
         if (pue != null) {
-            pue.update(this, this.positionX, oldY, this.positionX, this.positionY);
+            pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
         }
     }
 
@@ -158,7 +195,7 @@ public class Node extends ArrayList<Node> {
         this.positionX = x;
         this.positionY = y;
         if (pue != null) {
-            pue.update(this, oldX, oldY, this.positionX, this.positionY);
+            pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
         }
     }
 
@@ -174,7 +211,7 @@ public class Node extends ArrayList<Node> {
         this.positionY += y;
 
         if (pue != null) {
-            pue.update(this, oldX, oldY, this.positionX, this.positionY);
+            pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
         }
     }
 
@@ -196,6 +233,9 @@ public class Node extends ArrayList<Node> {
         if (add) {
             node.parent = this;
         }
+        if (cue != null) {
+            cue.afterAdd(this, node);
+        }
         return add;
     }
 
@@ -203,6 +243,9 @@ public class Node extends ArrayList<Node> {
     public void add(int index, Node element) {
         super.add(index, element);
         element.parent = this;
+        if (cue != null) {
+            cue.afterAdd(this, element);
+        }
     }
 
     @Override
@@ -211,6 +254,9 @@ public class Node extends ArrayList<Node> {
         if (b) {
             for (Node node : c) {
                 node.parent = this;
+                if (cue != null) {
+                    cue.afterAdd(this, node);
+                }
             }
         }
         return b;
@@ -222,6 +268,9 @@ public class Node extends ArrayList<Node> {
         if (b) {
             for (Node node : c) {
                 node.parent = this;
+                if (cue != null) {
+                    cue.afterAdd(this, node);
+                }
             }
         }
         return b;
@@ -233,6 +282,9 @@ public class Node extends ArrayList<Node> {
         if (remove != null) {
             remove.parent = null;
         }
+        if (cue != null) {
+            cue.afterRemove(this, remove);
+        }
         return remove;
     }
 
@@ -243,6 +295,10 @@ public class Node extends ArrayList<Node> {
         if (remove && o instanceof Node) {
             Node node = (Node) o;
             node.parent = null;
+
+            if (cue != null) {
+                cue.afterRemove(this, node);
+            }
         }
 
         return remove;
@@ -256,6 +312,10 @@ public class Node extends ArrayList<Node> {
                 if (o instanceof Node) {
                     Node node = (Node) o;
                     node.parent = null;
+
+                    if (cue != null) {
+                        cue.afterRemove(this, node);
+                    }
                 }
             }
         }
@@ -270,5 +330,45 @@ public class Node extends ArrayList<Node> {
     @Override
     public boolean removeIf(Predicate<? super Node> filter) {
         throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Node node = (Node) o;
+        return uid.equals(node.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + uid.hashCode();
+        return result;
+    }
+
+    /**
+     * 更新自身场景显示的位置
+     *
+     * @param x 父级位置
+     * @param y 父级位置
+     */
+    public void updateViewPosition(float x, float y) {
+        float thisX = this.positionX + x;
+        float thisY = this.positionY + y;
+        this.setGdxNodePosition(thisX, thisY);
+
+        for (Node node : this) {
+            node.updateViewPosition(thisX, thisY);
+        }
+    }
+
+    public void setGdxNodePosition(float x, float y) {
+
+    }
+
+    public void draw(SpriteBatch spriteBatch) {
+
     }
 }
