@@ -6,7 +6,9 @@ dependencies {
   api "de.golfgl.gdxcontrollerutils:gdx-controllerutils-scene2d:$controllerScene2DVersion"
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "cn.hutool:hutool-all:$hutoolVersion"
+//  api "implementation 'io.marauder.charger:clipper:1.0.0'"
 //  api "io.github.libktx:ktx-freetype:$ktxVersion"
+//  implementation group: 'io.marauder.charger', name: 'clipper', version: '1.0.0'
 
   if(enableGraalNative == 'true') {
     implementation "io.github.berstanio:gdx-svmhelper-annotations:$graalHelperVersion"

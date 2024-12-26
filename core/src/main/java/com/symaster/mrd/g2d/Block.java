@@ -23,17 +23,25 @@ public class Block {
     }
 
     @Override
-    public int hashCode() {
-        return super.hashCode();
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+
+        Block block = (Block) o;
+        return x == block.x && y == block.y;
     }
 
     @Override
-    public boolean equals(Object obj) {
-        return super.equals(obj);
+    public int hashCode() {
+        int result = x;
+        result = 31 * result + y;
+        return result;
     }
 
     @Override
     public String toString() {
-        return super.toString();
+        return "Block{" +
+                "x=" + x +
+                ", y=" + y +
+                '}';
     }
 }
