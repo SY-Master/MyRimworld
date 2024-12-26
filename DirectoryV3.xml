@@ -6,4 +6,5 @@
            presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
      <tree path="/core/src/main/java/com/symaster/mrd/drawable/SolidColorDrawable.java" title="纯色绘制器"/>
      <tree path="/core/src/main/java/com/symaster/mrd/g2d/SpriteNode.java" title="精灵节点"/>
+     <tree path="/core/src/main/java/com/symaster/mrd/g2d/ViewportNode.java" title="视口节点"/>
  </trees>

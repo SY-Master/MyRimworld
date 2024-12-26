@@ -228,7 +228,7 @@ public class Scene {
      *
      * @param delta Time in seconds since the last frame.
      */
-    public void act(float delta) {
+    public void logic(float delta) {
         activeBlocks.stream()
                 .flatMap(e -> {
                     Set<Node> nodes1 = nodes.get(e);
@@ -239,7 +239,9 @@ public class Scene {
                     }
                 })
                 .forEach(e -> {
-                    e.act(delta);
+                    // 处理每个节点的逻辑
+                    e.logic(delta);
+                    // 让节点更新显示组件的坐标
                     e.updateViewPosition(0, 0);
                 });
     }
@@ -260,21 +262,7 @@ public class Scene {
             int blockXNumber = (int) Math.ceil(viewport.getWidth() / blockSize);
             int blockYNumber = (int) Math.ceil(viewport.getHeight() / blockSize);
 
-            for (int i = 0; i < blockXNumber; i++) {
-                for (int j = 0; j < blockYNumber; j++) {
-                    renderCache.cacheBlock = new Block(x + i, y + j);
-                    if (activeBlocks.contains(renderCache.cacheBlock)) {
-                        Set<Node> nodes1 = nodes.get(renderCache.cacheBlock);
-                        if (nodes1 != null) {
-                            for (Node node : nodes1) {
-                                if (node.isVisible()) {
-                                    nodeSet.add(node);
-                                }
-                            }
-                        }
-                    }
-                }
-            }
+            findAndAdd(blockXNumber, blockYNumber, x, y, nodeSet);
         }
 
         if (nodeSet.isEmpty()) {
@@ -286,6 +274,24 @@ public class Scene {
         spriteBatch.begin();
         nodeSet.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(node -> node.draw(spriteBatch));
         spriteBatch.end();
+    }
+
+    private void findAndAdd(int blockXNumber, int blockYNumber, int x, int y, Set<Node> nodeSet) {
+        for (int i = 0; i < blockXNumber; i++) {
+            for (int j = 0; j < blockYNumber; j++) {
+                renderCache.cacheBlock = new Block(x + i, y + j);
+                if (activeBlocks.contains(renderCache.cacheBlock)) {
+                    Set<Node> nodes1 = nodes.get(renderCache.cacheBlock);
+                    if (nodes1 != null) {
+                        for (Node node : nodes1) {
+                            if (node.isVisible()) {
+                                nodeSet.add(node);
+                            }
+                        }
+                    }
+                }
+            }
+        }
     }
 
     public void resize(int width, int height) {
