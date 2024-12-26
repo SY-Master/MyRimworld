@@ -12,8 +12,6 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.utils.viewport.FillViewport;
-import com.symaster.mrd.g2d.CameraNode;
 import com.symaster.mrd.g2d.Scene;
 import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.g2d.ViewportNode;
@@ -47,7 +45,6 @@ public class Main extends ApplicationAdapter {
 
         Sprite sprite1 = new Sprite(texture);
         sprite1.setColor(new Color(255, 0, 0, 255));
-
         SpriteNode nodes = new SpriteNode(sprite1);
         nodes.setActivityBlockSize(3);
         nodes.setPositionX(100);
@@ -55,10 +52,9 @@ public class Main extends ApplicationAdapter {
 
         Sprite sprite = new Sprite(texture);
         sprite.setColor(new Color(0, 255, 0, 255));
-
         SpriteNode nodes1 = new SpriteNode(sprite);
-        nodes.setPositionX(100);
-        nodes.setPositionY(200);
+        nodes1.setPositionX(100);
+        nodes1.setPositionY(200);
 
         scene.add(nodes);
         scene.add(nodes1);
@@ -120,10 +116,14 @@ public class Main extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        scene.act(delta);
-        gui.act(delta);
+        // 处理场景的逻辑
+        scene.logic(delta);
+        // 处理GUI的逻辑
+        gui.logic(delta);
 
+        // 绘制场景
         scene.render();
+        // 绘制GUI
         gui.render();
     }
 

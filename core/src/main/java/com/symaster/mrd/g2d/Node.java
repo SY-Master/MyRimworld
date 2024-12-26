@@ -1,6 +1,7 @@
 package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
@@ -14,7 +15,7 @@ import java.util.function.Predicate;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Node extends LinkedList<Node> {
+public class Node extends LinkedList<Node> implements Disposable {
 
     private final String uid;
     private float positionY;
@@ -60,10 +61,6 @@ public class Node extends LinkedList<Node> {
         this.height = 0.0f;
         this.zIndex = 0;
         this.uid = UUID.randomUUID().toString();
-    }
-
-    public String getUid() {
-        return uid;
     }
 
     public int getZIndex() {
@@ -125,9 +122,9 @@ public class Node extends LinkedList<Node> {
     /**
      * 每帧调用
      */
-    public void act(float delta) {
+    public void logic(float delta) {
         for (Node node : this) {
-            node.act(delta);
+            node.logic(delta);
         }
     }
 
@@ -332,22 +329,6 @@ public class Node extends LinkedList<Node> {
         throw new UnsupportedOperationException();
     }
 
-    @Override
-    public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
-
-        Node node = (Node) o;
-        return uid.equals(node.uid);
-    }
-
-    @Override
-    public int hashCode() {
-        int result = super.hashCode();
-        result = 31 * result + uid.hashCode();
-        return result;
-    }
-
     /**
      * 更新自身场景显示的位置
      *
@@ -364,11 +345,40 @@ public class Node extends LinkedList<Node> {
         }
     }
 
+    /**
+     * 设置显示组件的世界位置
+     */
     public void setGdxNodePosition(float x, float y) {
 
     }
 
+    /**
+     * 如果子节点需要绘制
+     */
     public void draw(SpriteBatch spriteBatch) {
 
+    }
+
+    /**
+     * 如果子节点需要释放资源
+     */
+    @Override
+    public void dispose() {
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        if (!super.equals(o)) return false;
+
+        Node node = (Node) o;
+        return uid.equals(node.uid);
+    }
+
+    @Override
+    public int hashCode() {
+        int result = super.hashCode();
+        result = 31 * result + uid.hashCode();
+        return result;
     }
 }

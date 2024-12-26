@@ -70,7 +70,7 @@ public class MainStageUI extends Stage {
      *
      * @param delta Time in seconds since the last frame.
      */
-    public void act(float delta) {
+    public void logic(float delta) {
         for (FooterMenuContainer footerMenu : footerMenus) {
             if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
                 footerMenu.getMenuBtn().toggle();
