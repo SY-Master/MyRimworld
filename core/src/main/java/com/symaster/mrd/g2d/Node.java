@@ -120,12 +120,9 @@ public class Node extends LinkedList<Node> implements Disposable {
     }
 
     /**
-     * 每帧调用
+     * 每帧调用，节点逻辑处理
      */
     public void logic(float delta) {
-        for (Node node : this) {
-            node.logic(delta);
-        }
     }
 
     public int getActivityBlockSize() {

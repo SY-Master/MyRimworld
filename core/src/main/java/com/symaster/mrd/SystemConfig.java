@@ -8,11 +8,18 @@ public class SystemConfig {
 
     public static final String TEXT_PATH = "ch/text.txt";
     public static final String FONT_PATH = "fonts/SweiDelLunaSansCJKsc-Black.ttf";
-    public static final int FONT_SIZE = 16;
 
+    /**
+     * 字体大小
+     */
+    public static int FONT_SIZE = 16;
     /**
      * 区块大小（米）默认10米
      */
-    public static final float BLOCK_SIZE = 10f;
+    public static float BLOCK_SIZE = 10f;
+    /**
+     * 时间缩放
+     */
+    public static float TIME_SCALE = 1f;
 
 }

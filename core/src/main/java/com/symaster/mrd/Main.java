@@ -9,6 +9,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -90,14 +91,17 @@ public class Main extends ApplicationAdapter {
     }
 
     private void addMap(Scene scene) {
-        Texture borderTexture = new Texture(Gdx.files.internal("border.png"));
+        Texture borderTexture = new Texture(Gdx.files.internal("TX Tileset Grass.png"));
+        TextureRegion textureRegion = new TextureRegion(borderTexture, 32, 32, 32, 32);
+
         float w = UnitUtil.ofM(1);
         float h = UnitUtil.ofM(1);
 
-        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(borderTexture, 1, 1, 1, 1));
+        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(textureRegion, 1, 1, 1, 1));
 
-        for (int x = -100; x < 100; x++) {
-            for (int y = -100; y < 100; y++) {
+        int size = 500;
+        for (int x = -size; x < size; x++) {
+            for (int y = -size; y < size; y++) {
                 NinePatchNode nodes1 = new NinePatchNode(ninePatchDrawable);
                 nodes1.setWidth(w);
                 nodes1.setHeight(h);
@@ -106,8 +110,6 @@ public class Main extends ApplicationAdapter {
                 scene.add(nodes1);
             }
         }
-
-
     }
 
     Skin defaultSkin() {
@@ -160,7 +162,7 @@ public class Main extends ApplicationAdapter {
     @Override
     public void render() {
 
-        float delta = Gdx.graphics.getDeltaTime();
+        float delta = SystemConfig.TIME_SCALE * Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 处理场景的逻辑
