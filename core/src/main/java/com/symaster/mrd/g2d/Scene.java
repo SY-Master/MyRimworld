@@ -6,11 +6,11 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
+import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * 场景
@@ -40,6 +40,8 @@ public class Scene {
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
 
+    private InputFactory inputFactory;
+
     private final Cache renderCache;
     private final SpriteBatch spriteBatch;
 
@@ -60,6 +62,14 @@ public class Scene {
         this.childUpdateExtend = getChildUpdateExtend();
     }
 
+    public InputFactory getInputFactory() {
+        return inputFactory;
+    }
+
+    public void setInputFactory(InputFactory inputFactory) {
+        this.inputFactory = inputFactory;
+    }
+
     public ChildUpdateExtend getChildUpdateExtend() {
         return new ChildUpdateExtend() {
 
@@ -71,6 +81,10 @@ public class Scene {
                     cameraNodes.add((CameraNode) child);
                 }
 
+                child.onScene(Scene.this);
+                for (Node node : child) {
+                    node.onScene(Scene.this);
+                }
             }
 
             @Override
@@ -79,6 +93,11 @@ public class Scene {
 
                 if (child instanceof CameraNode) {
                     cameraNodes.remove(child);
+                }
+
+                child.extScene(Scene.this);
+                for (Node node : child) {
+                    node.extScene(Scene.this);
                 }
             }
         };
@@ -91,20 +110,14 @@ public class Scene {
                 return;
             }
 
-            Block oldIndex = getBlockIndex(oldX, oldY);
-            Block newIndex = getBlockIndex(newX, newY);
-            if (!oldIndex.equals(newIndex)) {
-                Set<Node> nodes1 = nodes.get(oldIndex);
-                if (nodes1 != null) {
-                    nodes1.remove(node);
-                }
-                nodes.computeIfAbsent(newIndex, k -> new HashSet<>()).add(node);
+            MoveNodeCache moveNodeCache = new MoveNodeCache();
+            moveNodeCache.node = node;
+            moveNodeCache.oldX = oldX;
+            moveNodeCache.oldY = oldY;
+            moveNodeCache.newX = newX;
+            moveNodeCache.newY = newY;
 
-                if (activityBlockMap.get(node) != null) {
-                    activityBlockMap.put(node, getNodeActivityBlocks(node, node.getActivityBlockSize()));
-                    updateActivityBlockSize();
-                }
-            }
+            renderCache.moveNodes.add(moveNodeCache);
         };
     }
 
@@ -157,7 +170,6 @@ public class Scene {
      * 添加节点，只能添加跟节点
      */
     public void add(Node node) {
-
         if (node.getParent() != null) {
             throw new RuntimeException("不能将子节点放置到场景中");
         }
@@ -177,8 +189,12 @@ public class Scene {
         }
 
         if (node instanceof CameraNode) {
-            CameraNode cameraNode = (CameraNode) node;
-            cameraNodes.add(cameraNode);
+            cameraNodes.add(((CameraNode) node));
+        }
+
+        node.onScene(this);
+        for (Node node1 : node) {
+            node1.onScene(this);
         }
     }
 
@@ -196,6 +212,11 @@ public class Scene {
 
         if (node instanceof CameraNode) {
             cameraNodes.remove(node);
+        }
+
+        node.extScene(Scene.this);
+        for (Node node2 : node) {
+            node2.extScene(Scene.this);
         }
     }
 
@@ -229,26 +250,51 @@ public class Scene {
      * @param delta Time in seconds since the last frame.
      */
     public void logic(float delta) {
-        activeBlocks.stream()
-                .flatMap(e -> {
-                    Set<Node> nodes1 = nodes.get(e);
-                    if (nodes1 == null) {
-                        return Stream.empty();
-                    } else {
-                        return nodes1.stream();
-                    }
-                })
-                .forEach(e -> {
-                    // 处理每个节点的逻辑
-                    e.logic(delta);
-                    // 让节点更新显示组件的坐标
-                    e.updateViewPosition(0, 0);
-                });
+
+        for (Block block : activeBlocks) {
+            Set<Node> nodes1 = nodes.get(block);
+            if (nodes1 == null || nodes1.isEmpty()) {
+                continue;
+            }
+
+            for (Node node : nodes1) {
+                // 处理每个节点的逻辑
+                node.logic(delta);
+                // 让节点更新显示组件的坐标
+                node.updateViewPosition(0, 0);
+            }
+        }
+
+        // 更新移动过的组件的区块位置
+        blocksUpdate();
+    }
+
+    /**
+     * 更新移动过的组件的区块位置
+     */
+    private void blocksUpdate() {
+        for (MoveNodeCache moveNode : renderCache.moveNodes) {
+            Block oldIndex = getBlockIndex(moveNode.oldX, moveNode.oldY);
+            Block newIndex = getBlockIndex(moveNode.newX, moveNode.newY);
+            if (!oldIndex.equals(newIndex)) {
+                Set<Node> nodes1 = nodes.get(oldIndex);
+                if (nodes1 != null) {
+                    nodes1.remove(moveNode.node);
+                }
+                nodes.computeIfAbsent(newIndex, k -> new HashSet<>()).add(moveNode.node);
+
+                if (activityBlockMap.get(moveNode.node) != null) {
+                    activityBlockMap.put(moveNode.node, getNodeActivityBlocks(moveNode.node, moveNode.node.getActivityBlockSize()));
+                    updateActivityBlockSize();
+                }
+            }
+        }
+
+        renderCache.moveNodes.clear();
     }
 
     public void render() {
-        Set<Node> nodeSet = renderCache.nodes;
-        nodeSet.clear();
+        renderCache.nodes.clear();
 
         CameraNode camera = null;
 
@@ -259,24 +305,24 @@ public class Scene {
             int x = getBlockIndex(viewport.getX());
             int y = getBlockIndex(viewport.getY());
 
-            int blockXNumber = (int) Math.ceil(viewport.getWidth() / blockSize);
-            int blockYNumber = (int) Math.ceil(viewport.getHeight() / blockSize);
+            int blockXNumber = (int) Math.ceil(viewport.getWidth() / blockSize) + 1;
+            int blockYNumber = (int) Math.ceil(viewport.getHeight() / blockSize) + 1;
 
-            findAndAdd(blockXNumber, blockYNumber, x, y, nodeSet);
+            findAndAdd(blockXNumber, blockYNumber, x, y, renderCache.nodes);
         }
 
-        if (nodeSet.isEmpty()) {
+        if (renderCache.nodes.isEmpty()) {
             return;
         }
 
         camera.beginDraw();
         spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         spriteBatch.begin();
-        nodeSet.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(node -> node.draw(spriteBatch));
+        renderCache.nodes.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(node -> node.draw(spriteBatch));
         spriteBatch.end();
     }
 
-    private void findAndAdd(int blockXNumber, int blockYNumber, int x, int y, Set<Node> nodeSet) {
+    private void findAndAdd(int blockXNumber, int blockYNumber, int x, int y, List<Node> nodeSet) {
         for (int i = 0; i < blockXNumber; i++) {
             for (int j = 0; j < blockYNumber; j++) {
                 renderCache.cacheBlock = new Block(x + i, y + j);
@@ -299,8 +345,17 @@ public class Scene {
     }
 
     private static final class Cache {
-        public final Set<Node> nodes = new HashSet<>();
+        public final List<Node> nodes = new LinkedList<>();
+        /**
+         * 暂存发生移动的组件
+         */
+        public final List<MoveNodeCache> moveNodes = new LinkedList<>();
         public Block cacheBlock;
+    }
+
+    private static final class MoveNodeCache {
+        public Node node;
+        public float oldX, oldY, newX, newY;
     }
 
 

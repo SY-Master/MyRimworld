@@ -224,6 +224,24 @@ public class Node extends LinkedList<Node> implements Disposable {
         return rtn;
     }
 
+    /**
+     * 当前节点被添加进场景事件
+     *
+     * @param scene 场景
+     */
+    public void onScene(Scene scene) {
+
+    }
+
+    /**
+     * 当前场景被移除场景事件
+     *
+     * @param scene 场景
+     */
+    public void extScene(Scene scene) {
+
+    }
+
     @Override
     public boolean add(Node node) {
         boolean add = super.add(node);
