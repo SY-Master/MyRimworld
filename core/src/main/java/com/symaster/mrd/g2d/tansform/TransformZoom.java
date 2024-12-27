@@ -85,5 +85,7 @@ public class TransformZoom extends Node {
     @Override
     public void extScene(Scene scene) {
         super.extScene(scene);
+
+        scene.getInputFactory().remove(scrolledInput);
     }
 }
