@@ -250,7 +250,6 @@ public class Scene {
      * @param delta Time in seconds since the last frame.
      */
     public void logic(float delta) {
-
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
             if (nodes1 == null || nodes1.isEmpty()) {
@@ -258,15 +257,31 @@ public class Scene {
             }
 
             for (Node node : nodes1) {
-                // 处理每个节点的逻辑
-                node.logic(delta);
-                // 让节点更新显示组件的坐标
-                node.updateViewPosition(0, 0);
+                actNodeLogic(node, delta, true);
             }
+        }
+
+        for (CameraNode cameraNode : cameraNodes) {
+            actNodeLogic(cameraNode, delta, false);
         }
 
         // 更新移动过的组件的区块位置
         blocksUpdate();
+    }
+
+    private void actNodeLogic(Node node, float delta, boolean skipCam) {
+        if (node instanceof CameraNode && skipCam) {
+            return;
+        }
+
+        // 处理每个节点的逻辑
+        node.logic(delta);
+        // 让节点更新显示组件的坐标
+        node.updateViewPosition(0, 0);
+
+        for (Node c : node) {
+            actNodeLogic(c, delta, skipCam);
+        }
     }
 
     /**
@@ -311,12 +326,11 @@ public class Scene {
             findAndAdd(blockXNumber, blockYNumber, x, y, renderCache.nodes);
         }
 
-        if (renderCache.nodes.isEmpty()) {
-            return;
+        if (camera != null) {
+            camera.beginDraw();
+            spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         }
 
-        camera.beginDraw();
-        spriteBatch.setProjectionMatrix(camera.getCamera().combined);
         spriteBatch.begin();
         renderCache.nodes.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(node -> node.draw(spriteBatch));
         spriteBatch.end();
