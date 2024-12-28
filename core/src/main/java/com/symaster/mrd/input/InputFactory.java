@@ -1,5 +1,6 @@
 package com.symaster.mrd.input;
 
+import java.io.Serializable;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -7,7 +8,8 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/27
  */
-public class InputFactory implements com.badlogic.gdx.InputProcessor {
+public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializable {
+    private static final long serialVersionUID = 1L;
 
     private final Set<com.badlogic.gdx.InputProcessor> inputProcessors = new HashSet<>();
 

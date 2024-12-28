@@ -5,7 +5,9 @@ import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
+import com.symaster.mrd.g2d.scene.Scene;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.function.Predicate;
 
@@ -15,7 +17,8 @@ import java.util.function.Predicate;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Node extends LinkedList<Node> implements Disposable {
+public class Node extends LinkedList<Node> implements Disposable, Serializable, Creation {
+    private static final long serialVersionUID = 1L;
 
     private final String uid;
     private float positionY;
@@ -395,5 +398,10 @@ public class Node extends LinkedList<Node> implements Disposable {
         int result = super.hashCode();
         result = 31 * result + uid.hashCode();
         return result;
+    }
+
+    @Override
+    public void create() {
+
     }
 }

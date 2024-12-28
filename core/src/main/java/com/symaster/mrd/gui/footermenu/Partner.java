@@ -9,11 +9,11 @@ import com.symaster.mrd.util.GdxText;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class Creature implements FooterMenu {
+public class Partner implements FooterMenu {
 
     @Override
     public String title() {
-        return GdxText.val("野生动物");
+        return GdxText.val("伙伴列表");
     }
 
     @Override
@@ -28,6 +28,6 @@ public class Creature implements FooterMenu {
 
     @Override
     public int sort() {
-        return 1;
+        return 0;
     }
 }

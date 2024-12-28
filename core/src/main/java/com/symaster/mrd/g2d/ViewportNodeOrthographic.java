@@ -1,6 +1,6 @@
 package com.symaster.mrd.g2d;
 
-import com.badlogic.gdx.graphics.Camera;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -10,20 +10,20 @@ import com.badlogic.gdx.utils.viewport.Viewport;
  * @author yinmiao
  * @since 2024/12/24
  */
-public class ViewportNode extends CameraNode {
+public class ViewportNodeOrthographic extends OrthographicCameraNode {
 
     private final Viewport viewport;
 
-    public ViewportNode(float worldWidth, float worldHeight, Camera camera) {
+    public ViewportNodeOrthographic(float worldWidth, float worldHeight, OrthographicCamera camera) {
         this(new FillViewport(worldWidth, worldHeight, camera));
     }
 
-    public ViewportNode(float worldWidth, float worldHeight) {
+    public ViewportNodeOrthographic(float worldWidth, float worldHeight) {
         this(new FillViewport(worldWidth, worldHeight));
     }
 
-    public ViewportNode(Viewport viewport) {
-        super(viewport.getCamera());
+    public ViewportNodeOrthographic(Viewport viewport) {
+        super((OrthographicCamera) viewport.getCamera());
         this.viewport = viewport;
     }
 
