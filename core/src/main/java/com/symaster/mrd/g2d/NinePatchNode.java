@@ -18,6 +18,10 @@ public class NinePatchNode extends Node {
         setVisible(true);
     }
 
+    public NinePatchDrawable getNinePatchDrawable() {
+        return ninePatchDrawable;
+    }
+
     /**
      * 设置显示组件的世界位置
      */

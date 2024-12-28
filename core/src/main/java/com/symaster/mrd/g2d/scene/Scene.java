@@ -1,4 +1,4 @@
-package com.symaster.mrd.g2d;
+package com.symaster.mrd.g2d.scene;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
@@ -6,9 +6,17 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
+import com.symaster.mrd.g2d.Block;
+import com.symaster.mrd.g2d.OrthographicCameraNode;
+import com.symaster.mrd.g2d.Creation;
+import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.scene.impl.ActivityBlockSizeExtendImpl;
+import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
+import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
 import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
 
+import java.io.Serializable;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -18,7 +26,8 @@ import java.util.stream.Collectors;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Scene {
+public class Scene implements Serializable, Creation {
+    private static final long serialVersionUID = 1L;
 
     /**
      * 区块大小
@@ -28,22 +37,18 @@ public class Scene {
      * 分区块Node表
      */
     private final Map<Block, Set<Node>> nodes;
-
     private final Map<Node, Set<Block>> activityBlockMap;
-
     private final Set<Block> activeBlocks;
-
-    private final Set<CameraNode> cameraNodes;
-
-    /// 节点扩展操作
-    private final ActivityBlockSizeExtend activityBlockSizeExtend;
-    private final PositionUpdateExtend positionUpdateExtend;
-    private final ChildUpdateExtend childUpdateExtend;
+    private final Set<OrthographicCameraNode> orthographicCameraNodes;
 
     private InputFactory inputFactory;
 
     private final Cache renderCache;
-    private final SpriteBatch spriteBatch;
+
+    private transient ActivityBlockSizeExtend activityBlockSizeExtend;
+    private transient PositionUpdateExtend positionUpdateExtend;
+    private transient ChildUpdateExtend childUpdateExtend;
+    private transient SpriteBatch spriteBatch;
 
     public Scene() {
         this(UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
@@ -54,12 +59,44 @@ public class Scene {
         nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
-        this.cameraNodes = new HashSet<>();
+        this.orthographicCameraNodes = new HashSet<>();
         this.renderCache = new Cache();
+    }
+
+    @Override
+    public void create() {
         this.spriteBatch = new SpriteBatch();
-        this.activityBlockSizeExtend = getActivityBlockSizeExtend();
-        this.positionUpdateExtend = getPositionUpdateExtend();
-        this.childUpdateExtend = getChildUpdateExtend();
+        this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
+        this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
+        this.childUpdateExtend = new ChildUpdateExtendImpl(this);
+    }
+
+    public float getBlockSize() {
+        return blockSize;
+    }
+
+    public Map<Block, Set<Node>> getNodes() {
+        return nodes;
+    }
+
+    public Map<Node, Set<Block>> getActivityBlockMap() {
+        return activityBlockMap;
+    }
+
+    public Set<Block> getActiveBlocks() {
+        return activeBlocks;
+    }
+
+    public Set<OrthographicCameraNode> getCameraNodes() {
+        return orthographicCameraNodes;
+    }
+
+    public Cache getRenderCache() {
+        return renderCache;
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
     }
 
     public InputFactory getInputFactory() {
@@ -70,68 +107,7 @@ public class Scene {
         this.inputFactory = inputFactory;
     }
 
-    public ChildUpdateExtend getChildUpdateExtend() {
-        return new ChildUpdateExtend() {
-
-            @Override
-            public void afterAdd(Node parent, Node child) {
-                addExtend(child);
-
-                if (child instanceof CameraNode) {
-                    cameraNodes.add((CameraNode) child);
-                }
-
-                child.onScene(Scene.this);
-                for (Node node : child) {
-                    node.onScene(Scene.this);
-                }
-            }
-
-            @Override
-            public void afterRemove(Node parent, Node child) {
-                removeExtend(child);
-
-                if (child instanceof CameraNode) {
-                    cameraNodes.remove(child);
-                }
-
-                child.extScene(Scene.this);
-                for (Node node : child) {
-                    node.extScene(Scene.this);
-                }
-            }
-        };
-    }
-
-    public PositionUpdateExtend getPositionUpdateExtend() {
-        // 当场景中的节点位置改变后会触发这段代码
-        return (node, oldX, oldY, newX, newY) -> {
-            if (node.getParent() != null) {
-                return;
-            }
-
-            MoveNodeCache moveNodeCache = new MoveNodeCache();
-            moveNodeCache.node = node;
-            moveNodeCache.oldX = oldX;
-            moveNodeCache.oldY = oldY;
-            moveNodeCache.newX = newX;
-            moveNodeCache.newY = newY;
-
-            renderCache.moveNodes.add(moveNodeCache);
-        };
-    }
-
-    public ActivityBlockSizeExtend getActivityBlockSizeExtend() {
-        // 当场景中的节点设置了新的区块激活数量时会触发这段代码
-        return (node, oldSize, newSize) -> {
-            if (node.getParent() != null) {
-                return;
-            }
-            blockUpdate(node, newSize);
-        };
-    }
-
-    private void blockUpdate(Node node, int newSize) {
+    public void blockUpdate(Node node, int newSize) {
         if (newSize > 0) {
             // 添加
             activityBlockMap.put(node, getNodeActivityBlocks(node, newSize));
@@ -181,15 +157,15 @@ public class Scene {
         node.setBse(activityBlockSizeExtend);
         node.setPue(positionUpdateExtend);
 
-        addExtend(node);
+        addExtendEvent(node);
 
         if (node.getActivityBlockSize() > 0) {
             activityBlockMap.put(node, getNodeActivityBlocks(node, node.getActivityBlockSize()));
             updateActivityBlockSize();
         }
 
-        if (node instanceof CameraNode) {
-            cameraNodes.add(((CameraNode) node));
+        if (node instanceof OrthographicCameraNode) {
+            orthographicCameraNodes.add(((OrthographicCameraNode) node));
         }
 
         node.onScene(this);
@@ -206,12 +182,12 @@ public class Scene {
 
         node.setPue(null);
         node.setBse(null);
-        removeExtend(node);
+        removeExtendEvent(node);
 
         nodes2.remove(node);
 
-        if (node instanceof CameraNode) {
-            cameraNodes.remove(node);
+        if (node instanceof OrthographicCameraNode) {
+            orthographicCameraNodes.remove(node);
         }
 
         node.extScene(Scene.this);
@@ -220,7 +196,7 @@ public class Scene {
         }
     }
 
-    private void addExtend(Node node) {
+    public void addExtendEvent(Node node) {
         node.setCue(childUpdateExtend);
 
         for (Node child : node) {
@@ -228,7 +204,7 @@ public class Scene {
         }
     }
 
-    private void removeExtend(Node node) {
+    public void removeExtendEvent(Node node) {
         node.setCue(null);
 
         for (Node child : node) {
@@ -261,8 +237,8 @@ public class Scene {
             }
         }
 
-        for (CameraNode cameraNode : cameraNodes) {
-            actNodeLogic(cameraNode, delta, false);
+        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
+            actNodeLogic(orthographicCameraNode, delta, false);
         }
 
         // 更新移动过的组件的区块位置
@@ -270,7 +246,7 @@ public class Scene {
     }
 
     private void actNodeLogic(Node node, float delta, boolean skipCam) {
-        if (node instanceof CameraNode && skipCam) {
+        if (node instanceof OrthographicCameraNode && skipCam) {
             return;
         }
 
@@ -311,11 +287,11 @@ public class Scene {
     public void render() {
         renderCache.nodes.clear();
 
-        CameraNode camera = null;
+        OrthographicCameraNode camera = null;
 
-        for (CameraNode cameraNode : cameraNodes) {
-            camera = cameraNode;
-            Rectangle viewport = cameraNode.getWorldRectangle();
+        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
+            camera = orthographicCameraNode;
+            Rectangle viewport = orthographicCameraNode.getWorldRectangle();
 
             int x = getBlockIndex(viewport.getX());
             int y = getBlockIndex(viewport.getY());
@@ -357,20 +333,5 @@ public class Scene {
     public void resize(int width, int height) {
 
     }
-
-    private static final class Cache {
-        public final List<Node> nodes = new LinkedList<>();
-        /**
-         * 暂存发生移动的组件
-         */
-        public final List<MoveNodeCache> moveNodes = new LinkedList<>();
-        public Block cacheBlock;
-    }
-
-    private static final class MoveNodeCache {
-        public Node node;
-        public float oldX, oldY, newX, newY;
-    }
-
 
 }

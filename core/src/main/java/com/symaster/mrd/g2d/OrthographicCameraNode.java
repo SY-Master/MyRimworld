@@ -1,6 +1,5 @@
 package com.symaster.mrd.g2d;
 
-import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
@@ -9,19 +8,19 @@ import com.badlogic.gdx.math.Vector3;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class CameraNode extends Node {
+public class OrthographicCameraNode extends Node {
 
-    private final Camera camera;
+    private final OrthographicCamera camera;
 
-    public CameraNode() {
+    public OrthographicCameraNode() {
         this(new OrthographicCamera());
     }
 
-    public CameraNode(Camera camera) {
+    public OrthographicCameraNode(OrthographicCamera camera) {
         this.camera = camera;
     }
 
-    public Camera getCamera() {
+    public OrthographicCamera getCamera() {
         return camera;
     }
 

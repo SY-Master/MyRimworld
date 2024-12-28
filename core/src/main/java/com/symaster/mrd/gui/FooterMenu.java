@@ -13,4 +13,6 @@ public interface FooterMenu {
     Actor panel();
 
     LayoutConfig layoutConfig();
+
+    int sort();
 }

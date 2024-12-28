@@ -2,9 +2,9 @@ package com.symaster.mrd;
 
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
@@ -15,9 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.symaster.mrd.g2d.NinePatchNode;
-import com.symaster.mrd.g2d.Scene;
 import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.g2d.ViewportNode;
+import com.symaster.mrd.g2d.ViewportNodeOrthographic;
+import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.gui.MainStageUI;
@@ -38,10 +38,13 @@ public class Main extends ApplicationAdapter {
     private MainStageUI gui;
     private Skin skin;
     private Scene scene;
-    private ViewportNode fillViewport;
+    private ViewportNodeOrthographic fillViewport;
 
     @Override
     public void create() {
+
+        AssetManager assetManager = new AssetManager();
+
         InputFactory inputFactory = new InputFactory();
         Gdx.input.setInputProcessor(inputFactory);
         skin = defaultSkin();
@@ -49,9 +52,15 @@ public class Main extends ApplicationAdapter {
         gui = MainStageUI.create(skin);
         inputFactory.add(gui);
 
+        // assetManager.load("user.png", Texture.class);
+
+        // Texture texture1 = assetManager.get("user.png", Texture.class);
+
         Texture texture = new Texture(Gdx.files.internal("user.png"));
 
         scene = new Scene();
+        scene.create();
+
         scene.setInputFactory(inputFactory);
 
         addMap(scene);
@@ -75,7 +84,7 @@ public class Main extends ApplicationAdapter {
         scene.add(nodes);
         scene.add(nodes1);
 
-        fillViewport = new ViewportNode(960, 540);
+        fillViewport = new ViewportNodeOrthographic(960, 540);
         fillViewport.setActivityBlockSize(1);
         WASDInput wasdInput = new WASDInput();
         fillViewport.add(wasdInput);
@@ -84,7 +93,7 @@ public class Main extends ApplicationAdapter {
         transformMove.setSpeed(UnitUtil.ofM(18));
         fillViewport.add(transformMove);
 
-        TransformZoom nodes2 = new TransformZoom((OrthographicCamera) fillViewport.getCamera(), fillViewport);
+        TransformZoom nodes2 = new TransformZoom(fillViewport.getCamera(), fillViewport);
         fillViewport.add(nodes2);
 
         nodes1.add(fillViewport);

@@ -6,7 +6,7 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.Scene;
+import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.input.ScrolledInput;
 
 /**

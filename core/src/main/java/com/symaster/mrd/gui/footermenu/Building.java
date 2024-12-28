@@ -3,17 +3,15 @@ package com.symaster.mrd.gui.footermenu;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.symaster.mrd.gui.FooterMenu;
 import com.symaster.mrd.gui.LayoutConfig;
-import com.symaster.mrd.util.GdxText;
 
 /**
  * @author yinmiao
- * @since 2024/12/16
+ * @since 2024/12/27
  */
-public class Creature implements FooterMenu {
-
+public class Building implements FooterMenu {
     @Override
     public String title() {
-        return GdxText.val("野生动物");
+        return "建筑规划";
     }
 
     @Override
@@ -28,6 +26,6 @@ public class Creature implements FooterMenu {
 
     @Override
     public int sort() {
-        return 1;
+        return -1;
     }
 }

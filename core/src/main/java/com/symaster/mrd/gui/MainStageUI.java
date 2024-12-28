@@ -10,8 +10,10 @@ import com.symaster.mrd.util.ClassUtil;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author yinmiao
@@ -32,32 +34,44 @@ public class MainStageUI extends Stage {
         mainStageUI.table = new Table();
         mainStageUI.footerMenus = new ArrayList<>();
 
+        List<FooterMenu> footerMenus = findFooterMenus().stream()
+                .sorted(Comparator.comparingInt(FooterMenu::sort))
+                .collect(Collectors.toList());
+
+        for (FooterMenu o : footerMenus) {
+            TextButton textButton = new TextButton(o.title(), skin);
+            FooterMenuContainer m = new FooterMenuContainer(o, textButton);
+
+            mainStageUI.footerMenus.add(m);
+            mainStageUI.table.add(m.getMenuBtn()).expand().fill();
+            if (m.getFooterMenu().panel() != null) {
+                m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
+                mainStageUI.addActor(m.getMenuActor());
+                m.getMenuActor().setVisible(false);
+            }
+        }
+
+        mainStageUI.addActor(mainStageUI.table);
+
+        return mainStageUI;
+    }
+
+    private static List<FooterMenu> findFooterMenus() {
         Set<Class<?>> scan = ClassUtil.scan("com.symaster.mrd.gui", FooterMenu.class::isAssignableFrom);
+        List<FooterMenu> footerMenus = new ArrayList<>();
 
         try {
             for (Class<?> aClass : scan) {
 
                 Constructor<?> constructor = aClass.getConstructor();
                 FooterMenu o = (FooterMenu) constructor.newInstance();
-
-                TextButton textButton = new TextButton(o.title(), skin);
-                FooterMenuContainer m = new FooterMenuContainer(o, textButton);
-
-                mainStageUI.footerMenus.add(m);
-                mainStageUI.table.add(m.getMenuBtn()).expand().fill();
-                if (m.getFooterMenu().panel() != null) {
-                    m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
-                    mainStageUI.addActor(m.getMenuActor());
-                    m.getMenuActor().setVisible(false);
-                }
+                footerMenus.add(o);
             }
-        } catch (NoSuchMethodException |InstantiationException | IllegalAccessException | InvocationTargetException e) {
+        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+                 InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-
-        mainStageUI.addActor(mainStageUI.table);
-
-        return mainStageUI;
+        return footerMenus;
     }
 
     public void resize(int width, int height) {
