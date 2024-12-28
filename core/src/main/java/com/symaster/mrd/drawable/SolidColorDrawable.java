@@ -17,7 +17,7 @@ public class SolidColorDrawable extends BaseDrawable {
         this.color = new Color(color);
 
         Pixmap pixmap = new Pixmap(1, 1, Pixmap.Format.RGBA8888);
-        pixmap.setColor(color);
+        pixmap.setColor(Color.WHITE);
         pixmap.fill();
         textureRegion = new TextureRegion(new Texture(pixmap));
         pixmap.dispose(); // 立即释放Pixmap资源
