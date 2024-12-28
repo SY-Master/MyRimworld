@@ -34,7 +34,7 @@ public class PlayGameSetting extends Group {
 
         addActor((scrollPane = new ScrollPane((table = new Table()))));
 
-        table.add((playGame = new TextButton("开始游戏", skin)));
+        table.add((playGame = new TextButton("开始游戏", skin))).fill();
     }
 
     public void resize(int width, int height) {
@@ -43,6 +43,8 @@ public class PlayGameSetting extends Group {
         float sW = width * 0.8f;
         scrollPane.setSize(sW, height - 55);
         scrollPane.setPosition(width / 2f - sW / 2, 5);
+
+        table.setWidth(sW);
     }
 
     public ImageButton getBackBtn() {
@@ -60,4 +62,5 @@ public class PlayGameSetting extends Group {
     public ScrollPane getScrollPane() {
         return scrollPane;
     }
+
 }

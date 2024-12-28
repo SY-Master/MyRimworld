@@ -221,16 +221,16 @@ public class Main extends ApplicationAdapter {
         } else if (status == Status.MainMenuLoadingFinish) {
             mainMenu.logic(delta);
             mainMenu.render();
-        } else {
+        } else if (save != null && gui != null) {
             // 处理场景的逻辑
-            // scene.logic(delta);
+            save.getScene().logic(delta);
             // 处理GUI的逻辑
-            // gui.logic(delta);
+            gui.logic(delta);
 
             // 绘制场景
-            // scene.render();
+            save.getScene().render();
             // 绘制GUI
-            // gui.render();
+            gui.render();
         }
     }
 
@@ -243,7 +243,6 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void dispose() {
-        // gui.dispose();
         if (assetManager != null) {
             assetManager.dispose();
         }
@@ -255,6 +254,9 @@ public class Main extends ApplicationAdapter {
         }
         if (mainMenu != null) {
             mainMenu.dispose();
+        }
+        if (gui != null) {
+            gui.dispose();
         }
     }
 }

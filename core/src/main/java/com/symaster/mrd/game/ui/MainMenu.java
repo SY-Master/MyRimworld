@@ -3,7 +3,8 @@ package com.symaster.mrd.game.ui;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.scenes.scene2d.*;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -34,22 +35,35 @@ public class MainMenu extends Stage {
         mainMenuBtn.getPlayGameBtn().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                playGameClick();
+                toPlayGameClick();
             }
         });
         addActor(mainMenuBtn);
 
-        playGameSetting = new PlayGameSetting(skin, assetManager);
+        addActor((playGameSetting = new PlayGameSetting(skin, assetManager)));
+        playGameSetting.setVisible(false);
         playGameSetting.getBackBtn().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 backClick();
             }
         });
-        addActor(playGameSetting);
-        playGameSetting.setVisible(false);
+        playGameSetting.getPlayGame().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playGameClick();
+            }
+        });
+
 
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    }
+
+    /**
+     * 开始游戏
+     */
+    private void playGameClick() {
+
     }
 
     private void backClick() {
@@ -57,7 +71,7 @@ public class MainMenu extends Stage {
         playGameSetting.setVisible(false);
     }
 
-    private void playGameClick() {
+    private void toPlayGameClick() {
         mainMenuBtn.setVisible(false);
         playGameSetting.setVisible(true);
     }
