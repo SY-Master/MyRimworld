@@ -14,12 +14,13 @@ import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.symaster.mrd.g2d.NinePatchNode;
-import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.g2d.ViewportNodeOrthographic;
+import com.symaster.mrd.g2d.*;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
+import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
+import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
 import com.symaster.mrd.gui.MainStageUI;
 import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.input.WASDInput;
@@ -27,6 +28,7 @@ import com.symaster.mrd.util.GdxText;
 import com.symaster.mrd.util.UnitUtil;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,15 +41,22 @@ public class Main extends ApplicationAdapter {
     private Skin skin;
     private Scene scene;
     private ViewportNodeOrthographic fillViewport;
+    private AssetManager assetManager;
 
     @Override
     public void create() {
 
-        AssetManager assetManager = new AssetManager();
+        assetManager = new AssetManager();
+        assetManager.load("TX Tileset Grass.png", Texture.class);
+        assetManager.load("user.png", Texture.class);
+        assetManager.load("default-checked.9.png", Texture.class);
+        assetManager.load("default-focused.9.png", Texture.class);
+        assetManager.load("default-up.9.png", Texture.class);
 
         InputFactory inputFactory = new InputFactory();
         Gdx.input.setInputProcessor(inputFactory);
-        skin = defaultSkin();
+
+        skin = defaultSkin(assetManager);
 
         gui = MainStageUI.create(skin);
         inputFactory.add(gui);
@@ -56,16 +65,17 @@ public class Main extends ApplicationAdapter {
 
         // Texture texture1 = assetManager.get("user.png", Texture.class);
 
-        Texture texture = new Texture(Gdx.files.internal("user.png"));
+        Texture userTexture = assetManager.get("user.png", Texture.class);
+
+        BlockMapGenerateProcessorImpl bm = new BlockMapGenerateProcessorImpl(assetManager);
+
 
         scene = new Scene();
         scene.create();
-
+        scene.setBlockMapGenerateProcessor(bm);
         scene.setInputFactory(inputFactory);
 
-        addMap(scene);
-
-        Sprite sprite1 = new Sprite(texture);
+        Sprite sprite1 = new Sprite(userTexture);
         sprite1.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
         sprite1.setColor(new Color(255, 0, 0, 255));
         SpriteNode nodes = new SpriteNode(sprite1);
@@ -73,7 +83,7 @@ public class Main extends ApplicationAdapter {
         nodes.setPositionX(100);
         nodes.setPositionY(100);
 
-        Sprite sprite = new Sprite(texture);
+        Sprite sprite = new Sprite(userTexture);
         sprite.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
         sprite.setColor(new Color(0, 255, 0, 255));
         SpriteNode nodes1 = new SpriteNode(sprite);
@@ -99,33 +109,35 @@ public class Main extends ApplicationAdapter {
         nodes1.add(fillViewport);
     }
 
-    private void addMap(Scene scene) {
-        Texture borderTexture = new Texture(Gdx.files.internal("TX Tileset Grass.png"));
-        TextureRegion textureRegion = new TextureRegion(borderTexture, 32, 32, 32, 32);
+    // private void addMap(Scene scene) {
+    //     Texture borderTexture = new Texture(Gdx.files.internal("TX Tileset Grass.png"));
+    //     TextureRegion textureRegion = new TextureRegion(borderTexture, 32, 32, 32, 32);
+    //
+    //     float w = UnitUtil.ofM(1);
+    //     float h = UnitUtil.ofM(1);
+    //
+    //     NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(textureRegion, 1, 1, 1, 1));
+    //
+    //     int size = 500;
+    //     for (int x = -size; x < size; x++) {
+    //         for (int y = -size; y < size; y++) {
+    //             NinePatchNode nodes1 = new NinePatchNode(ninePatchDrawable);
+    //             nodes1.setWidth(w);
+    //             nodes1.setHeight(h);
+    //             nodes1.setZIndex(-1);
+    //             nodes1.setPosition(x * w, y * w);
+    //             scene.add(nodes1);
+    //         }
+    //     }
+    // }
 
-        float w = UnitUtil.ofM(1);
-        float h = UnitUtil.ofM(1);
+    Skin defaultSkin(AssetManager assetManager) {
 
-        NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(textureRegion, 1, 1, 1, 1));
-
-        int size = 500;
-        for (int x = -size; x < size; x++) {
-            for (int y = -size; y < size; y++) {
-                NinePatchNode nodes1 = new NinePatchNode(ninePatchDrawable);
-                nodes1.setWidth(w);
-                nodes1.setHeight(h);
-                nodes1.setZIndex(-1);
-                nodes1.setPosition(x * w, y * w);
-                scene.add(nodes1);
-            }
-        }
-    }
-
-    Skin defaultSkin() {
         BitmapFont defaultFont = textLoad(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, SystemConfig.FONT_SIZE);
-        NinePatch checked = new NinePatch(new Texture(Gdx.files.internal("default-checked.9.png")), 2, 2, 2, 2);
-        NinePatch focused = new NinePatch(new Texture(Gdx.files.internal("default-focused.9.png")), 2, 2, 2, 2);
-        NinePatch up = new NinePatch(new Texture(Gdx.files.internal("default-up.9.png")), 2, 2, 2, 2);
+        NinePatch checked = new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2);
+        NinePatch focused = new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2);
+        NinePatch up = new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2);
+
         NinePatchDrawable nDChecked = new NinePatchDrawable(checked);
         NinePatchDrawable nDFocused = new NinePatchDrawable(focused);
         NinePatchDrawable nDUp = new NinePatchDrawable(up);
@@ -170,6 +182,10 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
+        // 加载资源
+        if (assetManager.update(17)) {
+
+        }
 
         float delta = SystemConfig.TIME_SCALE * Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);

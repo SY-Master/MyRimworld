@@ -7,12 +7,10 @@ import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.Block;
-import com.symaster.mrd.g2d.OrthographicCameraNode;
 import com.symaster.mrd.g2d.Creation;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.scene.impl.ActivityBlockSizeExtendImpl;
-import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
-import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
+import com.symaster.mrd.g2d.OrthographicCameraNode;
+import com.symaster.mrd.g2d.scene.impl.*;
 import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
 
@@ -37,7 +35,13 @@ public class Scene implements Serializable, Creation {
      * 分区块Node表
      */
     private final Map<Block, Set<Node>> nodes;
+    /**
+     * 分区块地图表
+     */
+    private final Map<Block, Set<Node>> mapNodes;
+
     private final Map<Node, Set<Block>> activityBlockMap;
+
     private final Set<Block> activeBlocks;
     private final Set<OrthographicCameraNode> orthographicCameraNodes;
 
@@ -45,6 +49,7 @@ public class Scene implements Serializable, Creation {
 
     private final Cache renderCache;
 
+    private transient BlockMapGenerate blockMapGenerate;
     private transient ActivityBlockSizeExtend activityBlockSizeExtend;
     private transient PositionUpdateExtend positionUpdateExtend;
     private transient ChildUpdateExtend childUpdateExtend;
@@ -56,10 +61,11 @@ public class Scene implements Serializable, Creation {
 
     public Scene(float blockSize) {
         this.blockSize = blockSize;
-        nodes = new HashMap<>();
+        this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
         this.orthographicCameraNodes = new HashSet<>();
+        this.mapNodes = new HashMap<>();
         this.renderCache = new Cache();
     }
 
@@ -69,6 +75,11 @@ public class Scene implements Serializable, Creation {
         this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
+        this.blockMapGenerate = new BlockMapGenerate();
+    }
+
+    public void setBlockMapGenerateProcessor(BlockMapGenerateProcessor processor) {
+        blockMapGenerate.setBlockMapGenerateProcessor(processor);
     }
 
     public float getBlockSize() {
@@ -226,6 +237,49 @@ public class Scene implements Serializable, Creation {
      * @param delta Time in seconds since the last frame.
      */
     public void logic(float delta) {
+        // 添加新的地图
+        addToMap();
+
+        // 调用所有激活区块内组件的逻辑方法
+        actBlockNodes(delta);
+
+        // 独立处理摄像头的逻辑方法
+        actCamera(delta);
+
+        // 更新移动过的组件的区块位置
+        blocksUpdate();
+
+        // 新区块申请创建，逻辑：地图表内不存在的激活区块
+        addToGenerateQueue();
+    }
+
+    private void addToMap() {
+        if (blockMapGenerate != null) {
+            BlockMapGenerate.Result result = blockMapGenerate.getResult();
+            if (result != null) {
+                mapNodes.put(result.block, result.nodes);
+            }
+        }
+    }
+
+    private void addToGenerateQueue() {
+        if (blockMapGenerate != null) {
+            for (Block activeBlock : activeBlocks) {
+                if (!mapNodes.containsKey(activeBlock)) {
+                    blockMapGenerate.addGenerateQueue(activeBlock);
+                    mapNodes.put(activeBlock, null);
+                }
+            }
+        }
+    }
+
+    private void actCamera(float delta) {
+        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
+            actNodeLogic(orthographicCameraNode, delta, false);
+        }
+    }
+
+    private void actBlockNodes(float delta) {
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
             if (nodes1 == null || nodes1.isEmpty()) {
@@ -236,13 +290,6 @@ public class Scene implements Serializable, Creation {
                 actNodeLogic(node, delta, true);
             }
         }
-
-        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
-            actNodeLogic(orthographicCameraNode, delta, false);
-        }
-
-        // 更新移动过的组件的区块位置
-        blocksUpdate();
     }
 
     private void actNodeLogic(Node node, float delta, boolean skipCam) {

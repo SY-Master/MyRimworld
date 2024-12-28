@@ -34,7 +34,7 @@ public class MainStageUI extends Stage {
         mainStageUI.table = new Table();
         mainStageUI.footerMenus = new ArrayList<>();
 
-        List<FooterMenu> footerMenus = findFooterMenus().stream()
+        List<FooterMenu> footerMenus = mainStageUI.findFooterMenus().stream()
                 .sorted(Comparator.comparingInt(FooterMenu::sort))
                 .collect(Collectors.toList());
 
@@ -56,7 +56,7 @@ public class MainStageUI extends Stage {
         return mainStageUI;
     }
 
-    private static List<FooterMenu> findFooterMenus() {
+    public List<FooterMenu> findFooterMenus() {
         Set<Class<?>> scan = ClassUtil.scan("com.symaster.mrd.gui", FooterMenu.class::isAssignableFrom);
         List<FooterMenu> footerMenus = new ArrayList<>();
 
