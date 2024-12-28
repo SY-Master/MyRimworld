@@ -3,32 +3,22 @@ package com.symaster.mrd;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.symaster.mrd.g2d.*;
-import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
-import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
-import com.symaster.mrd.g2d.tansform.TransformMove;
-import com.symaster.mrd.g2d.tansform.TransformZoom;
-import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
+import com.symaster.mrd.game.data.Save;
+import com.symaster.mrd.game.ui.Loading;
+import com.symaster.mrd.game.ui.MainMenu;
 import com.symaster.mrd.gui.MainStageUI;
 import com.symaster.mrd.input.InputFactory;
-import com.symaster.mrd.input.WASDInput;
 import com.symaster.mrd.util.GdxText;
-import com.symaster.mrd.util.UnitUtil;
 
 import java.util.List;
-import java.util.Set;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -39,9 +29,14 @@ public class Main extends ApplicationAdapter {
 
     private MainStageUI gui;
     private Skin skin;
-    private Scene scene;
-    private ViewportNodeOrthographic fillViewport;
+    // private Scene scene;
+    // private ViewportNodeOrthographic fillViewport;
     private AssetManager assetManager;
+    private Loading loading;
+    private Save save;
+    private Status status;
+    private MainMenu mainMenu;
+    private InputFactory inputFactory;
 
     @Override
     public void create() {
@@ -52,61 +47,67 @@ public class Main extends ApplicationAdapter {
         assetManager.load("default-checked.9.png", Texture.class);
         assetManager.load("default-focused.9.png", Texture.class);
         assetManager.load("default-up.9.png", Texture.class);
+        assetManager.load("log.png", Texture.class);
+        assetManager.load("white.png", Texture.class);
 
-        InputFactory inputFactory = new InputFactory();
+        inputFactory = new InputFactory();
         Gdx.input.setInputProcessor(inputFactory);
 
-        skin = defaultSkin(assetManager);
+        loading = new Loading();
 
-        gui = MainStageUI.create(skin);
-        inputFactory.add(gui);
+        status = Status.MainLoading;
 
-        // assetManager.load("user.png", Texture.class);
+        // skin = defaultSkin(assetManager);
 
-        // Texture texture1 = assetManager.get("user.png", Texture.class);
+        // gui = MainStageUI.create(skin);
+        // inputFactory.add(gui);
+        //
+        // // assetManager.load("user.png", Texture.class);
+        //
+        // // Texture texture1 = assetManager.get("user.png", Texture.class);
+        //
+        // Texture userTexture = assetManager.get("user.png", Texture.class);
+        //
+        // BlockMapGenerateProcessorImpl bm = new BlockMapGenerateProcessorImpl(assetManager);
 
-        Texture userTexture = assetManager.get("user.png", Texture.class);
 
-        BlockMapGenerateProcessorImpl bm = new BlockMapGenerateProcessorImpl(assetManager);
+        // scene = new Scene();
+        // scene.create();
+        // scene.setBlockMapGenerateProcessor(bm);
+        // scene.setInputFactory(inputFactory);
 
+        // Sprite sprite1 = new Sprite(userTexture);
+        // sprite1.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
+        // sprite1.setColor(new Color(255, 0, 0, 255));
+        // SpriteNode nodes = new SpriteNode(sprite1);
+        // nodes.setActivityBlockSize(3);
+        // nodes.setPositionX(100);
+        // nodes.setPositionY(100);
+        //
+        // Sprite sprite = new Sprite(userTexture);
+        // sprite.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
+        // sprite.setColor(new Color(0, 255, 0, 255));
+        // SpriteNode nodes1 = new SpriteNode(sprite);
+        // nodes1.setActivityBlockSize(1);
+        // nodes1.setPositionX(100);
+        // nodes1.setPositionY(200);
 
-        scene = new Scene();
-        scene.create();
-        scene.setBlockMapGenerateProcessor(bm);
-        scene.setInputFactory(inputFactory);
+        // scene.add(nodes);
+        // scene.add(nodes1);
 
-        Sprite sprite1 = new Sprite(userTexture);
-        sprite1.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
-        sprite1.setColor(new Color(255, 0, 0, 255));
-        SpriteNode nodes = new SpriteNode(sprite1);
-        nodes.setActivityBlockSize(3);
-        nodes.setPositionX(100);
-        nodes.setPositionY(100);
-
-        Sprite sprite = new Sprite(userTexture);
-        sprite.setSize(UnitUtil.ofM(1), UnitUtil.ofM(1));
-        sprite.setColor(new Color(0, 255, 0, 255));
-        SpriteNode nodes1 = new SpriteNode(sprite);
-        nodes1.setActivityBlockSize(1);
-        nodes1.setPositionX(100);
-        nodes1.setPositionY(200);
-
-        scene.add(nodes);
-        scene.add(nodes1);
-
-        fillViewport = new ViewportNodeOrthographic(960, 540);
-        fillViewport.setActivityBlockSize(1);
-        WASDInput wasdInput = new WASDInput();
-        fillViewport.add(wasdInput);
-
-        TransformMove transformMove = new TransformMove(wasdInput.getVector2(), fillViewport);
-        transformMove.setSpeed(UnitUtil.ofM(18));
-        fillViewport.add(transformMove);
-
-        TransformZoom nodes2 = new TransformZoom(fillViewport.getCamera(), fillViewport);
-        fillViewport.add(nodes2);
-
-        nodes1.add(fillViewport);
+        // fillViewport = new ViewportNodeOrthographic(960, 540);
+        // fillViewport.setActivityBlockSize(1);
+        // WASDInput wasdInput = new WASDInput();
+        // fillViewport.add(wasdInput);
+        //
+        // TransformMove transformMove = new TransformMove(wasdInput.getVector2(), fillViewport);
+        // transformMove.setSpeed(UnitUtil.ofM(18));
+        // fillViewport.add(transformMove);
+        //
+        // TransformZoom nodes2 = new TransformZoom(fillViewport.getCamera(), fillViewport);
+        // fillViewport.add(nodes2);
+        //
+        // nodes1.add(fillViewport);
     }
 
     // private void addMap(Scene scene) {
@@ -131,9 +132,14 @@ public class Main extends ApplicationAdapter {
     //     }
     // }
 
-    Skin defaultSkin(AssetManager assetManager) {
+    public Skin defaultSkin(AssetManager assetManager) {
+        Skin skin = new Skin();
 
-        BitmapFont defaultFont = textLoad(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, SystemConfig.FONT_SIZE);
+        for (int fontSize : SystemConfig.FONT_SIZES) {
+            BitmapFont font = textLoad(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, fontSize);
+            skin.add("font-" + fontSize, font);
+        }
+
         NinePatch checked = new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2);
         NinePatch focused = new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2);
         NinePatch up = new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2);
@@ -141,12 +147,15 @@ public class Main extends ApplicationAdapter {
         NinePatchDrawable nDChecked = new NinePatchDrawable(checked);
         NinePatchDrawable nDFocused = new NinePatchDrawable(focused);
         NinePatchDrawable nDUp = new NinePatchDrawable(up);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, defaultFont);
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, skin.getFont("font-16"));
         textButtonStyle.focused = nDFocused;
-
-        Skin skin = new Skin();
         skin.add("default", textButtonStyle);
         return skin;
+    }
+
+    private void loadSkin() {
+        skin = defaultSkin(assetManager);
+        status = Status.SkinLoadingFinish;
     }
 
     public BitmapFont textLoad(String textPath, String fontPath, int size) {
@@ -175,35 +184,76 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void resize(int width, int height) {
-        fillViewport.getViewport().update(width, height);
-        gui.resize(width, height);
-        scene.resize(width, height);
+        if (loading != null) {
+            loading.resize(width, height);
+        }
+
+        if (mainMenu != null) {
+            mainMenu.resize(width, height);
+        }
+
+        // fillViewport.getViewport().update(width, height);
+        // gui.resize(width, height);
+        // scene.resize(width, height);
     }
 
     @Override
     public void render() {
-        // 加载资源
-        if (assetManager.update(17)) {
-
-        }
-
         float delta = SystemConfig.TIME_SCALE * Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        // 处理场景的逻辑
-        scene.logic(delta);
-        // 处理GUI的逻辑
-        gui.logic(delta);
+        // 加载资源
+        if (!assetManager.update(17)) {
+            loading.setProgressValue(assetManager.getProgress());
+            loading.logic(delta);
+            loading.render();
+        } else if (status == Status.MainLoading) {
+            loadSkin();
+            loading.setProgressValue(1f);
+            loading.logic(delta);
+            loading.render();
+        } else if (status == Status.SkinLoadingFinish) {
+            loadMainMenu();
+            loading.setProgressValue(1f);
+            loading.logic(delta);
+            loading.render();
+        } else if (status == Status.MainMenuLoadingFinish) {
+            mainMenu.logic(delta);
+            mainMenu.render();
+        } else {
+            // 处理场景的逻辑
+            // scene.logic(delta);
+            // 处理GUI的逻辑
+            // gui.logic(delta);
 
-        // 绘制场景
-        scene.render();
-        // 绘制GUI
-        gui.render();
+            // 绘制场景
+            // scene.render();
+            // 绘制GUI
+            // gui.render();
+        }
+    }
+
+    private void loadMainMenu() {
+        mainMenu = new MainMenu(skin, assetManager);
+        mainMenu.act();
+        inputFactory.add(mainMenu);
+        status = Status.MainMenuLoadingFinish;
     }
 
     @Override
     public void dispose() {
-        gui.dispose();
-        skin.dispose();
+        // gui.dispose();
+        if (assetManager != null) {
+            assetManager.dispose();
+        }
+        if (skin != null) {
+            skin.dispose();
+        }
+        if (loading != null) {
+            loading.dispose();
+        }
+        if (mainMenu != null) {
+            mainMenu.dispose();
+        }
     }
 }

@@ -12,7 +12,8 @@ public class SystemConfig {
     /**
      * 字体大小
      */
-    public static int FONT_SIZE = 16;
+    public static int[] FONT_SIZES = new int[]{14, 16, 18, 20};
+    // public static int FONT_SIZE = 16;
     /**
      * 区块大小（米）默认10米
      */
