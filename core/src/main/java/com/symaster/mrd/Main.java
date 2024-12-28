@@ -49,6 +49,7 @@ public class Main extends ApplicationAdapter {
         assetManager.load("default-up.9.png", Texture.class);
         assetManager.load("log.png", Texture.class);
         assetManager.load("white.png", Texture.class);
+        assetManager.load("left.png", Texture.class);
 
         inputFactory = new InputFactory();
         Gdx.input.setInputProcessor(inputFactory);
