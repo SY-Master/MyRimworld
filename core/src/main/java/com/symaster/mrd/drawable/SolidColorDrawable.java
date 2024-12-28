@@ -23,6 +23,11 @@ public class SolidColorDrawable extends BaseDrawable {
         pixmap.dispose(); // 立即释放Pixmap资源
     }
 
+    public SolidColorDrawable(TextureRegion textureRegion, Color color) {
+        this.textureRegion = textureRegion;
+        this.color = color;
+    }
+
     @Override
     public void draw(Batch batch, float x, float y, float width, float height) {
         Color originalColor = batch.getColor();
