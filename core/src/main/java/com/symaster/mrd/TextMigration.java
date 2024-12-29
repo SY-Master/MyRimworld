@@ -11,7 +11,7 @@ import java.util.stream.Collectors;
 public class TextMigration {
 
     private static final String folder = "E:\\projects\\symaster\\MyRimworld2\\core\\src\\main\\java\\com\\symaster\\mrd";
-    private static final String txtFile = "E:\\projects\\symaster\\MyRimworld2\\assets\\ch\\text.txt";
+    private static final String txtFile = "E:\\projects\\symaster\\MyRimworld2\\assets\\language\\cd.txt";
     private static final List<String> suffix = Arrays.asList(".java");
     private static final String flag = "GdxText.val(";
     private static final String flagTo = "GdxText.get(";
