@@ -9,7 +9,7 @@ public class SystemConfig {
     /**
      * 本地化文件
      */
-    public static String TEXT_PATH = "ch/text.txt";
+    public static String TEXT_PATH = "language/ch.txt";
     /**
      * 使用字体
      */
