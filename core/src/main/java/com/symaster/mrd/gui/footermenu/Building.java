@@ -3,6 +3,7 @@ package com.symaster.mrd.gui.footermenu;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.symaster.mrd.gui.FooterMenu;
 import com.symaster.mrd.gui.LayoutConfig;
+import com.symaster.mrd.util.GdxText;
 
 /**
  * @author yinmiao
@@ -11,7 +12,7 @@ import com.symaster.mrd.gui.LayoutConfig;
 public class Building implements FooterMenu {
     @Override
     public String title() {
-        return "建筑规划";
+        return GdxText.val("建筑规划");
     }
 
     @Override

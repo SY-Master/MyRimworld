@@ -48,22 +48,8 @@ public class MainMenu extends Stage {
                 backClick();
             }
         });
-        playGameSetting.getPlayGame().addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                playGameClick();
-            }
-        });
-
 
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-    }
-
-    /**
-     * 开始游戏
-     */
-    private void playGameClick() {
-
     }
 
     private void backClick() {
@@ -90,5 +76,17 @@ public class MainMenu extends Stage {
     public void render() {
         getViewport().apply();
         draw();
+    }
+
+    public Image getBg() {
+        return bg;
+    }
+
+    public MainMenuBtn getMainMenuBtn() {
+        return mainMenuBtn;
+    }
+
+    public PlayGameSetting getPlayGameSetting() {
+        return playGameSetting;
     }
 }

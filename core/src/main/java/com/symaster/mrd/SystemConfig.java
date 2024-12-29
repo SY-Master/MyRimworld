@@ -6,14 +6,18 @@ package com.symaster.mrd;
  */
 public class SystemConfig {
 
-    public static final String TEXT_PATH = "ch/text.txt";
-    public static final String FONT_PATH = "fonts/SweiDelLunaSansCJKsc-Black.ttf";
-
+    /**
+     * 本地化文件
+     */
+    public static String TEXT_PATH = "ch/text.txt";
+    /**
+     * 使用字体
+     */
+    public static String FONT_PATH = "fonts/SweiDelLunaSansCJKsc-Black.ttf";
     /**
      * 字体大小
      */
     public static int[] FONT_SIZES = new int[]{14, 16, 18, 20};
-    // public static int FONT_SIZE = 16;
     /**
      * 区块大小（米）默认10米
      */
@@ -22,5 +26,9 @@ public class SystemConfig {
      * 时间缩放
      */
     public static float TIME_SCALE = 1f;
+    /**
+     * GUI缩放因子
+     */
+    public static float GUI_SCALE = 1f;
 
 }

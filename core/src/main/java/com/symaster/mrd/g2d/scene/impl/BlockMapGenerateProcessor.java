@@ -2,6 +2,7 @@ package com.symaster.mrd.g2d.scene.impl;
 
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.scene.Scene;
 
 import java.util.Set;
 
@@ -10,5 +11,5 @@ import java.util.Set;
  * @since 2024/12/28
  */
 public interface BlockMapGenerateProcessor {
-    Set<Node> generate(Block take);
+    Set<Node> generate(Scene scene, Block take);
 }

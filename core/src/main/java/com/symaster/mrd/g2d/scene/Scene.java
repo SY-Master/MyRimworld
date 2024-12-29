@@ -1,16 +1,20 @@
 package com.symaster.mrd.g2d.scene;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.Block;
-import com.symaster.mrd.g2d.Creation;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.OrthographicCameraNode;
-import com.symaster.mrd.g2d.scene.impl.*;
+import com.symaster.mrd.g2d.scene.impl.ActivityBlockSizeExtendImpl;
+import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
+import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
+import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
 import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
 
@@ -24,7 +28,7 @@ import java.util.stream.Collectors;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Scene implements Serializable, Creation {
+public class Scene implements Serializable, Disposable {
     private static final long serialVersionUID = 1L;
 
     /**
@@ -39,27 +43,38 @@ public class Scene implements Serializable, Creation {
      * 分区块地图表
      */
     private final Map<Block, Set<Node>> mapNodes;
-
+    /**
+     * 激活区块的节点
+     */
     private final Map<Node, Set<Block>> activityBlockMap;
-
+    /**
+     * 激活的区块
+     */
     private final Set<Block> activeBlocks;
+    /**
+     * 相机
+     */
     private final Set<OrthographicCameraNode> orthographicCameraNodes;
-
+    /**
+     * 世界地图生成种子
+     */
+    private final String mapSeed;
+    /**
+     * 区块生成器
+     */
+    private final BlockMapGenerate blockMapGenerate;
+    private final ActivityBlockSizeExtend activityBlockSizeExtend;
+    private final PositionUpdateExtend positionUpdateExtend;
+    private final ChildUpdateExtend childUpdateExtend;
+    private final SpriteBatch spriteBatch;
+    private final Cache renderCache;
     private InputFactory inputFactory;
 
-    private final Cache renderCache;
-
-    private transient BlockMapGenerate blockMapGenerate;
-    private transient ActivityBlockSizeExtend activityBlockSizeExtend;
-    private transient PositionUpdateExtend positionUpdateExtend;
-    private transient ChildUpdateExtend childUpdateExtend;
-    private transient SpriteBatch spriteBatch;
-
-    public Scene() {
-        this(UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
+    public Scene(AssetManager assetManager) {
+        this(assetManager, UUID.randomUUID().toString(), UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
     }
 
-    public Scene(float blockSize) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize) {
         this.blockSize = blockSize;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
@@ -67,19 +82,19 @@ public class Scene implements Serializable, Creation {
         this.orthographicCameraNodes = new HashSet<>();
         this.mapNodes = new HashMap<>();
         this.renderCache = new Cache();
-    }
-
-    @Override
-    public void create() {
+        this.mapSeed = mapSeed;
         this.spriteBatch = new SpriteBatch();
         this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
-        this.blockMapGenerate = new BlockMapGenerate();
+        this.blockMapGenerate = new BlockMapGenerate(this, assetManager);
+        Thread thread = new Thread(this.blockMapGenerate);
+        thread.setName("BlockMapGenerate");
+        thread.start();
     }
 
-    public void setBlockMapGenerateProcessor(BlockMapGenerateProcessor processor) {
-        blockMapGenerate.setBlockMapGenerateProcessor(processor);
+    public String getMapSeed() {
+        return mapSeed;
     }
 
     public float getBlockSize() {
@@ -381,4 +396,12 @@ public class Scene implements Serializable, Creation {
 
     }
 
+    /**
+     * Releases all resources of this object.
+     */
+    @Override
+    public void dispose() {
+        blockMapGenerate.dispose();
+        spriteBatch.dispose();
+    }
 }

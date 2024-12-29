@@ -19,6 +19,7 @@ public class MainMenuBtn extends Group {
     private final TextButton playGameBtn;
     private final TextButton loadGameBtn;
     private final TextButton settingBtn;
+    private final TextButton modeManageBtn;
     private final TextButton extBtn;
     private final Image log;
 
@@ -34,11 +35,15 @@ public class MainMenuBtn extends Group {
         loadGameBtn.setSize(200, 45);
         addActor(loadGameBtn);
 
-        settingBtn = new TextButton("设置", skin);
+        settingBtn = new TextButton(GdxText.val("设置"), skin);
         settingBtn.setSize(200, 45);
         addActor(settingBtn);
 
-        extBtn = new TextButton("退出游戏", skin);
+        modeManageBtn = new TextButton(GdxText.val("模组管理"), skin);
+        modeManageBtn.setSize(200, 45);
+        addActor(modeManageBtn);
+
+        extBtn = new TextButton(GdxText.val("退出游戏"), skin);
         extBtn.setSize(200, 45);
         addActor(extBtn);
     }
@@ -48,9 +53,10 @@ public class MainMenuBtn extends Group {
         float j = height / 2f - log.getHeight() / 2;
         log.setPosition(0, j);
 
-        playGameBtn.setPosition(width - playGameBtn.getWidth() - 30, 200);
-        loadGameBtn.setPosition(width - loadGameBtn.getWidth() - 30, 150);
-        settingBtn.setPosition(width - settingBtn.getWidth() - 30, 100);
+        playGameBtn.setPosition(width - playGameBtn.getWidth() - 30, 250);
+        loadGameBtn.setPosition(width - loadGameBtn.getWidth() - 30, 200);
+        settingBtn.setPosition(width - settingBtn.getWidth() - 30, 150);
+        modeManageBtn.setPosition(width - settingBtn.getWidth() - 30, 100);
         extBtn.setPosition(width - extBtn.getWidth() - 30, 50);
     }
 
