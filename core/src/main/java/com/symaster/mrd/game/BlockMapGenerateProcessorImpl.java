@@ -4,6 +4,7 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 
 import java.util.Collections;
@@ -24,7 +25,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
     }
 
     @Override
-    public Set<Node> generate(Block take) {
+    public Set<Node> generate(Scene scene, Block take) {
         Texture mapTexture = assetManager.get("TX Tileset Grass.png", Texture.class);
 
 

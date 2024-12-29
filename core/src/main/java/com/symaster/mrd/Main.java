@@ -8,9 +8,14 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
+import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
@@ -237,8 +242,25 @@ public class Main extends ApplicationAdapter {
     private void loadMainMenu() {
         mainMenu = new MainMenu(skin, assetManager);
         mainMenu.act();
+        mainMenu.getPlayGameSetting().getPlayGame().addListener(new ClickListener() {
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                playGameClick();
+            }
+        });
         inputFactory.add(mainMenu);
         status = Status.MainMenuLoadingFinish;
+    }
+
+    /**
+     * 开始游戏
+     */
+    private void playGameClick() {
+        Scene scene = new Scene(assetManager);
+        scene.setInputFactory(inputFactory);
+
+        GameGenerateData gameGenerateData = new GameGenerateData();
+
     }
 
     @Override

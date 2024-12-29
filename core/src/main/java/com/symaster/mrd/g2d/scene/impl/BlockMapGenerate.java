@@ -1,8 +1,11 @@
 package com.symaster.mrd.g2d.scene.impl;
 
+import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentLinkedQueue;
@@ -22,9 +25,20 @@ public class BlockMapGenerate implements Runnable, Disposable {
      * 结果队列
      */
     private final ConcurrentLinkedQueue<Result> res = new ConcurrentLinkedQueue<>();
+
+    private final Scene scene;
+    private final BlockMapGenerateProcessor blockMapGenerateProcessor;
+
     private boolean running = true;
 
-    private BlockMapGenerateProcessor blockMapGenerateProcessor;
+    public BlockMapGenerate(Scene scene, AssetManager assetManager) {
+        this(scene, new BlockMapGenerateProcessorImpl(assetManager));
+    }
+
+    public BlockMapGenerate(Scene scene, BlockMapGenerateProcessor blockMapGenerateProcessor) {
+        this.scene = scene;
+        this.blockMapGenerateProcessor = blockMapGenerateProcessor;
+    }
 
     @Override
     public void run() {
@@ -56,15 +70,11 @@ public class BlockMapGenerate implements Runnable, Disposable {
         return blockMapGenerateProcessor;
     }
 
-    public void setBlockMapGenerateProcessor(BlockMapGenerateProcessor blockMapGenerateProcessor) {
-        this.blockMapGenerateProcessor = blockMapGenerateProcessor;
-    }
-
     private Result generate(Block take) {
         if (blockMapGenerateProcessor == null) {
             return null;
         }
-        Set<Node> generate = blockMapGenerateProcessor.generate(take);
+        Set<Node> generate = blockMapGenerateProcessor.generate(scene, take);
         Result result = new Result();
         result.block = take;
         result.nodes = generate;
