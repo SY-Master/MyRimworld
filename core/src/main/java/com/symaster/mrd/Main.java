@@ -7,6 +7,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -15,9 +16,6 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.badlogic.gdx.utils.async.AsyncResult;
-import com.badlogic.gdx.utils.async.AsyncTask;
-import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
 import com.symaster.mrd.game.GameGenerateProcessor;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
@@ -39,8 +37,6 @@ public class Main extends ApplicationAdapter {
 
     private MainStageUI gui;
     private Skin skin;
-    // private Scene scene;
-    // private ViewportNodeOrthographic fillViewport;
     private AssetManager assetManager;
     private Loading loading;
     private Save save;
@@ -49,6 +45,7 @@ public class Main extends ApplicationAdapter {
     private InputFactory inputFactory;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
+    private SpriteBatch spriteBatch;
 
     @Override
     public void create() {
@@ -69,6 +66,8 @@ public class Main extends ApplicationAdapter {
         loading = new Loading();
 
         asyncExecutor = new AsyncExecutor(1);
+
+        this.spriteBatch = new SpriteBatch();
 
         status = Status.MainLoading;
 
@@ -207,6 +206,14 @@ public class Main extends ApplicationAdapter {
             mainMenu.resize(width, height);
         }
 
+        if (gui != null) {
+            gui.resize(width, height);
+        }
+
+        if (save != null && save.getScene() != null) {
+            save.getScene().resize(width, height);
+        }
+
         // fillViewport.getViewport().update(width, height);
         // gui.resize(width, height);
         // scene.resize(width, height);
@@ -235,10 +242,19 @@ public class Main extends ApplicationAdapter {
         } else if (status == Status.MainMenuLoadingFinish) {
             mainMenu.logic(delta);
             mainMenu.render();
-        } else if (gameGenerateProcessor != null && !gameGenerateProcessor.update()) {
+        } else if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
             loading.setProgressValue(gameGenerateProcessor.getProgress());
             loading.logic(delta);
             loading.render();
+        } else if (status == Status.GameGenerating && gameGenerateProcessor != null) {
+            this.save = gameGenerateProcessor.getSave();
+            this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            this.status = Status.GameReadyGo;
+
+            this.loading.setProgressValue(1f);
+            this.loading.logic(delta);
+            this.loading.render();
         } else if (save != null && gui != null) {
             // 处理场景的逻辑
             save.getScene().logic(delta);
@@ -272,16 +288,17 @@ public class Main extends ApplicationAdapter {
         if (save != null) {
             save.dispose();
             save = null;
-            gui = null;
         }
 
-        // Scene scene = new Scene(assetManager);
-        // scene.setInputFactory(inputFactory);
+        if (gui == null) {
+            gui = new MainStageUI(skin);
+        }
 
         GameGenerateData gameGenerateData = new GameGenerateData();
         gameGenerateData.mapSeed = UUID.randomUUID().toString();
-        gameGenerateData.scene = new Scene(assetManager);
-        gameGenerateData.scene.setInputFactory(inputFactory);
+        gameGenerateData.spriteBatch = this.spriteBatch;
+        gameGenerateData.inputFactory = inputFactory;
+        gameGenerateData.assetManager = assetManager;
 
         gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData);
 

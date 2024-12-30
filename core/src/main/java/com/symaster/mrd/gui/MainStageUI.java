@@ -24,17 +24,13 @@ public class MainStageUI extends Stage {
     private Table table;
     private List<FooterMenuContainer> footerMenus;
 
-    public MainStageUI() {
+    public MainStageUI(Skin skin) {
         super(new ScreenViewport());
-    }
 
-    public static MainStageUI create(Skin skin) {
-        MainStageUI mainStageUI = new MainStageUI();
+        this.table = new Table();
+        this.footerMenus = new ArrayList<>();
 
-        mainStageUI.table = new Table();
-        mainStageUI.footerMenus = new ArrayList<>();
-
-        List<FooterMenu> footerMenus = mainStageUI.findFooterMenus().stream()
+        List<FooterMenu> footerMenus = this.findFooterMenus().stream()
                 .sorted(Comparator.comparingInt(FooterMenu::sort))
                 .collect(Collectors.toList());
 
@@ -42,18 +38,16 @@ public class MainStageUI extends Stage {
             TextButton textButton = new TextButton(o.title(), skin);
             FooterMenuContainer m = new FooterMenuContainer(o, textButton);
 
-            mainStageUI.footerMenus.add(m);
-            mainStageUI.table.add(m.getMenuBtn()).expand().fill();
+            this.footerMenus.add(m);
+            this.table.add(m.getMenuBtn()).expand().fill();
             if (m.getFooterMenu().panel() != null) {
                 m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
-                mainStageUI.addActor(m.getMenuActor());
+                this.addActor(m.getMenuActor());
                 m.getMenuActor().setVisible(false);
             }
         }
 
-        mainStageUI.addActor(mainStageUI.table);
-
-        return mainStageUI;
+        this.addActor(this.table);
     }
 
     public List<FooterMenu> findFooterMenus() {
