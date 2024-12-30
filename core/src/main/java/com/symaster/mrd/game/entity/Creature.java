@@ -35,6 +35,18 @@ public class Creature extends Node {
      * ai
      */
     private AI ai;
+    /**
+     * 是否是活着的
+     */
+    private boolean alive;
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void setAlive(boolean alive) {
+        this.alive = alive;
+    }
 
     public Creature(Race race) {
         this.race = race;
