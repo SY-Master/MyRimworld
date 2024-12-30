@@ -7,6 +7,8 @@ import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
+import com.symaster.mrd.game.entity.Gender;
+import com.symaster.mrd.game.entity.Human;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -69,6 +71,15 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         }
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, blocks, gameGenerateData.spriteBatch);
+        scene.setInputFactory(gameGenerateData.inputFactory);
+
+        Human human = new Human(gameGenerateData.assetManager);
+        human.setVisible(true);
+        human.setActivityBlockSize(3);
+        human.setHp(1f);
+        human.setHpMax(100f);
+        human.setGender(Gender.MALE);
+        scene.add(human);
 
         Save save = new Save();
         save.setScene(scene);

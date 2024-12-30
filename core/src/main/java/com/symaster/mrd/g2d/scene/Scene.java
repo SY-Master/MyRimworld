@@ -412,8 +412,16 @@ public class Scene implements Serializable, Disposable {
         }
 
         spriteBatch.begin();
-        renderCache.nodes.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(node -> node.draw(spriteBatch));
+        renderCache.nodes.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(this::drawNode);
         spriteBatch.end();
+    }
+
+    private void drawNode(Node node) {
+        node.draw(spriteBatch);
+
+        for (Node child : node) {
+            drawNode(child);
+        }
     }
 
     private void find(int blockXNumber, int blockYNumber, int x, int y, List<Node> result) {
