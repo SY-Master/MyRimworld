@@ -39,10 +39,6 @@ public class Scene implements Serializable, Disposable {
      * 分区块Node表
      */
     private final Map<Block, Set<Node>> nodes;
-    // /**
-    //  * 分区块地图表
-    //  */
-    // private final Map<Block, Set<Node>> mapNodes;
     /**
      * 激活区块的节点
      */
@@ -71,16 +67,16 @@ public class Scene implements Serializable, Disposable {
     private final Cache renderCache;
     private InputFactory inputFactory;
 
-    public Scene(AssetManager assetManager) {
-        this(assetManager, UUID.randomUUID().toString(), UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null); // 默认区块边长10米
+    public Scene(AssetManager assetManager, SpriteBatch spriteBatch) {
+        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, SpriteBatch spriteBatch) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, SpriteBatch spriteBatch) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, spriteBatch); // 默认区块边长10米
     }
 
     /**
@@ -91,15 +87,19 @@ public class Scene implements Serializable, Disposable {
      * @param blockSize    区块大小
      * @param initBlocks   构建场景时初始化区块
      */
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, SpriteBatch spriteBatch) {
         this.blockSize = blockSize;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
         this.orthographicCameraNodes = new HashSet<>();
         this.renderCache = new Cache();
-        this.mapSeed = mapSeed;
-        this.spriteBatch = new SpriteBatch();
+        if (mapSeed == null) {
+            this.mapSeed = UUID.randomUUID().toString();
+        } else {
+            this.mapSeed = mapSeed;
+        }
+        this.spriteBatch = spriteBatch;
         this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
@@ -207,6 +207,11 @@ public class Scene implements Serializable, Disposable {
         }
 
         Block blockIndex = getBlockIndex(node.getPositionX(), node.getPositionY());
+
+        if (!nodes.containsKey(blockIndex)) {
+            blockMapGenerate.addGenerateQueue(blockIndex);
+            nodes.put(blockIndex, new HashSet<>());
+        }
 
         nodes.computeIfAbsent(blockIndex, x -> new HashSet<>()).add(node);
 
@@ -398,7 +403,7 @@ public class Scene implements Serializable, Disposable {
             int blockXNumber = (int) Math.ceil(viewport.getWidth() / blockSize) + 1;
             int blockYNumber = (int) Math.ceil(viewport.getHeight() / blockSize) + 1;
 
-            findAndAdd(blockXNumber, blockYNumber, x, y, renderCache.nodes);
+            find(blockXNumber, blockYNumber, x, y, renderCache.nodes);
         }
 
         if (camera != null) {
@@ -411,7 +416,7 @@ public class Scene implements Serializable, Disposable {
         spriteBatch.end();
     }
 
-    private void findAndAdd(int blockXNumber, int blockYNumber, int x, int y, List<Node> nodeSet) {
+    private void find(int blockXNumber, int blockYNumber, int x, int y, List<Node> result) {
         for (int i = 0; i < blockXNumber; i++) {
             for (int j = 0; j < blockYNumber; j++) {
                 renderCache.cacheBlock = new Block(x + i, y + j);
@@ -420,7 +425,7 @@ public class Scene implements Serializable, Disposable {
                     if (nodes1 != null) {
                         for (Node node : nodes1) {
                             if (node.isVisible()) {
-                                nodeSet.add(node);
+                                result.add(node);
                             }
                         }
                     }

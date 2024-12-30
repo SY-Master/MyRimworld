@@ -1,13 +1,15 @@
 package com.symaster.mrd.game;
 
-import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.async.AsyncTask;
+import com.badlogic.gdx.utils.async.ThreadUtils;
+import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
-import com.symaster.mrd.input.InputFactory;
 
-import java.util.UUID;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * @author yinmiao
@@ -32,36 +34,49 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         return finished;
     }
 
+    public boolean update(int millis) {
+
+        long endTime = TimeUtils.millis() + millis;
+        while (true) {
+            boolean done = update();
+            if (done || TimeUtils.millis() > endTime) return done;
+            ThreadUtils.yield();
+        }
+    }
+
     public Save getSave() {
         return save;
     }
 
     @Override
     public Save call() throws Exception {
-
-
-
-        finished = true;
-        return null;
+        try {
+            return generate();
+        } catch (Exception e) {
+            e.printStackTrace(System.err);
+            throw e;
+        }
     }
 
-    // @Override
-    // public void run() {
-    //
-    //     String mapSeed;
-    //     if (gameGenerateData.mapSeed == null) {
-    //         mapSeed = UUID.randomUUID().toString();
-    //     } else {
-    //         mapSeed = gameGenerateData.mapSeed;
-    //     }
-    //
-    //     progress = 0.01f;
-    //
-    //     save = new Save();
-    //
-    //     Scene scene = gameGenerateData.scene;
-    //     save.setScene(scene);
-    //
-    //     progress = 0.15f;
-    // }
+    private Save generate() {
+        List<Block> blocks = new ArrayList<>();
+
+        int initSize = 10;
+        for (int x = -initSize; x < initSize; x++) {
+            for (int y = -initSize; y < initSize; y++) {
+                blocks.add(new Block(x, y));
+            }
+        }
+
+        Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, blocks, gameGenerateData.spriteBatch);
+
+        Save save = new Save();
+        save.setScene(scene);
+
+        this.save = save;
+
+        finished = true;
+        return save;
+    }
+
 }

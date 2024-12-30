@@ -10,6 +10,7 @@ public enum Status {
     SkinLoadingFinish,
     MainMenuLoadingFinish,
     GameGenerating,
+    GameReadyGo,
     ;
 
 

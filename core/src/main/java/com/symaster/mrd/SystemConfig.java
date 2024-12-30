@@ -23,6 +23,10 @@ public class SystemConfig {
      */
     public static float BLOCK_SIZE = 10f;
     /**
+     * 一个区块的地板数量
+     */
+    public static int MAP_NUMBER = 10;
+    /**
      * 时间缩放
      */
     public static float TIME_SCALE = 1f;
