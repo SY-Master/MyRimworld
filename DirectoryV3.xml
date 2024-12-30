@@ -22,4 +22,13 @@
     <tree path="/core/src/main/java/com/symaster/mrd/input/InputFactory.java" title="输入处理器工厂"/>
     <tree path="/core/src/main/java/com/symaster/mrd/input/ScrolledInput.java" title="鼠标滚轮输入"/>
     <tree path="/core/src/main/java/com/symaster/mrd/input/WASDInput.java" title="WASD输入"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/scene" title="场景"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/tansform" title="变换组件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game" title="游戏"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d" title="2D绘制相关"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/drawable" title="绘制器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api" title="接口"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/gui" title="界面组件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/input" title="输入组件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/SystemConfig.java" title="配置"/>
 </trees>

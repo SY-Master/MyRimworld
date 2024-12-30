@@ -270,6 +270,7 @@ public class Main extends ApplicationAdapter {
 
         if (gui == null) {
             gui = new MainStageUI(skin);
+            inputFactory.add(gui);
         }
 
         GameGenerateData gameGenerateData = new GameGenerateData();
