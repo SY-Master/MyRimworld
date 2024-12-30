@@ -1,18 +1,24 @@
-package com.symaster.mrd.gui.footermenu;
+package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.symaster.mrd.gui.FooterMenu;
+import com.symaster.mrd.game.ui.FooterMenu;
+import com.symaster.mrd.game.ui.MainStageUI;
 import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.util.GdxText;
 
 /**
  * @author yinmiao
- * @since 2024/12/27
+ * @since 2024/12/16
  */
-public class Building implements FooterMenu {
+public class Partner extends FooterMenu {
+
+    public Partner(MainStageUI mainStageUI) {
+        super(mainStageUI);
+    }
+
     @Override
     public String title() {
-        return GdxText.val("建筑规划");
+        return GdxText.val("伙伴列表");
     }
 
     @Override
@@ -25,8 +31,4 @@ public class Building implements FooterMenu {
         return null;
     }
 
-    @Override
-    public int sort() {
-        return -1;
-    }
 }

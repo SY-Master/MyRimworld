@@ -1,6 +1,7 @@
 package com.symaster.mrd.gui;
 
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.symaster.mrd.game.ui.FooterMenu;
 
 /**
  * @author yinmiao
