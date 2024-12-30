@@ -22,13 +22,12 @@ import java.util.stream.Collectors;
  */
 public class MainStageUI extends Stage {
 
-    private Table table;
-    private List<FooterMenuContainer> footerMenus;
+    private final Table table;
+    private final List<FooterMenuContainer> footerMenus;
     private Scene scene;
 
     public MainStageUI(Skin skin) {
         super(new ScreenViewport());
-
         this.table = new Table();
         this.footerMenus = new ArrayList<>();
 

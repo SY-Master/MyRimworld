@@ -3,6 +3,7 @@ package com.symaster.mrd.game;
 import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.async.ThreadUtils;
+import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.data.GameGenerateData;
@@ -74,9 +75,9 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, blocks, gameGenerateData.spriteBatch);
         scene.setInputFactory(gameGenerateData.inputFactory);
 
-        Human human = new Human(gameGenerateData.assetManager);
+        Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin);
         human.setZIndex(100);
-        human.setActivityBlockSize(3);
+        human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         human.setHp(1f);
         human.setHpMax(100f);
         human.setGender(Gender.MALE);
@@ -84,7 +85,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         HumanNameGenerator humanNameGenerator = new HumanNameGenerator();
         human.setName(humanNameGenerator.generateName());
 
-        scene.add(human);
+        scene.add(human, Groups.PARTNER);
 
         Save save = new Save();
         save.setScene(scene);

@@ -13,6 +13,7 @@ public class LabelNode extends Node {
 
     public LabelNode(Label label) {
         this.label = label;
+        setVisible(true);
     }
 
     @Override
@@ -22,6 +23,6 @@ public class LabelNode extends Node {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        label.draw(spriteBatch, 0.5f);
+        label.draw(spriteBatch, 1f);
     }
 }

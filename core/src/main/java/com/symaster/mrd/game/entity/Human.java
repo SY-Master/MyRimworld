@@ -5,8 +5,9 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.symaster.mrd.g2d.LabelNode;
 import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.util.GdxText;
 import com.symaster.mrd.util.UnitUtil;
 
 /**
@@ -17,9 +18,10 @@ import com.symaster.mrd.util.UnitUtil;
  */
 public class Human extends Creature {
 
-    private SpriteNode nodes;
+    private final SpriteNode nodes;
+    private final Label label;
 
-    public Human(AssetManager assetManager) {
+    public Human(AssetManager assetManager, Skin skin) {
         Texture texture = assetManager.get("user.png", Texture.class);
 
         Sprite  sprite = new Sprite(texture);
@@ -27,15 +29,24 @@ public class Human extends Creature {
 
         add((nodes = new SpriteNode(sprite)));
 
-        // Label label = new Label(GdxText.val(""), );
+        label = new Label(getName(), skin.get("nameLabel", Label.LabelStyle.class));
+        label.setFontScale(0.3f);
 
-
+        LabelNode nodes1 = new LabelNode(label);
+        nodes1.setPositionY(-5);
+        add(nodes1);
 
         setVisible(true);
 
         if (getGender() != null) {
             updateSpriteColor();
         }
+    }
+
+    @Override
+    public void setName(String name) {
+        super.setName(name);
+        label.setText(name);
     }
 
     private void updateSpriteColor() {
