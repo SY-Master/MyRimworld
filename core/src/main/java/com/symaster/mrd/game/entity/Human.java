@@ -22,6 +22,7 @@ public class Human extends Creature {
     private final Label label;
 
     public Human(AssetManager assetManager, Skin skin) {
+        super(Race.Human);
         Texture texture = assetManager.get("user.png", Texture.class);
 
         Sprite  sprite = new Sprite(texture);
