@@ -2,6 +2,7 @@ package com.symaster.mrd.game.data;
 
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.input.InputFactory;
 
@@ -31,4 +32,5 @@ public class GameGenerateData {
      */
     public SpriteBatch spriteBatch;
 
+    public Skin skin;
 }

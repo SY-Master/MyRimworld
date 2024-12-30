@@ -43,6 +43,9 @@ public class Scene implements Serializable, Disposable {
      * 激活区块的节点
      */
     private final Map<Node, Set<Block>> activityBlockMap;
+
+    private final Map<String, Set<Node>> nodeGroups;
+
     /**
      * 激活的区块
      */
@@ -94,6 +97,7 @@ public class Scene implements Serializable, Disposable {
         this.activeBlocks = new HashSet<>();
         this.orthographicCameraNodes = new HashSet<>();
         this.renderCache = new Cache();
+        this.nodeGroups = new HashMap<>();
         if (mapSeed == null) {
             this.mapSeed = UUID.randomUUID().toString();
         } else {
@@ -202,8 +206,19 @@ public class Scene implements Serializable, Disposable {
      * 添加节点，只能添加跟节点
      */
     public void add(Node node) {
+        add(node, null);
+    }
+
+    /**
+     * 添加节点，只能添加跟节点
+     */
+    public void add(Node node, String group) {
         if (node.getParent() != null) {
             throw new RuntimeException("不能将子节点放置到场景中");
+        }
+
+        if (group != null && !group.isEmpty()) {
+            nodeGroups.computeIfAbsent(group, k -> new HashSet<>()).add(node);
         }
 
         Block blockIndex = getBlockIndex(node.getPositionX(), node.getPositionY());

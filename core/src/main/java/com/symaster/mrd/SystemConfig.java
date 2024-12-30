@@ -34,5 +34,9 @@ public class SystemConfig {
      * GUI缩放因子
      */
     public static float GUI_SCALE = 1f;
+    /**
+     * 激活伙伴周围的区块
+     */
+    public static int PARTNER_ACTIVE_SIZE = 3;
 
 }

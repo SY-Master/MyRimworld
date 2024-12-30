@@ -3,6 +3,7 @@ package com.symaster.mrd;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
@@ -10,6 +11,7 @@ import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
@@ -145,6 +147,10 @@ public class Main extends ApplicationAdapter {
         TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, skin.getFont("font-16"));
         textButtonStyle.focused = nDFocused;
         skin.add("default", textButtonStyle);
+
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("font-16"), new Color(0, 0, 0, 1f));
+        skin.add("nameLabel", style);
+
         return skin;
     }
 
@@ -287,6 +293,7 @@ public class Main extends ApplicationAdapter {
         gameGenerateData.spriteBatch = this.spriteBatch;
         gameGenerateData.inputFactory = inputFactory;
         gameGenerateData.assetManager = assetManager;
+        gameGenerateData.skin = skin;
         asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
 
         status = Status.GameGenerating;
