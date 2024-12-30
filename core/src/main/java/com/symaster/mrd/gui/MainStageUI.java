@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
@@ -23,6 +24,7 @@ public class MainStageUI extends Stage {
 
     private Table table;
     private List<FooterMenuContainer> footerMenus;
+    private Scene scene;
 
     public MainStageUI(Skin skin) {
         super(new ScreenViewport());
@@ -79,6 +81,10 @@ public class MainStageUI extends Stage {
      * @param delta Time in seconds since the last frame.
      */
     public void logic(float delta) {
+        if (scene == null) {
+            return;
+        }
+
         for (FooterMenuContainer footerMenu : footerMenus) {
             if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
                 footerMenu.getMenuBtn().toggle();
@@ -97,7 +103,15 @@ public class MainStageUI extends Stage {
     }
 
     public void render() {
+        if (scene == null) {
+            return;
+        }
+
         getViewport().apply();
         draw();
+    }
+
+    public void setScene(Scene scene) {
+        this.scene = scene;
     }
 }

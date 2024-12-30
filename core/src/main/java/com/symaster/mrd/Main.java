@@ -15,7 +15,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
-import com.badlogic.gdx.utils.async.AsyncResult;
+import com.symaster.mrd.g2d.ViewportNodeOrthographic;
+import com.symaster.mrd.g2d.tansform.TransformMove;
+import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.GameGenerateProcessor;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
@@ -23,7 +25,9 @@ import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
 import com.symaster.mrd.gui.MainStageUI;
 import com.symaster.mrd.input.InputFactory;
+import com.symaster.mrd.input.WASDInput;
 import com.symaster.mrd.util.GdxText;
+import com.symaster.mrd.util.UnitUtil;
 
 import java.util.List;
 import java.util.UUID;
@@ -46,6 +50,20 @@ public class Main extends ApplicationAdapter {
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
     private SpriteBatch spriteBatch;
+    private ViewportNodeOrthographic cam;
+
+    private ViewportNodeOrthographic getCam() {
+        ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
+        cam.setActivityBlockSize(1);
+        WASDInput wasdInput = new WASDInput();
+        cam.add(wasdInput);
+        TransformMove transformMove = new TransformMove(wasdInput.getVector2(), cam);
+        transformMove.setSpeed(UnitUtil.ofM(18));
+        cam.add(transformMove);
+
+        cam.add(new TransformZoom(cam.getCamera(), cam));
+        return cam;
+    }
 
     @Override
     public void create() {
@@ -60,15 +78,12 @@ public class Main extends ApplicationAdapter {
         assetManager.load("white.png", Texture.class);
         assetManager.load("left.png", Texture.class);
 
-        inputFactory = new InputFactory();
+        this.inputFactory = new InputFactory();
         Gdx.input.setInputProcessor(inputFactory);
-
-        loading = new Loading();
-
-        asyncExecutor = new AsyncExecutor(1);
-
+        this.loading = new Loading();
+        this.asyncExecutor = new AsyncExecutor(1);
         this.spriteBatch = new SpriteBatch();
-
+        this.cam = getCam();
         status = Status.MainLoading;
 
         // skin = defaultSkin(assetManager);
@@ -109,18 +124,7 @@ public class Main extends ApplicationAdapter {
         // scene.add(nodes);
         // scene.add(nodes1);
 
-        // fillViewport = new ViewportNodeOrthographic(960, 540);
-        // fillViewport.setActivityBlockSize(1);
-        // WASDInput wasdInput = new WASDInput();
-        // fillViewport.add(wasdInput);
-        //
-        // TransformMove transformMove = new TransformMove(wasdInput.getVector2(), fillViewport);
-        // transformMove.setSpeed(UnitUtil.ofM(18));
-        // fillViewport.add(transformMove);
-        //
-        // TransformZoom nodes2 = new TransformZoom(fillViewport.getCamera(), fillViewport);
-        // fillViewport.add(nodes2);
-        //
+
         // nodes1.add(fillViewport);
     }
 
@@ -192,6 +196,10 @@ public class Main extends ApplicationAdapter {
             save.getScene().resize(width, height);
         }
 
+        if (cam != null) {
+            cam.getViewport().update(width, height);
+        }
+
         // fillViewport.getViewport().update(width, height);
         // gui.resize(width, height);
         // scene.resize(width, height);
@@ -220,19 +228,21 @@ public class Main extends ApplicationAdapter {
         } else if (status == Status.MainMenuLoadingFinish) {
             mainMenu.logic(delta);
             mainMenu.render();
-        } else if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
+        } else if (status == Status.GameGenerating && gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
             loading.setProgressValue(gameGenerateProcessor.getProgress());
             loading.logic(delta);
             loading.render();
         } else if (status == Status.GameGenerating && gameGenerateProcessor != null) {
             this.save = gameGenerateProcessor.getSave();
             this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            this.save.getScene().add(cam);
             this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            this.status = Status.GameReadyGo;
+            this.gui.setScene(save.getScene());
 
             this.loading.setProgressValue(1f);
             this.loading.logic(delta);
             this.loading.render();
+            this.status = Status.GameReadyGo;
         } else if (save != null && gui != null) {
             // 处理场景的逻辑
             save.getScene().logic(delta);
@@ -278,10 +288,7 @@ public class Main extends ApplicationAdapter {
         gameGenerateData.spriteBatch = this.spriteBatch;
         gameGenerateData.inputFactory = inputFactory;
         gameGenerateData.assetManager = assetManager;
-
-        gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData);
-
-        AsyncResult<Save> submit = asyncExecutor.submit(gameGenerateProcessor);
+        asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
 
         status = Status.GameGenerating;
     }

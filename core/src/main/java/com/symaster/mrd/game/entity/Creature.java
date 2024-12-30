@@ -23,4 +23,27 @@ public class Creature extends Node {
      */
     private Gender gender;
 
+    public float getHp() {
+        return hp;
+    }
+
+    public void setHp(float hp) {
+        this.hp = hp;
+    }
+
+    public float getHpMax() {
+        return hpMax;
+    }
+
+    public void setHpMax(float hpMax) {
+        this.hpMax = hpMax;
+    }
+
+    public Gender getGender() {
+        return gender;
+    }
+
+    public void setGender(Gender gender) {
+        this.gender = gender;
+    }
 }

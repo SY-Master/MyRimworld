@@ -28,7 +28,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private static Set<Node> getMapSize(float mapSize, TextureRegion textureRegion) {
+    private Set<Node> getMapSize(float mapSize, TextureRegion textureRegion) {
         Set<Node> rtn = new HashSet<>();
 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
@@ -40,6 +40,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
                 sprite.setSize(mapSize, mapSize);
 
                 SpriteNode map = new SpriteNode(sprite);
+                map.setVisible(true);
                 map.setPosition(mapX, mapY);
                 rtn.add(map);
             }
