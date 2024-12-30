@@ -291,13 +291,13 @@ public class Scene implements Serializable, Disposable {
         addToMap();
 
         // 调用所有激活区块内组件的逻辑方法
-        actBlockNodes(delta);
+        nodesLogic(delta);
 
         // 独立处理摄像头的逻辑方法
-        actCamera(delta);
+        cameraLogic(delta);
 
         // 更新移动过的组件的区块位置
-        blocksUpdate();
+        nodesUpdate();
 
         // 新区块申请创建，逻辑：地图表内不存在的激活区块
         addToGenerateQueue();
@@ -330,13 +330,13 @@ public class Scene implements Serializable, Disposable {
         }
     }
 
-    private void actCamera(float delta) {
+    private void cameraLogic(float delta) {
         for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
-            actNodeLogic(orthographicCameraNode, delta, false);
+            nodeLogic(orthographicCameraNode, delta, false, 0, 0);
         }
     }
 
-    private void actBlockNodes(float delta) {
+    private void nodesLogic(float delta) {
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
             if (nodes1 == null || nodes1.isEmpty()) {
@@ -344,30 +344,36 @@ public class Scene implements Serializable, Disposable {
             }
 
             for (Node node : nodes1) {
-                actNodeLogic(node, delta, true);
+                nodeLogic(node, delta, true, 0f, 0f);
             }
         }
     }
 
-    private void actNodeLogic(Node node, float delta, boolean skipCam) {
+    private void nodeLogic(Node node, float delta, boolean skipCam, float parentX, float parentY) {
         if (node instanceof OrthographicCameraNode && skipCam) {
             return;
         }
 
         // 处理每个节点的逻辑
         node.logic(delta);
-        // 让节点更新显示组件的坐标
-        node.updateViewPosition(0, 0);
 
+        // 显示组件的世界坐标
+        float worldX = node.getPositionX() + parentX;
+        float worldY = node.getPositionY() + parentY;
+
+        // 让节点更新显示组件的坐标
+        node.setGdxNodePosition(worldX, worldY);
+
+        // 所有子节点
         for (Node c : node) {
-            actNodeLogic(c, delta, skipCam);
+            nodeLogic(c, delta, skipCam, worldX, worldY);
         }
     }
 
     /**
      * 更新移动过的组件的区块位置
      */
-    private void blocksUpdate() {
+    private void nodesUpdate() {
         for (MoveNodeCache moveNode : renderCache.moveNodes) {
             Block oldIndex = getBlockIndex(moveNode.oldX, moveNode.oldY);
             Block newIndex = getBlockIndex(moveNode.newX, moveNode.newY);

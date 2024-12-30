@@ -348,22 +348,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     /**
-     * 更新自身场景显示的位置
-     *
-     * @param x 父级位置
-     * @param y 父级位置
-     */
-    public void updateViewPosition(float x, float y) {
-        float thisX = this.positionX + x;
-        float thisY = this.positionY + y;
-        this.setGdxNodePosition(thisX, thisY);
-
-        for (Node node : this) {
-            node.updateViewPosition(thisX, thisY);
-        }
-    }
-
-    /**
      * 设置显示组件的世界位置
      */
     public void setGdxNodePosition(float x, float y) {
