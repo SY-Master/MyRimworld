@@ -34,4 +34,7 @@
     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Save.java" title="存档"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/GameGenerateData.java" title="游戏生成器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/service" title="逻辑"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity" title="实体"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui" title="UI控件" extension="" presentableText=""
+          tooltipTitle="" icon="" textColor="" backgroundColor=""/>
 </trees>

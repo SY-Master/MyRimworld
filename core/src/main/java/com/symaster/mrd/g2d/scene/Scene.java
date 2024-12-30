@@ -139,6 +139,10 @@ public class Scene implements Serializable, Disposable {
         return nodes;
     }
 
+    public Set<Node> getByGroup(String groupName) {
+        return nodeGroups.get(groupName);
+    }
+
     public Map<Node, Set<Block>> getActivityBlockMap() {
         return activityBlockMap;
     }

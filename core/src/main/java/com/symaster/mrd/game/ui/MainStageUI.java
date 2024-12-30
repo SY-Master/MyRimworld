@@ -1,4 +1,4 @@
-package com.symaster.mrd.gui;
+package com.symaster.mrd.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -6,15 +6,19 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.ui.footermenu.Building;
+import com.symaster.mrd.game.ui.footermenu.Creature;
+import com.symaster.mrd.game.ui.footermenu.Partner;
+import com.symaster.mrd.game.ui.footermenu.Setting;
+import com.symaster.mrd.gui.FooterMenuContainer;
+import com.symaster.mrd.gui.MenuActor;
 import com.symaster.mrd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author yinmiao
@@ -31,24 +35,37 @@ public class MainStageUI extends Stage {
         this.table = new Table();
         this.footerMenus = new ArrayList<>();
 
-        List<FooterMenu> footerMenus = this.findFooterMenus().stream()
-                .sorted(Comparator.comparingInt(FooterMenu::sort))
-                .collect(Collectors.toList());
-
-        for (FooterMenu o : footerMenus) {
-            TextButton textButton = new TextButton(o.title(), skin);
-            FooterMenuContainer m = new FooterMenuContainer(o, textButton);
-
-            this.footerMenus.add(m);
-            this.table.add(m.getMenuBtn()).expand().fill();
-            if (m.getFooterMenu().panel() != null) {
-                m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
-                this.addActor(m.getMenuActor());
-                m.getMenuActor().setVisible(false);
-            }
-        }
+        addTo(skin, new Building(this));
+        addTo(skin, new Creature(this));
+        addTo(skin, new Partner(this));
+        addTo(skin, new Setting(this));
 
         this.addActor(this.table);
+    }
+
+    public Table getTable() {
+        return table;
+    }
+
+    public List<FooterMenuContainer> getFooterMenus() {
+        return footerMenus;
+    }
+
+    public Scene getScene() {
+        return scene;
+    }
+
+    private void addTo(Skin skin, FooterMenu o) {
+        TextButton textButton = new TextButton(o.title(), skin);
+        FooterMenuContainer m = new FooterMenuContainer(o, textButton);
+
+        this.footerMenus.add(m);
+        this.table.add(m.getMenuBtn()).expand().fill();
+        if (m.getFooterMenu().panel() != null) {
+            m.setMenuActor(new MenuActor(m.getFooterMenu().panel()));
+            this.addActor(m.getMenuActor());
+            m.getMenuActor().setVisible(false);
+        }
     }
 
     public List<FooterMenu> findFooterMenus() {
@@ -85,20 +102,24 @@ public class MainStageUI extends Stage {
         }
 
         for (FooterMenuContainer footerMenu : footerMenus) {
-            if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
-                footerMenu.getMenuBtn().toggle();
-
-                for (FooterMenuContainer menu : footerMenus) {
-                    MenuActor menuActor = menu.getMenuActor();
-                    if (menuActor.isVisible()) {
-                        menuActor.setVisible(false);
-                    }
-                }
-
-                MenuActor menuActor = footerMenu.getMenuActor();
-                menuActor.setVisible(true);
-            }
+            footerMenu.getFooterMenu().logic(delta);
         }
+
+        // for (FooterMenuContainer footerMenu : footerMenus) {
+        //     if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
+        //         footerMenu.getMenuBtn().toggle();
+        //
+        //         for (FooterMenuContainer menu : footerMenus) {
+        //             MenuActor menuActor = menu.getMenuActor();
+        //             if (menuActor.isVisible()) {
+        //                 menuActor.setVisible(false);
+        //             }
+        //         }
+        //
+        //         MenuActor menuActor = footerMenu.getMenuActor();
+        //         menuActor.setVisible(true);
+        //     }
+        // }
     }
 
     public void render() {
