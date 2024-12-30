@@ -10,4 +10,16 @@
      <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Human.java" title="人类"/>
      <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Creature.java" title="生物实体"/>
      <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Race.java" title="种族"/>
- </trees>
+     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Gender.java" title="性别枚举"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/BlockMapGenerateProcessorImpl.java" title="区块生成器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/GameGenerateProcessor.java" title="新游戏生成器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/Loading.java" title="加载页面"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/MainMenu.java" title="主菜单"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/page/MainMenuBtn.java" title="主菜单按钮"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/page/PlayGameSetting.java" title="开始游戏页面"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/data/Save.java" title="游戏核心-存档"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/data/GameGenerateData.java" title="新游戏生成参数实体"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/input/InputFactory.java" title="输入处理器工厂"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/input/ScrolledInput.java" title="鼠标滚轮输入"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/input/WASDInput.java" title="WASD输入"/>
+</trees>
