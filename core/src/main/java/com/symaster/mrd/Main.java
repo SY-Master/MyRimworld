@@ -13,8 +13,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.badlogic.gdx.utils.async.AsyncResult;
+import com.badlogic.gdx.utils.async.AsyncTask;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.BlockMapGenerateProcessorImpl;
+import com.symaster.mrd.game.GameGenerateProcessor;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
 import com.symaster.mrd.game.ui.Loading;
@@ -24,6 +28,7 @@ import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.GdxText;
 
 import java.util.List;
+import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -42,6 +47,8 @@ public class Main extends ApplicationAdapter {
     private Status status;
     private MainMenu mainMenu;
     private InputFactory inputFactory;
+    private GameGenerateProcessor gameGenerateProcessor;
+    private AsyncExecutor asyncExecutor;
 
     @Override
     public void create() {
@@ -60,6 +67,8 @@ public class Main extends ApplicationAdapter {
         Gdx.input.setInputProcessor(inputFactory);
 
         loading = new Loading();
+
+        asyncExecutor = new AsyncExecutor(1);
 
         status = Status.MainLoading;
 
@@ -226,6 +235,10 @@ public class Main extends ApplicationAdapter {
         } else if (status == Status.MainMenuLoadingFinish) {
             mainMenu.logic(delta);
             mainMenu.render();
+        } else if (gameGenerateProcessor != null && !gameGenerateProcessor.update()) {
+            loading.setProgressValue(gameGenerateProcessor.getProgress());
+            loading.logic(delta);
+            loading.render();
         } else if (save != null && gui != null) {
             // 处理场景的逻辑
             save.getScene().logic(delta);
@@ -256,11 +269,25 @@ public class Main extends ApplicationAdapter {
      * 开始游戏
      */
     private void playGameClick() {
-        Scene scene = new Scene(assetManager);
-        scene.setInputFactory(inputFactory);
+        if (save != null) {
+            save.dispose();
+            save = null;
+            gui = null;
+        }
+
+        // Scene scene = new Scene(assetManager);
+        // scene.setInputFactory(inputFactory);
 
         GameGenerateData gameGenerateData = new GameGenerateData();
+        gameGenerateData.mapSeed = UUID.randomUUID().toString();
+        gameGenerateData.scene = new Scene(assetManager);
+        gameGenerateData.scene.setInputFactory(inputFactory);
 
+        gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData);
+
+        AsyncResult<Save> submit = asyncExecutor.submit(gameGenerateProcessor);
+
+        status = Status.GameGenerating;
     }
 
     @Override

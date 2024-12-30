@@ -39,10 +39,10 @@ public class Scene implements Serializable, Disposable {
      * 分区块Node表
      */
     private final Map<Block, Set<Node>> nodes;
-    /**
-     * 分区块地图表
-     */
-    private final Map<Block, Set<Node>> mapNodes;
+    // /**
+    //  * 分区块地图表
+    //  */
+    // private final Map<Block, Set<Node>> mapNodes;
     /**
      * 激活区块的节点
      */
@@ -63,6 +63,7 @@ public class Scene implements Serializable, Disposable {
      * 区块生成器
      */
     private final BlockMapGenerate blockMapGenerate;
+
     private final ActivityBlockSizeExtend activityBlockSizeExtend;
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
@@ -71,16 +72,31 @@ public class Scene implements Serializable, Disposable {
     private InputFactory inputFactory;
 
     public Scene(AssetManager assetManager) {
-        this(assetManager, UUID.randomUUID().toString(), UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
+        this(assetManager, UUID.randomUUID().toString(), UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize) {
+    public Scene(AssetManager assetManager, String mapSeed) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null); // 默认区块边长10米
+    }
+
+    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks); // 默认区块边长10米
+    }
+
+    /**
+     * 构建场景
+     *
+     * @param assetManager 资源管理器
+     * @param mapSeed      种子
+     * @param blockSize    区块大小
+     * @param initBlocks   构建场景时初始化区块
+     */
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks) {
         this.blockSize = blockSize;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
         this.orthographicCameraNodes = new HashSet<>();
-        this.mapNodes = new HashMap<>();
         this.renderCache = new Cache();
         this.mapSeed = mapSeed;
         this.spriteBatch = new SpriteBatch();
@@ -88,9 +104,23 @@ public class Scene implements Serializable, Disposable {
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
         this.blockMapGenerate = new BlockMapGenerate(this, assetManager);
-        Thread thread = new Thread(this.blockMapGenerate);
-        thread.setName("BlockMapGenerate");
-        thread.start();
+
+        // 同步初始化区块
+        if (initBlocks != null) {
+            initBlocks(initBlocks);
+        }
+    }
+
+    /**
+     * 同步初始化区块
+     *
+     * @param initBlocks 指定区块
+     */
+    private void initBlocks(List<Block> initBlocks) {
+        for (Block initBlock : initBlocks) {
+            Set<Node> generate = this.blockMapGenerate.getBlockMapGenerateProcessor().generate(this, initBlock);
+            nodes.computeIfAbsent(initBlock, k -> new HashSet<>()).addAll(generate);
+        }
     }
 
     public String getMapSeed() {
@@ -268,21 +298,28 @@ public class Scene implements Serializable, Disposable {
         addToGenerateQueue();
     }
 
+    /**
+     * 将生成完成的地图加载进场景
+     */
     private void addToMap() {
         if (blockMapGenerate != null) {
             BlockMapGenerate.Result result = blockMapGenerate.getResult();
             if (result != null) {
-                mapNodes.put(result.block, result.nodes);
+                Set<Node> nodes2 = nodes.computeIfAbsent(result.block, k -> new HashSet<>());
+                nodes2.addAll(result.nodes);
             }
         }
     }
 
+    /**
+     * 新区块申请创建
+     */
     private void addToGenerateQueue() {
         if (blockMapGenerate != null) {
             for (Block activeBlock : activeBlocks) {
-                if (!mapNodes.containsKey(activeBlock)) {
+                if (!nodes.containsKey(activeBlock)) {
                     blockMapGenerate.addGenerateQueue(activeBlock);
-                    mapNodes.put(activeBlock, null);
+                    nodes.put(activeBlock, new HashSet<>());
                 }
             }
         }

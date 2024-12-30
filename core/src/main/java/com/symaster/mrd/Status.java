@@ -9,6 +9,7 @@ public enum Status {
     MainLoading,
     SkinLoadingFinish,
     MainMenuLoadingFinish,
+    GameGenerating,
     ;
 
 
