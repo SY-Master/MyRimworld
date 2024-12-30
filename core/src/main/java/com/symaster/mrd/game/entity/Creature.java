@@ -22,6 +22,10 @@ public class Creature extends Node {
      * 性别
      */
     private Gender gender;
+    /**
+     * 生物的名称
+     */
+    private String name;
 
     public float getHp() {
         return hp;
@@ -45,5 +49,13 @@ public class Creature extends Node {
 
     public void setGender(Gender gender) {
         this.gender = gender;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
     }
 }

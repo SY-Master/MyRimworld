@@ -54,16 +54,29 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * 渲染顺序
      */
     private int zIndex;
+    /**
+     * 将这个组件的移动限制在激活区块内
+     */
+    private boolean limit2activityBlock;
 
     public Node() {
         this.positionX = 0.0f;
         this.positionY = 0.0f;
         this.visible = false;
+        this.limit2activityBlock = false;
         this.activityBlockSize = 0;
         this.width = 0.0f;
         this.height = 0.0f;
         this.zIndex = 0;
         this.uid = UUID.randomUUID().toString();
+    }
+
+    public boolean isLimit2activityBlock() {
+        return limit2activityBlock;
+    }
+
+    public void setLimit2activityBlock(boolean limit2activityBlock) {
+        this.limit2activityBlock = limit2activityBlock;
     }
 
     public int getZIndex() {
@@ -161,11 +174,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         if (this.positionX == positionX) {
             return;
         }
-        float oldX = this.positionX;
-        this.positionX = positionX;
-        if (pue != null) {
-            pue.afterUpdate(this, oldX, this.positionY, this.positionX, this.positionY);
-        }
+        setPosition(positionX, positionY);
+
+        // float oldX = this.positionX;
+        // this.positionX = positionX;
+        // if (pue != null) {
+        //     pue.afterUpdate(this, oldX, this.positionY, this.positionX, this.positionY);
+        // }
     }
 
     public float getPositionY() {
@@ -176,11 +191,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         if (this.positionY == y) {
             return;
         }
-        float oldY = this.positionY;
-        this.positionY = y;
-        if (pue != null) {
-            pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
-        }
+
+        setPosition(positionX, y);
+        // float oldY = this.positionY;
+        // this.positionY = y;
+        // if (pue != null) {
+        //     pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
+        // }
     }
 
     public void setPosition(float x, float y) {
@@ -189,10 +206,14 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         }
         float oldX = this.positionX;
         float oldY = this.positionY;
-        this.positionX = x;
-        this.positionY = y;
-        if (pue != null) {
-            pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
+
+        if (pue == null || pue.beforeUpdate(this, oldX, oldY, x, y)) {
+            this.positionX = x;
+            this.positionY = y;
+
+            if (pue != null) {
+                pue.afterUpdate(this, oldX, oldY, x, y);
+            }
         }
     }
 
@@ -204,11 +225,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         float oldX = this.positionX;
         float oldY = this.positionY;
 
-        this.positionX += x;
-        this.positionY += y;
+        if (pue == null || pue.beforeUpdate(this, oldX, oldY, positionX + x, positionY + y)) {
+            this.positionX += x;
+            this.positionY += y;
 
-        if (pue != null) {
-            pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
+            if (pue != null) {
+                pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
+            }
         }
     }
 

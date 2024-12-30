@@ -9,6 +9,7 @@ import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
 import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Human;
+import com.symaster.mrd.game.service.HumanNameGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -79,6 +80,10 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.setHp(1f);
         human.setHpMax(100f);
         human.setGender(Gender.MALE);
+
+        HumanNameGenerator humanNameGenerator = new HumanNameGenerator();
+        human.setName(humanNameGenerator.generateName());
+
         scene.add(human);
 
         Save save = new Save();
