@@ -27,7 +27,6 @@ public class NinePatchNode extends Node {
      */
     @Override
     public void setGdxNodePosition(float x, float y) {
-        super.setGdxNodePosition(x, y);
         this.gdxNodePositionX = x;
         this.gdxNodePositionY = y;
     }
