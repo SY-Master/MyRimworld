@@ -1,6 +1,7 @@
 package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.game.service.AI;
 
 /**
  * 生物实体
@@ -26,6 +27,30 @@ public class Creature extends Node {
      * 生物的名称
      */
     private String name;
+    /**
+     * 种族
+     */
+    private final Race race;
+    /**
+     * ai
+     */
+    private AI ai;
+
+    public Creature(Race race) {
+        this.race = race;
+    }
+
+    public Race getRace() {
+        return race;
+    }
+
+    public AI getAi() {
+        return ai;
+    }
+
+    public void setAi(AI ai) {
+        this.ai = ai;
+    }
 
     public float getHp() {
         return hp;
@@ -57,5 +82,11 @@ public class Creature extends Node {
 
     public void setName(String name) {
         this.name = name;
+    }
+
+    @Override
+    public void logic(float delta) {
+        super.logic(delta);
+        ai.logic(this, delta);
     }
 }

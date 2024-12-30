@@ -23,6 +23,7 @@ import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.GameGenerateProcessor;
 import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
+import com.symaster.mrd.game.service.AI;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
 import com.symaster.mrd.gui.MainStageUI;
@@ -53,6 +54,7 @@ public class Main extends ApplicationAdapter {
     private AsyncExecutor asyncExecutor;
     private SpriteBatch spriteBatch;
     private ViewportNodeOrthographic cam;
+    private AI ai;
 
     private ViewportNodeOrthographic getCam() {
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
@@ -81,6 +83,7 @@ public class Main extends ApplicationAdapter {
         assetManager.load("white.png", Texture.class);
         assetManager.load("left.png", Texture.class);
 
+        this.ai = new AI();
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
         this.spriteBatch = new SpriteBatch();
@@ -294,6 +297,7 @@ public class Main extends ApplicationAdapter {
         gameGenerateData.inputFactory = inputFactory;
         gameGenerateData.assetManager = assetManager;
         gameGenerateData.skin = skin;
+        gameGenerateData.ai = ai;
         asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
 
         status = Status.GameGenerating;

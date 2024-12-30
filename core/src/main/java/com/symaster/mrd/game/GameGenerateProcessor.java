@@ -10,7 +10,9 @@ import com.symaster.mrd.game.data.GameGenerateData;
 import com.symaster.mrd.game.data.Save;
 import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Human;
+import com.symaster.mrd.game.entity.Race;
 import com.symaster.mrd.game.service.HumanNameGenerator;
+import com.symaster.mrd.game.service.NameGenerator;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -81,9 +83,8 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.setHp(1f);
         human.setHpMax(100f);
         human.setGender(Gender.MALE);
-
-        HumanNameGenerator humanNameGenerator = new HumanNameGenerator();
-        human.setName(humanNameGenerator.generateName());
+        human.setAi(gameGenerateData.ai);
+        human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName());
 
         scene.add(human, Groups.PARTNER);
 
