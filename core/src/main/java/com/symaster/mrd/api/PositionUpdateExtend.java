@@ -13,4 +13,16 @@ public interface PositionUpdateExtend {
      */
     void afterUpdate(Node node, float oldX, float oldY, float newX, float newY);
 
+    /**
+     * 更新之前
+     *
+     * @param node 目标
+     * @param oldX 原x
+     * @param oldY 原y
+     * @param newX 新x
+     * @param newY 新y
+     * @return 是否继续移动
+     */
+    boolean beforeUpdate(Node node, float oldX, float oldY, float newX, float newY);
+
 }

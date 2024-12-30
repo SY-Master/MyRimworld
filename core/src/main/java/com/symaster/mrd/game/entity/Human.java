@@ -4,7 +4,9 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.symaster.mrd.g2d.SpriteNode;
+import com.symaster.mrd.util.GdxText;
 import com.symaster.mrd.util.UnitUtil;
 
 /**
@@ -24,6 +26,10 @@ public class Human extends Creature {
         sprite.setSize(UnitUtil.ofM(0.7f), UnitUtil.ofM(1f));
 
         add((nodes = new SpriteNode(sprite)));
+
+        // Label label = new Label(GdxText.val(""), );
+
+
 
         setVisible(true);
 

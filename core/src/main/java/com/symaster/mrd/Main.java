@@ -54,7 +54,7 @@ public class Main extends ApplicationAdapter {
 
     private ViewportNodeOrthographic getCam() {
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
-        cam.setActivityBlockSize(1);
+        cam.setLimit2activityBlock(true);
         WASDInput wasdInput = new WASDInput();
         cam.add(wasdInput);
         TransformMove transformMove = new TransformMove(wasdInput.getVector2(), cam);
@@ -67,6 +67,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void create() {
+        Gdx.input.setInputProcessor((inputFactory = new InputFactory()));
 
         assetManager = new AssetManager();
         assetManager.load("TX Tileset Grass.png", Texture.class);
@@ -78,13 +79,11 @@ public class Main extends ApplicationAdapter {
         assetManager.load("white.png", Texture.class);
         assetManager.load("left.png", Texture.class);
 
-        this.inputFactory = new InputFactory();
-        Gdx.input.setInputProcessor(inputFactory);
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
         this.spriteBatch = new SpriteBatch();
         this.cam = getCam();
-        status = Status.MainLoading;
+        this.status = Status.MainLoading;
 
         // skin = defaultSkin(assetManager);
 

@@ -1,5 +1,7 @@
 package com.symaster.mrd.g2d;
 
+import com.symaster.mrd.g2d.scene.Scene;
+
 /**
  * @author yinmiao
  * @since 2024/12/24
@@ -20,6 +22,24 @@ public class Block {
 
     public int getY() {
         return y;
+    }
+
+    public float toX1(Scene scene) {
+        float blockSize = scene.getBlockSize();
+        return x * blockSize;
+    }
+
+    public float toX2(Scene scene) {
+        return toX1(scene) + scene.getBlockSize();
+    }
+
+    public float toY1(Scene scene) {
+        float blockSize = scene.getBlockSize();
+        return y * blockSize;
+    }
+
+    public float toY2(Scene scene) {
+        return toY1(scene) + scene.getBlockSize();
     }
 
     @Override
