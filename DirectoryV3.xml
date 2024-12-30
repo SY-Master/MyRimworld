@@ -31,4 +31,7 @@
     <tree path="/core/src/main/java/com/symaster/mrd/gui" title="界面组件"/>
     <tree path="/core/src/main/java/com/symaster/mrd/input" title="输入组件"/>
     <tree path="/core/src/main/java/com/symaster/mrd/SystemConfig.java" title="配置"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Save.java" title="存档"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/GameGenerateData.java" title="游戏生成器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/service" title="逻辑"/>
 </trees>

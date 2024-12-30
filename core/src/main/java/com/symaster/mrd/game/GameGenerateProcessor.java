@@ -6,13 +6,10 @@ import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.data.GameGenerateData;
-import com.symaster.mrd.game.data.Save;
+import com.symaster.mrd.game.entity.GameGenerateData;
+import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Human;
-import com.symaster.mrd.game.entity.Race;
-import com.symaster.mrd.game.service.HumanNameGenerator;
-import com.symaster.mrd.game.service.NameGenerator;
 
 import java.util.ArrayList;
 import java.util.List;

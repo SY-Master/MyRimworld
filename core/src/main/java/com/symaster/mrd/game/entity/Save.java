@@ -1,4 +1,4 @@
-package com.symaster.mrd.game.data;
+package com.symaster.mrd.game.entity;
 
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.g2d.scene.Scene;

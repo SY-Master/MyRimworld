@@ -21,8 +21,8 @@ import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.GameGenerateProcessor;
-import com.symaster.mrd.game.data.GameGenerateData;
-import com.symaster.mrd.game.data.Save;
+import com.symaster.mrd.game.entity.GameGenerateData;
+import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.service.AI;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
@@ -244,6 +244,7 @@ public class Main extends ApplicationAdapter {
             this.save = gameGenerateProcessor.getSave();
             this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.save.getScene().add(cam);
+            this.ai.setScene(this.save.getScene());
             this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.gui.setScene(save.getScene());
 
