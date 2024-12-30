@@ -124,28 +124,6 @@ public class Main extends ApplicationAdapter {
         // nodes1.add(fillViewport);
     }
 
-    // private void addMap(Scene scene) {
-    //     Texture borderTexture = new Texture(Gdx.files.internal("TX Tileset Grass.png"));
-    //     TextureRegion textureRegion = new TextureRegion(borderTexture, 32, 32, 32, 32);
-    //
-    //     float w = UnitUtil.ofM(1);
-    //     float h = UnitUtil.ofM(1);
-    //
-    //     NinePatchDrawable ninePatchDrawable = new NinePatchDrawable(new NinePatch(textureRegion, 1, 1, 1, 1));
-    //
-    //     int size = 500;
-    //     for (int x = -size; x < size; x++) {
-    //         for (int y = -size; y < size; y++) {
-    //             NinePatchNode nodes1 = new NinePatchNode(ninePatchDrawable);
-    //             nodes1.setWidth(w);
-    //             nodes1.setHeight(h);
-    //             nodes1.setZIndex(-1);
-    //             nodes1.setPosition(x * w, y * w);
-    //             scene.add(nodes1);
-    //         }
-    //     }
-    // }
-
     public Skin defaultSkin(AssetManager assetManager) {
         Skin skin = new Skin();
 
