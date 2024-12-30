@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.symaster.mrd.g2d.SpriteNode;
+import com.symaster.mrd.util.UnitUtil;
 
 /**
  * 人类
@@ -14,14 +15,15 @@ import com.symaster.mrd.g2d.SpriteNode;
  */
 public class Human extends Creature {
 
-    private Sprite sprite;
+    private SpriteNode nodes;
 
     public Human(AssetManager assetManager) {
         Texture texture = assetManager.get("user.png", Texture.class);
 
-        sprite = new Sprite(texture);
+        Sprite  sprite = new Sprite(texture);
+        sprite.setSize(UnitUtil.ofM(0.7f), UnitUtil.ofM(1f));
 
-        add(new SpriteNode(sprite));
+        add((nodes = new SpriteNode(sprite)));
 
         setVisible(true);
 
@@ -32,9 +34,9 @@ public class Human extends Creature {
 
     private void updateSpriteColor() {
         if (getGender() == Gender.FEMALE) {
-            sprite.setColor(new Color(1f, 0, 0, 1));
+            nodes.getSprite().setColor(new Color(1f, 0, 0, 1));
         } else {
-            sprite.setColor(new Color(0, 0, 1f, 1f));
+            nodes.getSprite().setColor(new Color(0, 0, 1f, 1f));
         }
     }
 

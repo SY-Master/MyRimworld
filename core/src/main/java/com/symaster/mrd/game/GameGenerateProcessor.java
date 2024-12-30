@@ -74,7 +74,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         scene.setInputFactory(gameGenerateData.inputFactory);
 
         Human human = new Human(gameGenerateData.assetManager);
-        human.setVisible(true);
+        human.setZIndex(100);
         human.setActivityBlockSize(3);
         human.setHp(1f);
         human.setHpMax(100f);
