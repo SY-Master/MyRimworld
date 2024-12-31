@@ -68,18 +68,18 @@ public class Scene implements Serializable, Disposable {
     private final ChildUpdateExtend childUpdateExtend;
     private final SpriteBatch spriteBatch;
     private final Cache renderCache;
-    private InputFactory inputFactory;
+    private final InputFactory inputFactory;
 
-    public Scene(AssetManager assetManager, SpriteBatch spriteBatch) {
-        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch); // 默认区块边长10米
+    public Scene(AssetManager assetManager, SpriteBatch spriteBatch, InputFactory inputFactory) {
+        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch, inputFactory); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, SpriteBatch spriteBatch) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, SpriteBatch spriteBatch, InputFactory inputFactory) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch, inputFactory); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, SpriteBatch spriteBatch) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, spriteBatch); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, SpriteBatch spriteBatch, InputFactory inputFactory) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, spriteBatch, inputFactory); // 默认区块边长10米
     }
 
     /**
@@ -90,8 +90,10 @@ public class Scene implements Serializable, Disposable {
      * @param blockSize    区块大小
      * @param initBlocks   构建场景时初始化区块
      */
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, SpriteBatch spriteBatch) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, SpriteBatch spriteBatch, InputFactory inputFactory) {
         this.blockSize = blockSize;
+        this.inputFactory = inputFactory;
+        this.spriteBatch = spriteBatch;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
@@ -103,7 +105,6 @@ public class Scene implements Serializable, Disposable {
         } else {
             this.mapSeed = mapSeed;
         }
-        this.spriteBatch = spriteBatch;
         this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
@@ -165,10 +166,6 @@ public class Scene implements Serializable, Disposable {
 
     public InputFactory getInputFactory() {
         return inputFactory;
-    }
-
-    public void setInputFactory(InputFactory inputFactory) {
-        this.inputFactory = inputFactory;
     }
 
     public void blockUpdate(Node node, int newSize) {
@@ -248,9 +245,22 @@ public class Scene implements Serializable, Disposable {
             orthographicCameraNodes.add(((OrthographicCameraNode) node));
         }
 
+        onScene(node);
+    }
+
+    public void onScene(Node node) {
         node.onScene(this);
+
         for (Node node1 : node) {
-            node1.onScene(this);
+            onScene(node1);
+        }
+    }
+
+    public void extScene(Node node) {
+        node.extScene(this);
+
+        for (Node node1 : node) {
+            extScene(node1);
         }
     }
 
@@ -270,10 +280,7 @@ public class Scene implements Serializable, Disposable {
             orthographicCameraNodes.remove(node);
         }
 
-        node.extScene(Scene.this);
-        for (Node node2 : node) {
-            node2.extScene(Scene.this);
-        }
+        extScene(node);
     }
 
     public void addExtendEvent(Node node) {
