@@ -21,6 +21,11 @@ public class TransformMove extends Node {
      */
     private final Node operate;
 
+    public TransformMove(Vector2 input) {
+        this.input = input;
+        this.operate = null;
+    }
+
     public TransformMove(Vector2 input, Node operate) {
         this.input = input;
         this.operate = operate;
@@ -46,7 +51,14 @@ public class TransformMove extends Node {
     public void logic(float delta) {
         super.logic(delta);
 
-        if (input == null || operate == null) {
+        Node node;
+        if (this.operate == null) {
+            node = getParent();
+        } else {
+            node = this.operate;
+        }
+
+        if (input == null || node == null) {
             return;
         }
 
@@ -56,7 +68,7 @@ public class TransformMove extends Node {
         // 移动距离
         float dis = delta * speed;
 
-        operate.translate(input.x * dis, input.y * dis);
+        node.translate(input.x * dis, input.y * dis);
     }
 
 }

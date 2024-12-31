@@ -20,9 +20,9 @@ public class ChildUpdateExtendImpl implements ChildUpdateExtend {
     public void afterAdd(Node parent, Node child) {
         scene.addExtendEvent(child);
 
-        if (child instanceof OrthographicCameraNode) {
-            scene.getCameraNodes().add((OrthographicCameraNode) child);
-        }
+        // if (child instanceof OrthographicCameraNode) {
+        //     scene.getCameraNodes().add((OrthographicCameraNode) child);
+        // }
 
         scene.onScene(child);
     }
@@ -31,9 +31,9 @@ public class ChildUpdateExtendImpl implements ChildUpdateExtend {
     public void afterRemove(Node parent, Node child) {
         scene.removeExtendEvent(child);
 
-        if (child instanceof OrthographicCameraNode) {
-            scene.getCameraNodes().remove(child);
-        }
+        // if (child instanceof OrthographicCameraNode) {
+        //     scene.getCameraNodes().remove(child);
+        // }
 
         scene.extScene(child);
     }

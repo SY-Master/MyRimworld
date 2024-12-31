@@ -18,7 +18,14 @@ public class TransformZoom extends Node implements ScrolledInputEvent {
 
     private final OrthographicCamera camera;
     private final ScrolledInput scrolledInput;
+    /**
+     * 缩放移动补偿
+     */
     private final Node moveNode;
+
+    public TransformZoom(OrthographicCamera camera) {
+        this(camera, new ScrolledInput(), null);
+    }
 
     public TransformZoom(OrthographicCamera camera, Node moveNode) {
         this(camera, new ScrolledInput(), moveNode);

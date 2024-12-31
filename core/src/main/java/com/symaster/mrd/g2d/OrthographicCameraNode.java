@@ -1,8 +1,14 @@
 package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
+import com.symaster.mrd.g2d.scene.Scene;
+
+import java.util.Comparator;
+import java.util.LinkedList;
+import java.util.List;
 
 /**
  * @author yinmiao
@@ -11,13 +17,21 @@ import com.badlogic.gdx.math.Vector3;
 public class OrthographicCameraNode extends Node {
 
     private final OrthographicCamera camera;
+    private final SpriteBatch spriteBatch;
+    private final List<Node> caches = new LinkedList<>();
 
     public OrthographicCameraNode() {
-        this(new OrthographicCamera());
+        this(new OrthographicCamera(), new SpriteBatch());
     }
 
-    public OrthographicCameraNode(OrthographicCamera camera) {
+    public OrthographicCameraNode(SpriteBatch spriteBatch) {
+        this(new OrthographicCamera(), spriteBatch);
+    }
+
+    public OrthographicCameraNode(OrthographicCamera camera, SpriteBatch spriteBatch) {
         this.camera = camera;
+        this.spriteBatch = spriteBatch;
+        setForcedLogic(true);
     }
 
     public OrthographicCamera getCamera() {
@@ -38,5 +52,40 @@ public class OrthographicCameraNode extends Node {
 
     public void beginDraw() {
 
+    }
+
+    public SpriteBatch getSpriteBatch() {
+        return spriteBatch;
+    }
+
+    public void render() {
+        Scene scene = getScene();
+        if (scene == null) {
+            return;
+        }
+
+        caches.clear();
+
+        Rectangle worldRectangle = getWorldRectangle();
+        scene.findNodes(worldRectangle, caches, true);
+
+        beginDraw();
+        spriteBatch.setProjectionMatrix(camera.combined);
+
+        spriteBatch.begin();
+        caches.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(this::drawNode);
+        spriteBatch.end();
+    }
+
+    private void drawNode(Node node) {
+        if (!node.isVisible()) {
+            return;
+        }
+
+        node.draw(spriteBatch);
+
+        for (Node child : node) {
+            drawNode(child);
+        }
     }
 }

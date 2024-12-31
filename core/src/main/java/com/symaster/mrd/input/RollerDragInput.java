@@ -1,14 +1,14 @@
 package com.symaster.mrd.input;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
+import com.symaster.mrd.g2d.InputNode;
 import com.symaster.mrd.g2d.Node;
 
 /**
  * @author yinmiao
  * @since 2024/12/31
  */
-public class RollerDragInput extends InputAdapter {
+public class RollerDragInput extends InputNode {
 
     private final Node target;
 

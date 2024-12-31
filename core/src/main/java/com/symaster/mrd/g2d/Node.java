@@ -2,8 +2,8 @@ package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
-import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
+import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.scene.Scene;
 
@@ -45,7 +45,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     /**
      * 激活附近区块半径更新扩展
      */
-    private ActivityBlockSizeExtend bse;
+    private NodePropertiesChangeExtend changeExtend;
     /**
      * 子节点改变扩展
      */
@@ -58,6 +58,14 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * 将这个组件的移动限制在激活区块内
      */
     private boolean limit2activityBlock;
+    /**
+     * 当前组件所在场景
+     */
+    private Scene scene;
+    /**
+     * 是否强制逻辑计算，如果强制逻辑计算的话：不管节点是否处在激活区块内，都会逻辑计算
+     */
+    private boolean forcedLogic;
 
     public Node() {
         this.positionX = 0.0f;
@@ -103,12 +111,12 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.width = width;
     }
 
-    public ActivityBlockSizeExtend getBse() {
-        return bse;
+    public NodePropertiesChangeExtend getChangeExtend() {
+        return changeExtend;
     }
 
-    public void setBse(ActivityBlockSizeExtend bse) {
-        this.bse = bse;
+    public void setChangeExtend(NodePropertiesChangeExtend changeExtend) {
+        this.changeExtend = changeExtend;
     }
 
     public PositionUpdateExtend getPue() {
@@ -135,6 +143,21 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.visible = visible;
     }
 
+    public boolean isForcedLogic() {
+        return forcedLogic;
+    }
+
+    public void setForcedLogic(boolean forcedLogic) {
+        this.forcedLogic = forcedLogic;
+
+        if (forcedLogic && scene != null) {
+            scene.addForcedLogic(this);
+        }
+        if (!forcedLogic && scene != null) {
+            scene.removeForcedLogic(this);
+        }
+    }
+
     /**
      * 每帧调用，节点逻辑处理
      */
@@ -154,8 +177,8 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
 
         this.activityBlockSize = activityBlockSize;
 
-        if (bse != null) {
-            bse.afterUpdate(this, old, activityBlockSize);
+        if (changeExtend != null) {
+            changeExtend.activityBlockSizeAfterUpdate(this, old, activityBlockSize);
         }
     }
 
@@ -253,7 +276,11 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * @param scene 场景
      */
     public void onScene(Scene scene) {
+        this.scene = scene;
 
+        if (this.forcedLogic) {
+            scene.addForcedLogic(this);
+        }
     }
 
     /**
@@ -262,7 +289,19 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * @param scene 场景
      */
     public void extScene(Scene scene) {
+        this.scene = null;
 
+        if (this.forcedLogic) {
+            scene.removeForcedLogic(this);
+        }
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public Scene getScene() {
+        return scene;
     }
 
     @Override

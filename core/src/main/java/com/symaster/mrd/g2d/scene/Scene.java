@@ -1,19 +1,17 @@
 package com.symaster.mrd.g2d.scene;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.SystemConfig;
-import com.symaster.mrd.api.ActivityBlockSizeExtend;
 import com.symaster.mrd.api.ChildUpdateExtend;
+import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.OrthographicCameraNode;
-import com.symaster.mrd.g2d.scene.impl.ActivityBlockSizeExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
 import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
+import com.symaster.mrd.g2d.scene.impl.NodePropertiesChangeExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
 import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
@@ -46,14 +44,14 @@ public class Scene implements Serializable, Disposable {
 
     private final Map<String, Set<Node>> nodeGroups;
 
+    private final Set<Node> forceLogicNodes;
+
+    private final Set<Node> logicCache;
+
     /**
      * 激活的区块
      */
     private final Set<Block> activeBlocks;
-    /**
-     * 相机
-     */
-    private final Set<OrthographicCameraNode> orthographicCameraNodes;
     /**
      * 世界地图生成种子
      */
@@ -63,23 +61,22 @@ public class Scene implements Serializable, Disposable {
      */
     private final BlockMapGenerate blockMapGenerate;
 
-    private final ActivityBlockSizeExtend activityBlockSizeExtend;
+    private final NodePropertiesChangeExtend nodePropertiesChangeExtend;
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
-    private final SpriteBatch spriteBatch;
     private final Cache renderCache;
     private final InputFactory inputFactory;
 
-    public Scene(AssetManager assetManager, SpriteBatch spriteBatch, InputFactory inputFactory) {
-        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch, inputFactory); // 默认区块边长10米
+    public Scene(AssetManager assetManager, InputFactory inputFactory) {
+        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, inputFactory); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, SpriteBatch spriteBatch, InputFactory inputFactory) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, spriteBatch, inputFactory); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, InputFactory inputFactory) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, inputFactory); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, SpriteBatch spriteBatch, InputFactory inputFactory) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, spriteBatch, inputFactory); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, InputFactory inputFactory) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, inputFactory); // 默认区块边长10米
     }
 
     /**
@@ -90,22 +87,22 @@ public class Scene implements Serializable, Disposable {
      * @param blockSize    区块大小
      * @param initBlocks   构建场景时初始化区块
      */
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, SpriteBatch spriteBatch, InputFactory inputFactory) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, InputFactory inputFactory) {
         this.blockSize = blockSize;
         this.inputFactory = inputFactory;
-        this.spriteBatch = spriteBatch;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
-        this.orthographicCameraNodes = new HashSet<>();
         this.renderCache = new Cache();
         this.nodeGroups = new HashMap<>();
+        this.forceLogicNodes = new HashSet<>();
+        this.logicCache = new HashSet<>();
         if (mapSeed == null) {
             this.mapSeed = UUID.randomUUID().toString();
         } else {
             this.mapSeed = mapSeed;
         }
-        this.activityBlockSizeExtend = new ActivityBlockSizeExtendImpl(this);
+        this.nodePropertiesChangeExtend = new NodePropertiesChangeExtendImpl(this);
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
         this.blockMapGenerate = new BlockMapGenerate(this, assetManager);
@@ -152,16 +149,8 @@ public class Scene implements Serializable, Disposable {
         return activeBlocks;
     }
 
-    public Set<OrthographicCameraNode> getCameraNodes() {
-        return orthographicCameraNodes;
-    }
-
     public Cache getRenderCache() {
         return renderCache;
-    }
-
-    public SpriteBatch getSpriteBatch() {
-        return spriteBatch;
     }
 
     public InputFactory getInputFactory() {
@@ -231,7 +220,7 @@ public class Scene implements Serializable, Disposable {
 
         nodes.computeIfAbsent(blockIndex, x -> new HashSet<>()).add(node);
 
-        node.setBse(activityBlockSizeExtend);
+        node.setChangeExtend(nodePropertiesChangeExtend);
         node.setPue(positionUpdateExtend);
 
         addExtendEvent(node);
@@ -241,11 +230,15 @@ public class Scene implements Serializable, Disposable {
             updateActivityBlockSize();
         }
 
-        if (node instanceof OrthographicCameraNode) {
-            orthographicCameraNodes.add(((OrthographicCameraNode) node));
-        }
+        // if (node instanceof OrthographicCameraNode) {
+        //     orthographicCameraNodes.add(((OrthographicCameraNode) node));
+        // }
 
         onScene(node);
+    }
+
+    public void addForcedLogic(Node node) {
+        forceLogicNodes.add(node);
     }
 
     public void onScene(Node node) {
@@ -264,23 +257,8 @@ public class Scene implements Serializable, Disposable {
         }
     }
 
-    public void remove(Node node) {
-        Set<Node> nodes2 = nodes.get(getBlockIndex(node.getPositionX(), node.getPositionY()));
-        if (nodes2 == null) {
-            return;
-        }
-
-        node.setPue(null);
-        node.setBse(null);
-        removeExtendEvent(node);
-
-        nodes2.remove(node);
-
-        if (node instanceof OrthographicCameraNode) {
-            orthographicCameraNodes.remove(node);
-        }
-
-        extScene(node);
+    public void removeForcedLogic(Node node) {
+        forceLogicNodes.remove(node);
     }
 
     public void addExtendEvent(Node node) {
@@ -319,9 +297,6 @@ public class Scene implements Serializable, Disposable {
         // 调用所有激活区块内组件的逻辑方法
         nodesLogic(delta);
 
-        // 独立处理摄像头的逻辑方法
-        cameraLogic(delta);
-
         // 更新移动过的组件的区块位置
         nodesUpdate();
 
@@ -356,13 +331,28 @@ public class Scene implements Serializable, Disposable {
         }
     }
 
-    private void cameraLogic(float delta) {
-        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
-            nodeLogic(orthographicCameraNode, delta, false, 0, 0);
+    public void remove(Node node) {
+        Set<Node> nodes2 = nodes.get(getBlockIndex(node.getPositionX(), node.getPositionY()));
+        if (nodes2 == null) {
+            return;
         }
+
+        node.setPue(null);
+        node.setChangeExtend(null);
+        removeExtendEvent(node);
+
+        nodes2.remove(node);
+
+        // if (node instanceof OrthographicCameraNode) {
+        //     orthographicCameraNodes.remove(node);
+        // }
+
+        extScene(node);
     }
 
     private void nodesLogic(float delta) {
+        logicCache.clear();
+
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
             if (nodes1 == null || nodes1.isEmpty()) {
@@ -370,18 +360,25 @@ public class Scene implements Serializable, Disposable {
             }
 
             for (Node node : nodes1) {
-                nodeLogic(node, delta, true, 0f, 0f);
+                nodeLogic(node, delta, 0f, 0f);
             }
+        }
+
+        for (Node forceLogicNode : forceLogicNodes) {
+            if (logicCache.contains(forceLogicNode)) {
+                continue;
+            }
+
+            nodeLogic(forceLogicNode, delta, 0f, 0f);
         }
     }
 
-    private void nodeLogic(Node node, float delta, boolean skipCam, float parentX, float parentY) {
-        if (node instanceof OrthographicCameraNode && skipCam) {
-            return;
-        }
+    private void nodeLogic(Node node, float delta, float parentX, float parentY) {
 
         // 处理每个节点的逻辑
         node.logic(delta);
+
+        logicCache.add(node);
 
         // 显示组件的世界坐标
         float worldX = node.getPositionX() + parentX;
@@ -392,7 +389,7 @@ public class Scene implements Serializable, Disposable {
 
         // 所有子节点
         for (Node c : node) {
-            nodeLogic(c, delta, skipCam, worldX, worldY);
+            nodeLogic(c, delta, worldX, worldY);
         }
     }
 
@@ -420,53 +417,35 @@ public class Scene implements Serializable, Disposable {
         renderCache.moveNodes.clear();
     }
 
-    public void render() {
-        renderCache.nodes.clear();
-
-        OrthographicCameraNode camera = null;
-
-        for (OrthographicCameraNode orthographicCameraNode : orthographicCameraNodes) {
-            camera = orthographicCameraNode;
-            Rectangle viewport = orthographicCameraNode.getWorldRectangle();
-
-            int x = getBlockIndex(viewport.getX());
-            int y = getBlockIndex(viewport.getY());
-
-            int blockXNumber = (int) Math.ceil(viewport.getWidth() / blockSize) + 1;
-            int blockYNumber = (int) Math.ceil(viewport.getHeight() / blockSize) + 1;
-
-            find(blockXNumber, blockYNumber, x, y, renderCache.nodes);
-        }
-
-        if (camera != null) {
-            camera.beginDraw();
-            spriteBatch.setProjectionMatrix(camera.getCamera().combined);
-        }
-
-        spriteBatch.begin();
-        renderCache.nodes.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(this::drawNode);
-        spriteBatch.end();
+    public void findNodes(Rectangle worldRect, List<Node> result, boolean limitVisible) {
+        findNodes(worldRect.x, worldRect.y, worldRect.width, worldRect.height, result, limitVisible);
     }
 
-    private void drawNode(Node node) {
-        node.draw(spriteBatch);
+    public void findNodes(float worldX, float worldY, float worldW, float worldH, List<Node> result, boolean limitVisible) {
+        int xIndex = getBlockIndex(worldX);
+        int yIndex = getBlockIndex(worldY);
 
-        for (Node child : node) {
-            drawNode(child);
-        }
+        int blockXNumber = (int) Math.ceil(worldW / blockSize) + 1;
+        int blockYNumber = (int) Math.ceil(worldH / blockSize) + 1;
+
+        findNodesByBlock(blockXNumber, blockYNumber, xIndex, yIndex, result, limitVisible);
     }
 
-    private void find(int blockXNumber, int blockYNumber, int x, int y, List<Node> result) {
+    public void findNodesByBlock(int blockXNumber, int blockYNumber, int x, int y, List<Node> result, boolean limitVisible) {
         for (int i = 0; i < blockXNumber; i++) {
             for (int j = 0; j < blockYNumber; j++) {
                 renderCache.cacheBlock = new Block(x + i, y + j);
                 if (activeBlocks.contains(renderCache.cacheBlock)) {
                     Set<Node> nodes1 = nodes.get(renderCache.cacheBlock);
                     if (nodes1 != null) {
-                        for (Node node : nodes1) {
-                            if (node.isVisible()) {
-                                result.add(node);
+                        if (limitVisible) {
+                            for (Node node : nodes1) {
+                                if (node.isVisible()) {
+                                    result.add(node);
+                                }
                             }
+                        } else {
+                            result.addAll(nodes1);
                         }
                     }
                 }
@@ -484,6 +463,6 @@ public class Scene implements Serializable, Disposable {
     @Override
     public void dispose() {
         blockMapGenerate.dispose();
-        spriteBatch.dispose();
+        // spriteBatch.dispose();
     }
 }
