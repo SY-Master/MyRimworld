@@ -10,10 +10,23 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 public class LabelNode extends Node {
 
     private final Label label;
+    private float parentAlpha = 1.0f;
 
     public LabelNode(Label label) {
         this.label = label;
         setVisible(true);
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public float getParentAlpha() {
+        return parentAlpha;
+    }
+
+    public void setParentAlpha(float parentAlpha) {
+        this.parentAlpha = parentAlpha;
     }
 
     @Override
@@ -23,6 +36,6 @@ public class LabelNode extends Node {
 
     @Override
     public void draw(SpriteBatch spriteBatch) {
-        label.draw(spriteBatch, 1f);
+        label.draw(spriteBatch, parentAlpha);
     }
 }
