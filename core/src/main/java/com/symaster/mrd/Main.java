@@ -3,6 +3,7 @@ package com.symaster.mrd;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
@@ -28,6 +30,7 @@ import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
 import com.symaster.mrd.game.ui.MainStageUI;
 import com.symaster.mrd.input.InputFactory;
+import com.symaster.mrd.input.RollerDragInput;
 import com.symaster.mrd.input.WASDInput;
 import com.symaster.mrd.util.GdxText;
 import com.symaster.mrd.util.UnitUtil;
@@ -59,8 +62,12 @@ public class Main extends ApplicationAdapter {
     private ViewportNodeOrthographic getCam() {
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
         cam.setLimit2activityBlock(true);
+
+        inputFactory.add(new RollerDragInput(cam));
+
         WASDInput wasdInput = new WASDInput();
-        cam.add(wasdInput);
+        inputFactory.add(wasdInput);
+
         TransformMove transformMove = new TransformMove(wasdInput.getVector2(), cam);
         transformMove.setSpeed(UnitUtil.ofM(18));
         cam.add(transformMove);
@@ -151,7 +158,9 @@ public class Main extends ApplicationAdapter {
         textButtonStyle.focused = nDFocused;
         skin.add("default", textButtonStyle);
 
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("font-16"), new Color(0, 0, 0, 1f));
+        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("font-16"), new Color(1f, 1f, 1f, 1f));
+        style.background = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
+
         skin.add("nameLabel", style);
 
         return skin;

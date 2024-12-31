@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Align;
 import com.symaster.mrd.g2d.LabelNode;
 import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.util.UnitUtil;
@@ -20,9 +21,11 @@ public class Human extends Creature {
 
     private final SpriteNode nodes;
     private final Label label;
+    private float fontScale;
 
-    public Human(AssetManager assetManager, Skin skin) {
+    public Human(AssetManager assetManager, Skin skin, float fontScale) {
         super(Race.Human);
+        this.fontScale = fontScale;
         Texture texture = assetManager.get("user.png", Texture.class);
 
         Sprite  sprite = new Sprite(texture);
@@ -31,7 +34,9 @@ public class Human extends Creature {
         add((nodes = new SpriteNode(sprite)));
 
         label = new Label(getName(), skin.get("nameLabel", Label.LabelStyle.class));
-        label.setFontScale(0.3f);
+        label.setAlignment(Align.center);
+        label.setFontScale(fontScale);
+        label.setSize(UnitUtil.ofM(1.5f), 5f);
 
         LabelNode nodes1 = new LabelNode(label);
         nodes1.setPositionY(-5);
@@ -48,6 +53,22 @@ public class Human extends Creature {
     public void setName(String name) {
         super.setName(name);
         label.setText(name);
+    }
+
+    public SpriteNode getNodes() {
+        return nodes;
+    }
+
+    public Label getLabel() {
+        return label;
+    }
+
+    public float getFontScale() {
+        return fontScale;
+    }
+
+    public void setFontScale(float fontScale) {
+        this.fontScale = fontScale;
     }
 
     private void updateSpriteColor() {

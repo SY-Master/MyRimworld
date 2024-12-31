@@ -27,13 +27,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.keyDown(keycode)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -42,13 +43,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.keyUp(keycode)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -57,13 +59,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.keyTyped(character)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -72,13 +75,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.touchDown(screenX, screenY, pointer, button)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -87,13 +91,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.touchUp(screenX, screenY, pointer, button)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -102,13 +107,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.touchCancelled(screenX, screenY, pointer, button)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -117,13 +123,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.touchDragged(screenX, screenY, pointer)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -132,13 +139,14 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.mouseMoved(screenX, screenY)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 
     @Override
@@ -147,12 +155,13 @@ public class InputFactory implements com.badlogic.gdx.InputProcessor, Serializab
             return false;
         }
 
+        boolean result = false;
         for (com.badlogic.gdx.InputProcessor inputProcessor : inputProcessors) {
             if (inputProcessor.scrolled(amountX, amountY)) {
-                return true;
+                result = true;
             }
         }
 
-        return false;
+        return result;
     }
 }

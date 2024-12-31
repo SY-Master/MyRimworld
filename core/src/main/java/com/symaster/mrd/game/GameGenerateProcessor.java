@@ -10,6 +10,7 @@ import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Human;
+import com.symaster.mrd.input.RollerDragInput;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,7 +75,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, blocks, gameGenerateData.spriteBatch);
         scene.setInputFactory(gameGenerateData.inputFactory);
 
-        Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin);
+        Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         human.setZIndex(100);
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         human.setHp(1f);
