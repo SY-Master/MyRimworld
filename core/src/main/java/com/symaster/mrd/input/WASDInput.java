@@ -1,8 +1,8 @@
 package com.symaster.mrd.input;
 
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.math.Vector2;
+import com.symaster.mrd.g2d.InputNode;
 
 /**
  * WASD 的输入
@@ -10,7 +10,7 @@ import com.badlogic.gdx.math.Vector2;
  * @author yinmiao
  * @since 2024/12/26
  */
-public class WASDInput extends InputAdapter {
+public class WASDInput extends InputNode {
     private final Vector2 vector2;
 
     public WASDInput() {

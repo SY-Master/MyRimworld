@@ -3,7 +3,6 @@ package com.symaster.mrd;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
@@ -55,23 +54,21 @@ public class Main extends ApplicationAdapter {
     private InputFactory inputFactory;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
-    private SpriteBatch spriteBatch;
+    // private SpriteBatch spriteBatch;
     private ViewportNodeOrthographic cam;
     private AI ai;
 
     private ViewportNodeOrthographic getCam() {
+        WASDInput wasdInput = new WASDInput();
+
+        TransformMove transformMove = new TransformMove(wasdInput.getVector2());
+        transformMove.setSpeed(UnitUtil.ofM(18));
+
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
         cam.setLimit2activityBlock(true);
-
-        inputFactory.add(new RollerDragInput(cam));
-
-        WASDInput wasdInput = new WASDInput();
-        inputFactory.add(wasdInput);
-
-        TransformMove transformMove = new TransformMove(wasdInput.getVector2(), cam);
-        transformMove.setSpeed(UnitUtil.ofM(18));
+        cam.add(new RollerDragInput(cam));
+        cam.add(wasdInput);
         cam.add(transformMove);
-
         cam.add(new TransformZoom(cam.getCamera(), cam));
         return cam;
     }
@@ -93,7 +90,7 @@ public class Main extends ApplicationAdapter {
         this.ai = new AI();
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
-        this.spriteBatch = new SpriteBatch();
+        // this.spriteBatch = new SpriteBatch();
         this.cam = getCam();
         this.status = Status.MainLoading;
 
@@ -267,8 +264,10 @@ public class Main extends ApplicationAdapter {
             // 处理GUI的逻辑
             gui.logic(delta);
 
+            // 绘制相机
+            cam.render();
             // 绘制场景
-            save.getScene().render();
+            // save.getScene().render();
             // 绘制GUI
             gui.render();
         }
@@ -303,7 +302,7 @@ public class Main extends ApplicationAdapter {
 
         GameGenerateData gameGenerateData = new GameGenerateData();
         gameGenerateData.mapSeed = UUID.randomUUID().toString();
-        gameGenerateData.spriteBatch = this.spriteBatch;
+        // gameGenerateData.spriteBatch = this.spriteBatch;
         gameGenerateData.inputFactory = inputFactory;
         gameGenerateData.assetManager = assetManager;
         gameGenerateData.skin = skin;

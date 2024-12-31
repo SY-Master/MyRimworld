@@ -1,6 +1,7 @@
 package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
@@ -23,7 +24,7 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
     }
 
     public ViewportNodeOrthographic(Viewport viewport) {
-        super((OrthographicCamera) viewport.getCamera());
+        super((OrthographicCamera) viewport.getCamera(), new SpriteBatch());
         this.viewport = viewport;
     }
 
