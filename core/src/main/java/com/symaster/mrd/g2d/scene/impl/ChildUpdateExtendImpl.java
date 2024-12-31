@@ -24,10 +24,7 @@ public class ChildUpdateExtendImpl implements ChildUpdateExtend {
             scene.getCameraNodes().add((OrthographicCameraNode) child);
         }
 
-        child.onScene(scene);
-        for (Node node : child) {
-            node.onScene(scene);
-        }
+        scene.onScene(child);
     }
 
     @Override
@@ -38,9 +35,6 @@ public class ChildUpdateExtendImpl implements ChildUpdateExtend {
             scene.getCameraNodes().remove(child);
         }
 
-        child.extScene(scene);
-        for (Node node : child) {
-            node.extScene(scene);
-        }
+        scene.extScene(child);
     }
 }
