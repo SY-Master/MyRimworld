@@ -12,13 +12,9 @@ import com.symaster.mrd.game.service.ai.AI;
 public class Creature extends Node {
 
     /**
-     * 当前生命值（0-1）
+     * 生命值
      */
-    private float hp;
-    /**
-     * 最大生命值
-     */
-    private float hpMax;
+    private Measure hp;
     /**
      * 性别
      */
@@ -30,7 +26,7 @@ public class Creature extends Node {
     /**
      * 种族
      */
-    private final Race race;
+    private Race race;
     /**
      * ai
      */
@@ -39,6 +35,42 @@ public class Creature extends Node {
      * 是否是活着的
      */
     private boolean alive;
+    /**
+     * 生物的创建时间（降生日）
+     */
+    private GameTime createTime;
+    /**
+     * 生物的最大寿命（年）
+     */
+    private int lifetime;
+
+    public Measure getHp() {
+        return hp;
+    }
+
+    public void setHp(Measure hp) {
+        this.hp = hp;
+    }
+
+    public void setRace(Race race) {
+        this.race = race;
+    }
+
+    public GameTime getCreateTime() {
+        return createTime;
+    }
+
+    public void setCreateTime(GameTime createTime) {
+        this.createTime = createTime;
+    }
+
+    public int getLifetime() {
+        return lifetime;
+    }
+
+    public void setLifetime(int lifetime) {
+        this.lifetime = lifetime;
+    }
 
     public boolean isAlive() {
         return alive;
@@ -46,10 +78,6 @@ public class Creature extends Node {
 
     public void setAlive(boolean alive) {
         this.alive = alive;
-    }
-
-    public Creature(Race race) {
-        this.race = race;
     }
 
     public Race getRace() {
@@ -62,22 +90,6 @@ public class Creature extends Node {
 
     public void setAi(AI ai) {
         this.ai = ai;
-    }
-
-    public float getHp() {
-        return hp;
-    }
-
-    public void setHp(float hp) {
-        this.hp = hp;
-    }
-
-    public float getHpMax() {
-        return hpMax;
-    }
-
-    public void setHpMax(float hpMax) {
-        this.hpMax = hpMax;
     }
 
     public Gender getGender() {

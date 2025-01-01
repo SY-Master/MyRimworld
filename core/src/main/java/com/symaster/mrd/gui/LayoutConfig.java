@@ -8,6 +8,10 @@ package com.symaster.mrd.gui;
  */
 public abstract class LayoutConfig {
 
+    public abstract UIPosition uiPosition();
+
+    public abstract BTNPosition btnPosition();
+
     public abstract int panelWidth(int sceneWidth);
 
     public abstract int panelHeight(int sceneHeight);
