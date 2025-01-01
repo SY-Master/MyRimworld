@@ -4,13 +4,13 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.symaster.mrd.SystemConfig;
+import com.symaster.mrd.api.ProgressProcessor;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.GameGenerateData;
-import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Human;
-import com.symaster.mrd.input.RollerDragInput;
+import com.symaster.mrd.game.entity.Save;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,7 +72,8 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
             }
         }
 
-        Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, blocks, gameGenerateData.inputFactory);
+        Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, gameGenerateData.inputFactory);
+        scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
         Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         human.setZIndex(100);

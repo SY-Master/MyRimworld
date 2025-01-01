@@ -18,7 +18,7 @@ public class Creature extends FooterMenu {
     }
 
     @Override
-    public String title() {
+    public String name() {
         return GdxText.val("野生动物");
     }
 

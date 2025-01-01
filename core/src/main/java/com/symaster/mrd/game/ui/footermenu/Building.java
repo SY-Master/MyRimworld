@@ -17,7 +17,7 @@ public class Building extends FooterMenu {
     }
 
     @Override
-    public String title() {
+    public String name() {
         return GdxText.val("建筑规划");
     }
 

@@ -38,5 +38,17 @@ public class SystemConfig {
      * 激活伙伴周围的区块
      */
     public static int PARTNER_ACTIVE_SIZE = 3;
+    /**
+     * 游戏时间设定 - 一天多少个小时
+     */
+    public static int TIME_DAY_HOUR = 24;
+    /**
+     * 游戏时间设定 - 一个小时多少分钟
+     */
+    public static int TIME_HOUR_MINUTE = 60;
+    /**
+     * 游戏时间设定 - 一分钟多少秒
+     */
+    public static int TIME_MINUTE_SECOND = 1;
 
 }

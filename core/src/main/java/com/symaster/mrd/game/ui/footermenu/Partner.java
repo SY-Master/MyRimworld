@@ -17,7 +17,7 @@ public class Partner extends FooterMenu {
     }
 
     @Override
-    public String title() {
+    public String name() {
         return GdxText.val("伙伴列表");
     }
 
