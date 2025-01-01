@@ -53,7 +53,6 @@ public class Main extends ApplicationAdapter {
     private InputFactory inputFactory;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
-    // private SpriteBatch spriteBatch;
     private ViewportNodeOrthographic cam;
     private AI ai;
 

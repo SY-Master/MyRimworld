@@ -12,16 +12,17 @@ import com.symaster.mrd.util.GdxText;
 
 /**
  * @author yinmiao
- * @since 2024/12/16
+ * @since 2024/12/27
  */
-public class Setting extends MainStageUIItem {
+public class BuildingMenu extends MainStageUIItem {
+
     private TextButton textButton;
 
     @Override
     public void create() {
         super.create();
 
-        textButton = new TextButton(GdxText.val("设置"), getSkin());
+        textButton = new TextButton(GdxText.val("建筑规划"), getSkin());
         textButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -55,7 +56,7 @@ public class Setting extends MainStageUIItem {
 
             @Override
             public int panelWidth(int sceneWidth) {
-                return 0;
+                return (int) (sceneWidth * 0.4);
             }
 
             @Override

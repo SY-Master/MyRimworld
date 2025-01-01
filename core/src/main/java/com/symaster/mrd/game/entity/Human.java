@@ -24,7 +24,7 @@ public class Human extends Creature {
     private float fontScale;
 
     public Human(AssetManager assetManager, Skin skin, float fontScale) {
-        super(Race.Human);
+        setRace(Race.Human);
         this.fontScale = fontScale;
         Texture texture = assetManager.get("user.png", Texture.class);
 

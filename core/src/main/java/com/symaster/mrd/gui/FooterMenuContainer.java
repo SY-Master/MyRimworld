@@ -1,19 +1,20 @@
 package com.symaster.mrd.gui;
 
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.symaster.mrd.game.ui.FooterMenu;
+import com.symaster.mrd.game.ui.MainStageUIItem;
 
 /**
  * @author yinmiao
  * @since 2024/12/16
  */
 public class FooterMenuContainer {
-    private final FooterMenu footerMenu;
-    private final TextButton menuBtn;
+    private final MainStageUIItem mainStageUIItem;
+    private final Actor menuBtn;
     private MenuActor menuActor;
 
-    public FooterMenuContainer(FooterMenu footerMenu, TextButton menuBtn) {
-        this.footerMenu = footerMenu;
+    public FooterMenuContainer(MainStageUIItem mainStageUIItem, Actor menuBtn) {
+        this.mainStageUIItem = mainStageUIItem;
         this.menuBtn = menuBtn;
     }
 
@@ -25,11 +26,11 @@ public class FooterMenuContainer {
         this.menuActor = menuActor;
     }
 
-    public FooterMenu getFooterMenu() {
-        return footerMenu;
+    public MainStageUIItem getFooterMenu() {
+        return mainStageUIItem;
     }
 
-    public TextButton getMenuBtn() {
+    public Actor getMenuBtn() {
         return menuBtn;
     }
 }

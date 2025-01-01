@@ -14,14 +14,14 @@ import com.symaster.mrd.util.GdxText;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class Setting extends MainStageUIItem {
+public class CreatureMenu extends MainStageUIItem {
     private TextButton textButton;
 
     @Override
     public void create() {
         super.create();
 
-        textButton = new TextButton(GdxText.val("设置"), getSkin());
+        textButton = new TextButton(GdxText.val("野生动物"), getSkin());
         textButton.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
