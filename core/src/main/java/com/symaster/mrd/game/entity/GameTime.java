@@ -40,7 +40,7 @@ public class GameTime extends Node {
      * 年份
      */
     public int getYear(double time) {
-        return (int) Math.floor(time / config.month / config.day / config.hour / config.minute / config.second);
+        return (int) Math.floor(time / config.month / config.day / config.hour / config.minute / config.second) + 1;
     }
 
     /**
@@ -96,15 +96,31 @@ public class GameTime extends Node {
     /**
      * 小时
      */
-    private int getHour(double time) {
+    public int getHour(double time) {
         double v = time / (config.minute * config.second);
 
         double v1 = v % (config.month * config.day * config.hour);
         double v2 = v1 % (config.day * config.hour);
         double v3 = v2 % config.hour;
 
-        return (int) Math.floor(v3) + 1;
+        return (int) Math.floor(v3);
     }
+
+    public int getMinute() {
+        return getMinute(time);
+    }
+
+    public int getMinute(double time) {
+        double v = time / config.second;
+
+        double v1 = v % (config.month * config.day * config.hour * config.minute);
+        double v2 = v1 % (config.day * config.hour * config.minute);
+        double v3 = v2 % (config.hour * config.minute);
+        double v4 = v3 % config.minute;
+
+        return (int) Math.floor(v4);
+    }
+
 
     @Override
     public void logic(float delta) {

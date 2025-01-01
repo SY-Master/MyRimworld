@@ -37,4 +37,5 @@
     <tree path="/core/src/main/java/com/symaster/mrd/game/entity" title="实体"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui" title="UI控件" extension="" presentableText=""
           tooltipTitle="" icon="" textColor="" backgroundColor=""/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/TimeView.java" title="时间显示器"/>
 </trees>

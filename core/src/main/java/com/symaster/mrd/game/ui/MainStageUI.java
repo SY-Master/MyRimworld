@@ -6,10 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.ui.footermenu.BuildingMenu;
-import com.symaster.mrd.game.ui.footermenu.CreatureMenu;
-import com.symaster.mrd.game.ui.footermenu.PartnerMenu;
-import com.symaster.mrd.game.ui.footermenu.Setting;
+import com.symaster.mrd.game.ui.footermenu.*;
 import com.symaster.mrd.gui.*;
 import com.symaster.mrd.util.ClassUtil;
 
@@ -40,6 +37,7 @@ public class MainStageUI extends Stage {
         addTo(new CreatureMenu());
         addTo(new PartnerMenu());
         addTo(new Setting());
+        addTo(new TimeView());
 
         this.addActor(this.table);
     }
@@ -56,12 +54,14 @@ public class MainStageUI extends Stage {
         o.setSkin(skin);
         o.setMainStageUI(this);
         o.create();
-        o.addPanelOpenListener((item) -> {
-            if (item.panel() == null) {
-                return;
-            }
-            item.panel().setVisible(!item.panel().isVisible());
-        });
+        if (!o.isPanelNormallyOpen()) {
+            o.addPanelOpenListener((item) -> {
+                if (item.panel() == null) {
+                    return;
+                }
+                item.panel().setVisible(!item.panel().isVisible());
+            });
+        }
 
         this.footerMenus.add(o);
         if (o.layoutConfig() != null && BTNPosition.BottomMenu == o.layoutConfig().btnPosition()) {
@@ -70,7 +70,7 @@ public class MainStageUI extends Stage {
 
         if (o.panel() != null) {
             this.addActor(o.panel());
-            o.panel().setVisible(false);
+            o.panel().setVisible(o.isPanelNormallyOpen());
         }
     }
 
@@ -114,6 +114,11 @@ public class MainStageUI extends Stage {
             if (UIPosition.LEFT_DOWN == uiPosition) {
                 panel.setSize(panelWidth, Math.min(avaHeight, panelHeight));
                 panel.setPosition(0, bottomMenuHeight);
+            }
+            if (UIPosition.LEFT_UP == uiPosition) {
+                int min = Math.min(avaHeight, panelHeight);
+                panel.setSize(panelWidth, min);
+                panel.setPosition(0, height - min);
             }
 
 

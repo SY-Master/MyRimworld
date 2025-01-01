@@ -12,8 +12,16 @@ import com.symaster.mrd.gui.UIPosition;
  */
 public class TimeView extends MainStageUIItem {
 
+    private TimeViewPanel timeViewPanel;
+
     public TimeView() {
         setPanelNormallyOpen(true);
+    }
+
+    @Override
+    public void create() {
+        super.create();
+        timeViewPanel = new TimeViewPanel(getSkin(), this);
     }
 
     @Override
@@ -23,7 +31,7 @@ public class TimeView extends MainStageUIItem {
 
     @Override
     public Actor panel() {
-        return null;
+        return timeViewPanel;
     }
 
     @Override
@@ -31,7 +39,7 @@ public class TimeView extends MainStageUIItem {
         return new LayoutConfig() {
             @Override
             public UIPosition uiPosition() {
-                return UIPosition.LEFT_DOWN;
+                return UIPosition.LEFT_UP;
             }
 
             @Override
@@ -41,12 +49,12 @@ public class TimeView extends MainStageUIItem {
 
             @Override
             public int panelWidth(int sceneWidth) {
-                return 0;
+                return 10;
             }
 
             @Override
             public int panelHeight(int sceneHeight) {
-                return 0;
+                return 20;
             }
         };
     }
@@ -54,5 +62,6 @@ public class TimeView extends MainStageUIItem {
     @Override
     public void logic(float delta) {
         super.logic(delta);
+        timeViewPanel.logic(delta);
     }
 }
