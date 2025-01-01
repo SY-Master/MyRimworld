@@ -111,7 +111,7 @@ public class MainStageUI extends Stage {
             int panelHeight = layoutConfig.panelHeight(height);
 
             UIPosition uiPosition = layoutConfig.uiPosition();
-            if (UIPosition.LEFT == uiPosition) {
+            if (UIPosition.LEFT_DOWN == uiPosition) {
                 panel.setSize(panelWidth, Math.min(avaHeight, panelHeight));
                 panel.setPosition(0, bottomMenuHeight);
             }

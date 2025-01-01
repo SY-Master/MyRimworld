@@ -1,38 +1,24 @@
 package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.game.ui.MainStageUIItem;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.gui.UIPosition;
-import com.symaster.mrd.util.GdxText;
 
 /**
  * @author yinmiao
- * @since 2024/12/16
+ * @since 2025/1/1
  */
-public class CreatureMenu extends MainStageUIItem {
-    private TextButton textButton;
+public class TimeView extends MainStageUIItem {
 
-    @Override
-    public void create() {
-        super.create();
-
-        textButton = new TextButton(GdxText.val("野生动物"), getSkin());
-        textButton.addListener(new ClickListener() {
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                openPanel();
-            }
-        });
+    public TimeView() {
+        setPanelNormallyOpen(true);
     }
 
     @Override
     public Actor key() {
-        return textButton;
+        return null;
     }
 
     @Override
@@ -50,7 +36,7 @@ public class CreatureMenu extends MainStageUIItem {
 
             @Override
             public BTNPosition btnPosition() {
-                return BTNPosition.BottomMenu;
+                return null;
             }
 
             @Override
@@ -65,4 +51,8 @@ public class CreatureMenu extends MainStageUIItem {
         };
     }
 
+    @Override
+    public void logic(float delta) {
+        super.logic(delta);
+    }
 }

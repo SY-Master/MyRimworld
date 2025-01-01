@@ -28,18 +28,24 @@ public class Human extends Creature {
         this.fontScale = fontScale;
         Texture texture = assetManager.get("user.png", Texture.class);
 
+        float iconW = UnitUtil.ofM(0.7f);
+        float iconH = UnitUtil.ofM(1f);
+
         Sprite  sprite = new Sprite(texture);
-        sprite.setSize(UnitUtil.ofM(0.7f), UnitUtil.ofM(1f));
+        sprite.setSize(iconW, iconH);
 
         add((nodes = new SpriteNode(sprite)));
 
+        float labelW = UnitUtil.ofM(1.5f);
         label = new Label(getName(), skin.get("nameLabel", Label.LabelStyle.class));
         label.setAlignment(Align.center);
         label.setFontScale(fontScale);
-        label.setSize(UnitUtil.ofM(1.5f), 5f);
+        label.setSize(labelW, 5f);
+
+        float x = iconW / 2f - labelW / 2f;
 
         LabelNode nodes1 = new LabelNode(label);
-        nodes1.setPositionY(-5);
+        nodes1.setPosition(x, -5);
         add(nodes1);
 
         setVisible(true);

@@ -8,8 +8,12 @@ public enum UIPosition {
 
     UP,
     DOWN,
-    LEFT,
-    RIGHT,
+    LEFT_DOWN,
+    LEFT_UP,
+    LEFT_CENTER,
+    RIGHT_DOWN,
+    RIGHT_CENTER,
+    RIGHT_UP,
     CENTER;
 
 }

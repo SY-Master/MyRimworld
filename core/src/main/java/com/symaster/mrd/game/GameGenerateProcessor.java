@@ -7,13 +7,11 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.ProgressProcessor;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.entity.GameGenerateData;
-import com.symaster.mrd.game.entity.Gender;
-import com.symaster.mrd.game.entity.Human;
-import com.symaster.mrd.game.entity.Save;
+import com.symaster.mrd.game.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 /**
  * @author yinmiao
@@ -75,15 +73,26 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, gameGenerateData.inputFactory);
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
+        // 游戏时间
+        scene.add(new GameTime(new Random().nextFloat() * 1000000), Groups.TIMER);
+
+        Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
+        maleHuman.setZIndex(100);
+        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
+        maleHuman.setHp(new Measure(1, 100f));
+        maleHuman.setGender(Gender.MALE);
+        maleHuman.setAi(gameGenerateData.ai);
+        maleHuman.setName(NameGeneratorFactory.getNameGenerator(maleHuman.getRace()).generateName(Gender.MALE));
+        scene.add(maleHuman, Groups.PARTNER);
+
         Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         human.setZIndex(100);
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
-        human.setHp(1f);
-        human.setHpMax(100f);
-        human.setGender(Gender.MALE);
+        human.setHp(new Measure(1, 100f));
+        human.setGender(Gender.FEMALE);
         human.setAi(gameGenerateData.ai);
-        human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName());
-
+        human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName(Gender.FEMALE));
+        human.setPosition(20, 0);
         scene.add(human, Groups.PARTNER);
 
         Save save = new Save();

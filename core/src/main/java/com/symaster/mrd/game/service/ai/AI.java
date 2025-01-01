@@ -4,6 +4,7 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.Creature;
+import com.symaster.mrd.game.entity.GameTime;
 import com.symaster.mrd.game.entity.Race;
 
 import java.util.Set;
@@ -15,7 +16,8 @@ import java.util.Set;
 public class AI {
 
     private Scene scene;
-    private AIData aiData;
+    private Database database;
+    private GameTime gameTime;
 
     public Scene getScene() {
         return scene;
@@ -23,16 +25,21 @@ public class AI {
 
     public void setScene(Scene scene) {
         this.scene = scene;
-        Set<Node> byGroup = this.scene.getByGroup(Groups.AI_DATA);
+        Set<Node> byGroup = this.scene.getByGroup(Groups.DATABASE);
         if (byGroup == null) {
-            this.scene.add(new AIData(), Groups.AI_DATA);
+            this.scene.add(new Database(), Groups.DATABASE);
         }
 
-        aiData = (AIData) this.scene.getByGroup(Groups.AI_DATA).iterator().next();
+        database = (Database) this.scene.getByGroup(Groups.DATABASE).iterator().next();
+
+        Set<Node> byGroup1 = scene.getByGroup(Groups.TIMER);
+        if (byGroup1 != null) {
+            gameTime = (GameTime) byGroup1.iterator().next();
+        }
     }
 
     public void logic(Creature nodes, float delta) {
-        if (scene == null || aiData == null) {
+        if (scene == null || database == null) {
             return;
         }
 
@@ -40,10 +47,16 @@ public class AI {
             // 人类的AI
             human(nodes, delta);
         }
-
     }
 
     private void human(Creature nodes, float delta) {
+        if (gameTime == null || database == null) {
+            return;
+        }
+
+        //   - 休息区间：当时间段处于休息区间时，相应的生物会休息。
+        //      - 睡觉：只有睡觉一种行为会发生。
+        //
         //   - 工作：工作区间，理论上是工作，但是当没有任何工作的时间会执行其他事情，工作也分为了两种：命令、普通工作。行为顺序如下：
         //     1. 吃东西：最高优先级。当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
         //     2. 命令工作：只有吃饱后才有力气干活。
@@ -76,5 +89,12 @@ public class AI {
         //       - 不处于睡觉行为下
 
 
+
+        Status status = database.getStatus(nodes.getUid());
+
+        // 当前角色无状态（通常是没有执行任何动作的情况）
+        if (status == null) {
+
+        }
     }
 }

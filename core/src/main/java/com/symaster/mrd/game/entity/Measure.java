@@ -9,6 +9,14 @@ public class Measure {
     private float value;
     private float max;
 
+    public Measure() {
+    }
+
+    public Measure(float value, float max) {
+        this.value = value;
+        this.max = max;
+    }
+
     public float getValue() {
         return value;
     }
