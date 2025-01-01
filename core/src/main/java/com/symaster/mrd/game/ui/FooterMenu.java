@@ -19,7 +19,7 @@ public abstract class FooterMenu {
         return mainStageUI;
     }
 
-    public abstract String title();
+    public abstract String name();
 
     public abstract Actor panel();
 

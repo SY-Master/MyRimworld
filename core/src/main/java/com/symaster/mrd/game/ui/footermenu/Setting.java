@@ -17,7 +17,7 @@ public class Setting extends FooterMenu {
     }
 
     @Override
-    public String title() {
+    public String name() {
         return GdxText.val("设置");
     }
 

@@ -3,7 +3,9 @@ package com.symaster.mrd.g2d;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
+import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.g2d.scene.Scene;
 
 import java.util.Comparator;
@@ -19,6 +21,7 @@ public class OrthographicCameraNode extends Node {
     private final OrthographicCamera camera;
     private final SpriteBatch spriteBatch;
     private final List<Node> caches = new LinkedList<>();
+    private final PositionConverter positionConverter;
 
     public OrthographicCameraNode() {
         this(new OrthographicCamera(), new SpriteBatch());
@@ -32,6 +35,33 @@ public class OrthographicCameraNode extends Node {
         this.camera = camera;
         this.spriteBatch = spriteBatch;
         setForcedLogic(true);
+        this.positionConverter = getConverter();
+    }
+
+    public PositionConverter getConverter() {
+        return new PositionConverter() {
+            @Override
+            public void toWorld(Vector2 screen) {
+                Vector3 vector3 = new Vector3(screen.x, screen.y, 0);
+
+                camera.unproject(vector3);
+
+                screen.set(vector3.x, vector3.y);
+            }
+
+            @Override
+            public void toScreen(Vector2 world) {
+                Vector3 vector3 = new Vector3(world.x, world.y, 0);
+
+                camera.project(vector3);
+
+                world.set(vector3.x, vector3.y);
+            }
+        };
+    }
+
+    public PositionConverter getPositionConverter() {
+        return positionConverter;
     }
 
     public OrthographicCamera getCamera() {

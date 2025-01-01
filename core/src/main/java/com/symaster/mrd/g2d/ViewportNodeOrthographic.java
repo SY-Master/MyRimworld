@@ -6,6 +6,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.Viewport;
+import com.symaster.mrd.api.PositionConverter;
 
 /**
  * @author yinmiao
@@ -26,6 +27,21 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
     public ViewportNodeOrthographic(Viewport viewport) {
         super((OrthographicCamera) viewport.getCamera(), new SpriteBatch());
         this.viewport = viewport;
+    }
+
+    @Override
+    public PositionConverter getConverter() {
+        return new PositionConverter() {
+            @Override
+            public void toWorld(Vector2 screen) {
+                viewport.unproject(screen);
+            }
+
+            @Override
+            public void toScreen(Vector2 world) {
+                viewport.project(world);
+            }
+        };
     }
 
     public Viewport getViewport() {

@@ -7,6 +7,7 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
+import com.symaster.mrd.api.ProgressProcessor;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
@@ -68,15 +69,11 @@ public class Scene implements Serializable, Disposable {
     private final InputFactory inputFactory;
 
     public Scene(AssetManager assetManager, InputFactory inputFactory) {
-        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, inputFactory); // 默认区块边长10米
+        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), inputFactory); // 默认区块边长10米
     }
 
     public Scene(AssetManager assetManager, String mapSeed, InputFactory inputFactory) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), null, inputFactory); // 默认区块边长10米
-    }
-
-    public Scene(AssetManager assetManager, String mapSeed, List<Block> initBlocks, InputFactory inputFactory) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), initBlocks, inputFactory); // 默认区块边长10米
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), inputFactory); // 默认区块边长10米
     }
 
     /**
@@ -87,7 +84,7 @@ public class Scene implements Serializable, Disposable {
      * @param blockSize    区块大小
      * @param initBlocks   构建场景时初始化区块
      */
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize, List<Block> initBlocks, InputFactory inputFactory) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize, InputFactory inputFactory) {
         this.blockSize = blockSize;
         this.inputFactory = inputFactory;
         this.nodes = new HashMap<>();
@@ -106,11 +103,6 @@ public class Scene implements Serializable, Disposable {
         this.positionUpdateExtend = new PositionUpdateExtendImpl(this);
         this.childUpdateExtend = new ChildUpdateExtendImpl(this);
         this.blockMapGenerate = new BlockMapGenerate(this, assetManager);
-
-        // 同步初始化区块
-        if (initBlocks != null) {
-            initBlocks(initBlocks);
-        }
     }
 
     /**
@@ -118,10 +110,26 @@ public class Scene implements Serializable, Disposable {
      *
      * @param initBlocks 指定区块
      */
-    private void initBlocks(List<Block> initBlocks) {
-        for (Block initBlock : initBlocks) {
+    public void initBlocks(List<Block> initBlocks) {
+        initBlocks(initBlocks, null);
+    }
+
+    /**
+     * 同步初始化区块
+     *
+     * @param initBlocks 指定区块
+     */
+    public void initBlocks(List<Block> initBlocks, ProgressProcessor progressProcessor) {
+
+        for (int i = 0; i < initBlocks.size(); i++) {
+            Block initBlock = initBlocks.get(i);
+
             Set<Node> generate = this.blockMapGenerate.getBlockMapGenerateProcessor().generate(this, initBlock);
             nodes.computeIfAbsent(initBlock, k -> new HashSet<>()).addAll(generate);
+
+            if (progressProcessor != null) {
+                progressProcessor.update(i + 1f / initBlocks.size());
+            }
         }
     }
 

@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
-import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -65,8 +64,11 @@ public class Main extends ApplicationAdapter {
         transformMove.setSpeed(UnitUtil.ofM(18));
 
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
-        cam.setLimit2activityBlock(true);
-        cam.add(new RollerDragInput(cam));
+
+        RollerDragInput rollerDragInput = new RollerDragInput(cam);
+        rollerDragInput.setPositionConverter(cam.getPositionConverter());
+
+        cam.add(rollerDragInput);
         cam.add(wasdInput);
         cam.add(transformMove);
         cam.add(new TransformZoom(cam.getCamera(), cam));

@@ -56,7 +56,7 @@ public class MainStageUI extends Stage {
     }
 
     private void addTo(Skin skin, FooterMenu o) {
-        TextButton textButton = new TextButton(o.title(), skin);
+        TextButton textButton = new TextButton(o.name(), skin);
         FooterMenuContainer m = new FooterMenuContainer(o, textButton);
 
         this.footerMenus.add(m);
