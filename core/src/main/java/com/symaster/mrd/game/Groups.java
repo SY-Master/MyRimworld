@@ -13,6 +13,10 @@ public class Groups {
     /**
      * ai数据
      */
-    public static final String AI_DATA = "ai_data";
+    public static final String DATABASE = "database";
+    /**
+     * 时间
+     */
+    public static final String TIMER = "timer";
 
 }

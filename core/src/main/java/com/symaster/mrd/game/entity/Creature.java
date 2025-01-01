@@ -36,9 +36,9 @@ public class Creature extends Node {
      */
     private boolean alive;
     /**
-     * 生物的创建时间（降生日）
+     * 生物的创建时间（降生日）（秒）
      */
-    private GameTime createTime;
+    private double createTime;
     /**
      * 生物的最大寿命（年）
      */
@@ -56,11 +56,11 @@ public class Creature extends Node {
         this.race = race;
     }
 
-    public GameTime getCreateTime() {
+    public double getCreateTime() {
         return createTime;
     }
 
-    public void setCreateTime(GameTime createTime) {
+    public void setCreateTime(double createTime) {
         this.createTime = createTime;
     }
 

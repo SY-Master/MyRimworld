@@ -46,7 +46,7 @@ public class BuildingMenu extends MainStageUIItem {
         return new LayoutConfig() {
             @Override
             public UIPosition uiPosition() {
-                return UIPosition.LEFT;
+                return UIPosition.LEFT_DOWN;
             }
 
             @Override

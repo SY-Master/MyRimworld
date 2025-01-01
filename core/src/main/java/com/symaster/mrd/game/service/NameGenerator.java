@@ -1,5 +1,7 @@
 package com.symaster.mrd.game.service;
 
+import com.symaster.mrd.game.entity.Gender;
+
 /**
  * 名称生成器
  *
@@ -8,6 +10,6 @@ package com.symaster.mrd.game.service;
  */
 public interface NameGenerator {
 
-    String generateName();
+    String generateName(Gender gender);
 
 }

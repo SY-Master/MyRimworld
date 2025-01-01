@@ -47,7 +47,6 @@ public class PartnerMenu extends MainStageUIItem {
     @Override
     public void logic(float delta) {
         super.logic(delta);
-
         partnerPanel.logic(delta);
     }
 
@@ -56,7 +55,7 @@ public class PartnerMenu extends MainStageUIItem {
         return new LayoutConfig() {
             @Override
             public UIPosition uiPosition() {
-                return UIPosition.LEFT;
+                return UIPosition.LEFT_DOWN;
             }
 
             @Override

@@ -12,6 +12,7 @@ import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 
 import java.util.HashSet;
+import java.util.Random;
 import java.util.Set;
 
 /**
@@ -23,16 +24,31 @@ import java.util.Set;
 public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor {
 
     private final AssetManager assetManager;
+    private final Random random = new Random();
 
     public BlockMapGenerateProcessorImpl(AssetManager assetManager) {
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getMapSize(float mapSize, TextureRegion textureRegion, float startX, float startY) {
+    private Set<Node> getMapSize(float mapSize, Texture mapTexture, float startX, float startY) {
         Set<Node> rtn = new HashSet<>();
 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
             for (int y = 0; y < SystemConfig.MAP_NUMBER; y++) {
+
+                TextureRegion textureRegion;
+                float v = random.nextFloat();
+
+                if (v < 0.3f) {
+                    textureRegion = new TextureRegion(mapTexture, 0, 0, 32, 32);
+                } else if (v < 0.6f) {
+                    textureRegion = new TextureRegion(mapTexture, 32, 0, 32, 32);
+                } else if (v < 0.9f) {
+                    textureRegion = new TextureRegion(mapTexture, 128, 0, 32, 32);
+                } else {
+                    textureRegion = new TextureRegion(mapTexture, 160, 32, 32, 32);
+                }
+
                 float mapX = mapSize * x + startX;
                 float mapY = mapSize * y + startY;
 
@@ -52,7 +68,6 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
     @Override
     public Set<Node> generate(Scene scene, Block take) {
         Texture mapTexture = assetManager.get("TX Tileset Grass.png", Texture.class);
-        TextureRegion textureRegion = new TextureRegion(mapTexture, 0, 96, 32, 32);
 
         float blockSize = scene.getBlockSize();
 
@@ -61,6 +76,6 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
         float mapSize = blockSize / SystemConfig.MAP_NUMBER;
 
-        return getMapSize(mapSize, textureRegion, startX, startY);
+        return getMapSize(mapSize, mapTexture, startX, startY);
     }
 }
