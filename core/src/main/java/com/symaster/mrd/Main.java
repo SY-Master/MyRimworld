@@ -46,12 +46,13 @@ import java.util.stream.Stream;
  */
 public class Main extends ApplicationAdapter {
 
-    private Skin skin;
-    private AssetManager assetManager;
-    private Loading loading;
     private Save save;
     private MainMenu mainMenu;
     private MainStageUI gui;
+
+    private Skin skin;
+    private AssetManager assetManager;
+    private Loading loading;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
     private ViewportNodeOrthographic cam;
@@ -133,7 +134,7 @@ public class Main extends ApplicationAdapter {
         return skin;
     }
 
-    private void loadSkin() {
+    public void loadSkin() {
         skin = defaultSkin(assetManager);
     }
 
@@ -193,123 +194,10 @@ public class Main extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        switch (GameSingleData.gamePageStatus) {
-            case Loading: // 加载界面
-                loadingPageRender(delta);
-                break;
-            case Menu: // 主页
-                menuPageRender(delta);
-                break;
-            case Game: // 游戏页面
-                gamePageRender(delta);
-                break;
-        }
-
-        // 加载资源
-        // if (!assetManager.update(17)) {
-        //     loading.setProgressValue(assetManager.getProgress());
-        //     loading.logic(delta);
-        //     loading.render();
-        // } else if (GameSingleData.systemStatus == Status.MainLoading) {
-        //     loadSkin();
-        //     loading.setProgressValue(1f);
-        //     loading.logic(delta);
-        //     loading.render();
-        // } else if (GameSingleData.systemStatus == Status.SkinLoadingFinish) {
-        //     loadMainMenu();
-        //     loading.setProgressValue(1f);
-        //     loading.logic(delta);
-        //     loading.render();
-        // } else if (GameSingleData.systemStatus == Status.MainMenuLoadingFinish) {
-        //     mainMenu.logic(delta);
-        //     mainMenu.render();
-        // } else if (GameSingleData.systemStatus == Status.GameGenerating && gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
-        //     loading.setProgressValue(gameGenerateProcessor.getProgress());
-        //     loading.logic(delta);
-        //     loading.render();
-        // } else if (GameSingleData.systemStatus == Status.GameGenerating && gameGenerateProcessor != null) {
-        //     this.save = gameGenerateProcessor.getSave();
-        //     this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //     this.save.getScene().add(cam);
-        //     this.ai.setScene(this.save.getScene());
-        //     this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //     this.gui.setScene(save.getScene());
-        //     GameSingleData.inputBridge.remove(mainMenu);
-        //
-        //     this.loading.setProgressValue(1f);
-        //     this.loading.logic(delta);
-        //     this.loading.render();
-        //     GameSingleData.systemStatus = Status.GameReadyGo;
-        // } else if (save != null && gui != null) {
-        //     // 处理场景的逻辑
-        //     save.getScene().logic(delta);
-        //     // 处理GUI的逻辑
-        //     gui.logic(delta);
-        //
-        //     // 绘制相机
-        //     cam.render();
-        //     // 绘制场景
-        //     // save.getScene().render();
-        //     // 绘制GUI
-        //     gui.render();
-        // }
+        GameSingleData.gamePageStatus.render(this, delta);
     }
 
-    /**
-     * 加载界面渲染
-     */
-    private void gamePageRender(float delta) {
-        // 处理场景的逻辑
-        save.getScene().logic(delta);
-        // 处理GUI的逻辑
-        gui.logic(delta);
-
-        // 绘制相机
-        cam.render();
-        // 绘制GUI
-        gui.render();
-    }
-
-    private void menuPageRender(float delta) {
-        mainMenu.logic(delta);
-        mainMenu.render();
-    }
-
-    private void loadingPageRender(float delta) {
-        if (GameSingleData.loadingType == LoadingType.ApplicationRunnerLoading) {
-            if (!assetManager.update(17)) {
-                loading.setProgressValue(assetManager.getProgress());
-            } else {
-                loadSkin();
-                loadMainMenu();
-                loadGUI();
-                loading.setProgressValue(1f);
-                GameSingleData.gamePageStatus = GamePageStatus.Menu;
-            }
-        } else if (GameSingleData.loadingType == LoadingType.GamePlayLoading) {
-            if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
-                loading.setProgressValue(gameGenerateProcessor.getProgress());
-            } else if (gameGenerateProcessor != null) {
-                this.save = gameGenerateProcessor.getSave();
-                this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                this.save.getScene().add(cam);
-                this.ai.setScene(this.save.getScene());
-                this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-                this.gui.setScene(save.getScene());
-
-                this.loading.setProgressValue(1f);
-                this.loading.logic(delta);
-                this.loading.render();
-
-                GameSingleData.gamePageStatus = GamePageStatus.Game;
-            }
-        }
-
-        loading.logic(delta);
-        loading.render();
-    }
-
-    private void loadGUI() {
+    public void loadGUI() {
         gui = new MainStageUI(skin);
         GameSingleData.inputBridge.add(gui);
     }
@@ -318,7 +206,7 @@ public class Main extends ApplicationAdapter {
 
     }
 
-    private void loadMainMenu() {
+    public void loadMainMenu() {
         mainMenu = new MainMenu(skin, assetManager);
         mainMenu.act();
         mainMenu.getPlayGameSetting().getPlayGame().addListener(new ClickListener() {
@@ -367,5 +255,59 @@ public class Main extends ApplicationAdapter {
         if (gui != null) {
             gui.dispose();
         }
+    }
+
+    public void applicationRunnerLoading(float delta) {
+        if (!assetManager.update(17)) {
+            loading.setProgressValue(assetManager.getProgress());
+        } else {
+            loadSkin();
+            loadMainMenu();
+            loadGUI();
+            loading.setProgressValue(1f);
+            GameSingleData.gamePageStatus = GamePageStatus.Menu;
+        }
+
+        loading.logic(delta);
+        loading.render();
+    }
+
+    public void gamePlayLoading(float delta) {
+        if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
+            loading.setProgressValue(gameGenerateProcessor.getProgress());
+        } else if (gameGenerateProcessor != null) {
+            this.save = gameGenerateProcessor.getSave();
+            this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            this.save.getScene().add(cam);
+            this.ai.setScene(this.save.getScene());
+            this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+            this.gui.setScene(save.getScene());
+
+            this.loading.setProgressValue(1f);
+            this.loading.logic(delta);
+            this.loading.render();
+
+            GameSingleData.gamePageStatus = GamePageStatus.Game;
+        }
+
+        loading.logic(delta);
+        loading.render();
+    }
+
+    public void menuRender(float delta) {
+        mainMenu.logic(delta);
+        mainMenu.render();
+    }
+
+    public void gameRender(float delta) {
+        // 处理场景的逻辑
+        save.getScene().logic(delta);
+        // 处理GUI的逻辑
+        gui.logic(delta);
+
+        // 绘制相机
+        cam.render();
+        // 绘制GUI
+        gui.render();
     }
 }
