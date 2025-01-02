@@ -6,6 +6,7 @@ import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
 
+import java.awt.*;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -19,10 +20,12 @@ public abstract class MainStageUIItem implements Disposable {
     private Skin skin;
     private MainStageUI mainStageUI;
     private boolean panelNormallyOpen;
+    private final Insets insets;
 
     public MainStageUIItem() {
         this.panelOpenListeners = new HashSet<>();
         this.panelNormallyOpen = false;
+        this.insets = new Insets(0, 0, 0, 0);
     }
 
     public void create() {}
@@ -61,8 +64,6 @@ public abstract class MainStageUIItem implements Disposable {
 
     public abstract Actor panel();
 
-    // public abstract LayoutConfig layoutConfig();
-
     public UIPosition uiPosition() {
         return null;
     }
@@ -71,12 +72,21 @@ public abstract class MainStageUIItem implements Disposable {
         return null;
     }
 
-    public int panelWidth(int sceneWidth) {
+    public int panelWidth(int sceneWidth, int sceneHeight) {
         return 0;
     }
 
-    public int panelHeight(int sceneHeight) {
+    public int panelHeight(int sceneWidth, int sceneHeight) {
         return 0;
+    }
+
+    public final Insets marge(int sceneWidth, int sceneHeight) {
+        updateMarge(insets, sceneWidth, sceneHeight);
+        return insets;
+    }
+
+    private void updateMarge(Insets insets, int sceneWidth, int sceneHeight) {
+
     }
 
     public void logic(float delta) {

@@ -5,16 +5,15 @@ import com.badlogic.gdx.graphics.Camera;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.math.MathUtils;
 import com.badlogic.gdx.math.Vector3;
-import com.symaster.mrd.api.ScrolledInputEvent;
+import com.symaster.mrd.g2d.InputNode;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.input.ScrolledInput;
 
 /**
  * @author yinmiao
  * @since 2024/12/27
  */
-public class TransformZoom extends Node implements ScrolledInputEvent {
+public class TransformZoom extends InputNode {
 
     private final OrthographicCamera camera;
     private final ScrolledInput scrolledInput;
@@ -35,8 +34,6 @@ public class TransformZoom extends Node implements ScrolledInputEvent {
         this.camera = camera;
         this.scrolledInput = scrolledInput;
         this.moveNode = moveNode;
-
-        scrolledInput.setScrolledInputEvent(this);
     }
 
     public Camera getCamera() {
@@ -47,30 +44,6 @@ public class TransformZoom extends Node implements ScrolledInputEvent {
         return scrolledInput;
     }
 
-    /**
-     * 当前节点被添加进场景事件
-     *
-     * @param scene 场景
-     */
-    @Override
-    public void onScene(Scene scene) {
-        super.onScene(scene);
-
-        scene.getInputFactory().add(scrolledInput);
-    }
-
-    /**
-     * 当前场景被移除场景事件
-     *
-     * @param scene 场景
-     */
-    @Override
-    public void extScene(Scene scene) {
-        super.extScene(scene);
-
-        scene.getInputFactory().remove(scrolledInput);
-    }
-
     @Override
     public boolean scrolled(float amountX, float amountY) {
 
@@ -78,7 +51,6 @@ public class TransformZoom extends Node implements ScrolledInputEvent {
 
         // 计算缩放前后的差值
         float zoomFactor = 1.1f;
-
 
         float oldZoom = camera.zoom;
         if (amountY > 0) {

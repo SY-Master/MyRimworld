@@ -14,7 +14,6 @@ import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
 import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.NodePropertiesChangeExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
-import com.symaster.mrd.input.InputFactory;
 import com.symaster.mrd.util.UnitUtil;
 
 import java.io.Serializable;
@@ -66,14 +65,13 @@ public class Scene implements Serializable, Disposable {
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
     private final Cache renderCache;
-    private final InputFactory inputFactory;
 
-    public Scene(AssetManager assetManager, InputFactory inputFactory) {
-        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), inputFactory); // 默认区块边长10米
+    public Scene(AssetManager assetManager) {
+        this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
     }
 
-    public Scene(AssetManager assetManager, String mapSeed, InputFactory inputFactory) {
-        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE), inputFactory); // 默认区块边长10米
+    public Scene(AssetManager assetManager, String mapSeed) {
+        this(assetManager, mapSeed, UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
     }
 
     /**
@@ -82,11 +80,9 @@ public class Scene implements Serializable, Disposable {
      * @param assetManager 资源管理器
      * @param mapSeed      种子
      * @param blockSize    区块大小
-     * @param initBlocks   构建场景时初始化区块
      */
-    public Scene(AssetManager assetManager, String mapSeed, float blockSize, InputFactory inputFactory) {
+    public Scene(AssetManager assetManager, String mapSeed, float blockSize) {
         this.blockSize = blockSize;
-        this.inputFactory = inputFactory;
         this.nodes = new HashMap<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
@@ -159,10 +155,6 @@ public class Scene implements Serializable, Disposable {
 
     public Cache getRenderCache() {
         return renderCache;
-    }
-
-    public InputFactory getInputFactory() {
-        return inputFactory;
     }
 
     public void blockUpdate(Node node, int newSize) {

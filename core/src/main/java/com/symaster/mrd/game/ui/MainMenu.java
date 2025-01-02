@@ -9,8 +9,12 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.symaster.mrd.game.GamePageStatus;
+import com.symaster.mrd.game.GameSingleData;
+import com.symaster.mrd.game.PageLayer;
 import com.symaster.mrd.game.ui.page.MainMenuBtn;
 import com.symaster.mrd.game.ui.page.PlayGameSetting;
+import com.symaster.mrd.input.BridgeInputProcessor;
 
 /**
  * 主菜单
@@ -18,7 +22,7 @@ import com.symaster.mrd.game.ui.page.PlayGameSetting;
  * @author yinmiao
  * @since 2024/12/28
  */
-public class MainMenu extends Stage {
+public class MainMenu extends Stage implements BridgeInputProcessor {
 
     private final Image bg;
     private final MainMenuBtn mainMenuBtn;
@@ -88,5 +92,19 @@ public class MainMenu extends Stage {
 
     public PlayGameSetting getPlayGameSetting() {
         return playGameSetting;
+    }
+
+    @Override
+    public int layer() {
+        return PageLayer.Gui.getLayer();
+    }
+
+    @Override
+    public int sort() {
+        if (GameSingleData.gamePageStatus == GamePageStatus.Menu) {
+            return 0;
+        } else {
+            return 99;
+        }
     }
 }

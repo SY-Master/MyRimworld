@@ -4,14 +4,12 @@ import com.badlogic.gdx.utils.TimeUtils;
 import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.symaster.mrd.SystemConfig;
-import com.symaster.mrd.api.ProgressProcessor;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Random;
 
 /**
  * @author yinmiao
@@ -70,7 +68,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
             }
         }
 
-        Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed, gameGenerateData.inputFactory);
+        Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
         // 游戏时间

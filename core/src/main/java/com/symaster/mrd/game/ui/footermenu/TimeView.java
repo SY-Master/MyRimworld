@@ -47,12 +47,12 @@ public class TimeView extends MainStageUIItem {
     }
 
     @Override
-    public int panelWidth(int sceneWidth) {
-        return 10;
+    public int panelWidth(int sceneWidth, int sceneHeight) {
+        return 200;
     }
 
     @Override
-    public int panelHeight(int sceneHeight) {
+    public int panelHeight(int sceneWidth, int sceneHeight) {
         return 20;
     }
 
