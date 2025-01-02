@@ -1,6 +1,7 @@
 package com.symaster.mrd.g2d.tansform;
 
 import com.badlogic.gdx.math.Vector2;
+import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Node;
 
 /**
@@ -21,14 +22,24 @@ public class TransformMove extends Node {
      */
     private final Node operate;
 
+    private boolean ignoreTimeScale;
+
     public TransformMove(Vector2 input) {
-        this.input = input;
-        this.operate = null;
+        this(input, null);
     }
 
     public TransformMove(Vector2 input, Node operate) {
         this.input = input;
         this.operate = operate;
+        this.ignoreTimeScale = false;
+    }
+
+    public boolean isIgnoreTimeScale() {
+        return ignoreTimeScale;
+    }
+
+    public void setIgnoreTimeScale(boolean ignoreTimeScale) {
+        this.ignoreTimeScale = ignoreTimeScale;
     }
 
     public Node getOperate() {
@@ -66,7 +77,12 @@ public class TransformMove extends Node {
         float speed = Math.min(input.len(), 1) * this.speed;
 
         // 移动距离
-        float dis = delta * speed;
+        float dis;
+        if (ignoreTimeScale) {
+            dis = delta / SystemConfig.TIME_SCALE * speed;
+        } else {
+            dis = delta * speed;
+        }
 
         node.translate(input.x * dis, input.y * dis);
     }
