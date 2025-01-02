@@ -161,6 +161,10 @@ public class Main extends ApplicationAdapter {
 
         skin.add("nameLabel", style);
 
+        TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, skin.getFont("font-16"));
+        switchBtn.focused = nDFocused;
+        skin.add("switch", switchBtn);
+
         return skin;
     }
 

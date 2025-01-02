@@ -2,6 +2,7 @@ package com.symaster.mrd.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.gui.LayoutConfig;
 
 import java.util.HashSet;
@@ -11,7 +12,7 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/16
  */
-public abstract class MainStageUIItem {
+public abstract class MainStageUIItem implements Disposable {
 
     private final Set<PanelOpenListener> panelOpenListeners;
     private Skin skin;
@@ -71,5 +72,10 @@ public abstract class MainStageUIItem {
 
     public void removePanelOpenListener(PanelOpenListener listener) {
         panelOpenListeners.remove(listener);
+    }
+
+    @Override
+    public void dispose() {
+
     }
 }
