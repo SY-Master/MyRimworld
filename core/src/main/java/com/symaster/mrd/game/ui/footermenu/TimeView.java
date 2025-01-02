@@ -2,8 +2,6 @@ package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.symaster.mrd.game.ui.MainStageUIItem;
-import com.symaster.mrd.gui.BTNPosition;
-import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.gui.UIPosition;
 
 /**
@@ -35,28 +33,18 @@ public class TimeView extends MainStageUIItem {
     }
 
     @Override
-    public LayoutConfig layoutConfig() {
-        return new LayoutConfig() {
-            @Override
-            public UIPosition uiPosition() {
-                return UIPosition.LEFT_UP;
-            }
+    public UIPosition uiPosition() {
+        return UIPosition.LEFT_UP;
+    }
 
-            @Override
-            public BTNPosition btnPosition() {
-                return null;
-            }
+    @Override
+    public int panelWidth(int sceneWidth) {
+        return 10;
+    }
 
-            @Override
-            public int panelWidth(int sceneWidth) {
-                return 10;
-            }
-
-            @Override
-            public int panelHeight(int sceneHeight) {
-                return 20;
-            }
-        };
+    @Override
+    public int panelHeight(int sceneHeight) {
+        return 20;
     }
 
     @Override

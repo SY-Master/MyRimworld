@@ -8,7 +8,6 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.ui.footermenu.*;
 import com.symaster.mrd.gui.BTNPosition;
-import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.util.ClassUtil;
 
@@ -67,7 +66,7 @@ public class MainStageUI extends Stage {
         }
 
         this.footerMenus.add(o);
-        if (o.layoutConfig() != null && BTNPosition.BottomMenu == o.layoutConfig().btnPosition()) {
+        if (BTNPosition.BottomMenu == o.btnPosition()) {
             this.table.add(o.key()).expand().fill();
         }
 
@@ -104,17 +103,15 @@ public class MainStageUI extends Stage {
 
         for (MainStageUIItem footerMenu : footerMenus) {
             Actor panel = footerMenu.panel();
-            LayoutConfig layoutConfig = footerMenu.layoutConfig();
-
-            if (panel == null || layoutConfig == null) {
+            UIPosition uiPosition = footerMenu.uiPosition();
+            if (panel == null || uiPosition == null) {
                 continue;
             }
 
-            int panelWidth = layoutConfig.panelWidth(width);
-            int panelHeight = layoutConfig.panelHeight(height);
+            int panelWidth = footerMenu.panelWidth(width);
+            int panelHeight = footerMenu.panelHeight(height);
             int min = Math.min(avaHeight, panelHeight);
 
-            UIPosition uiPosition = layoutConfig.uiPosition();
             if (UIPosition.LEFT_DOWN == uiPosition) {
                 panel.setSize(panelWidth, min);
                 panel.setPosition(0, bottomMenuHeight);

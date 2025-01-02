@@ -6,8 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.game.ui.MainStageUIItem;
 import com.symaster.mrd.gui.BTNPosition;
-import com.symaster.mrd.gui.LayoutConfig;
-import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.util.GdxText;
 
 /**
@@ -41,28 +39,9 @@ public class Setting extends MainStageUIItem {
     }
 
     @Override
-    public LayoutConfig layoutConfig() {
-        return new LayoutConfig() {
-            @Override
-            public UIPosition uiPosition() {
-                return UIPosition.LEFT_DOWN;
-            }
-
-            @Override
-            public BTNPosition btnPosition() {
-                return BTNPosition.BottomMenu;
-            }
-
-            @Override
-            public int panelWidth(int sceneWidth) {
-                return 0;
-            }
-
-            @Override
-            public int panelHeight(int sceneHeight) {
-                return 0;
-            }
-        };
+    public BTNPosition btnPosition() {
+        return BTNPosition.BottomMenu;
     }
+
 
 }
