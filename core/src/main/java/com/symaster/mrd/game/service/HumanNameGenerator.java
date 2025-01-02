@@ -1,6 +1,7 @@
 package com.symaster.mrd.game.service;
 
 import com.symaster.mrd.game.entity.Gender;
+import com.symaster.mrd.util.GdxText;
 
 import java.util.Random;
 
@@ -8,31 +9,31 @@ public class HumanNameGenerator implements NameGenerator {
 
     // 姓
     private static final String[] firstNames = {
-            "李", "王", "张", "刘", "陈",
-            "杨", "赵", "黄", "周", "吴",
-            "姬", "姜", "赢", "姞", "隗",
-            "嬴", "姚", "伊", "羲", "祝",
-            "陶", "燕", "姒", "妘", "妫",
+            GdxText.val("李"), GdxText.val("王"), GdxText.val("张"), GdxText.val("刘"), GdxText.val("陈"),
+            GdxText.val("杨"), GdxText.val("赵"), GdxText.val("黄"), GdxText.val("周"), GdxText.val("吴"),
+            GdxText.val("姬"), GdxText.val("姜"), GdxText.val("赢"), GdxText.val("姞"), GdxText.val("隗"),
+            GdxText.val("嬴"), GdxText.val("姚"), GdxText.val("伊"), GdxText.val("羲"), GdxText.val("祝"),
+            GdxText.val("陶"), GdxText.val("燕"), GdxText.val("姒"), GdxText.val("妘"), GdxText.val("妫"),
     };
 
     // 女名
     private static final String[] femaleLastNames = {
-            "梦琪", "忆柳", "之桃", "慕青", "问兰", "语蓉",
-            "尔岚", "元香", "初夏", "沛菡", "傲珊", "曼文",
-            "乐菱", "痴珊", "恨玉", "惜文", "香寒", "新柔",
-            "海安", "夜蓉", "宁熙", "卿羽", "嫣然", "月华",
-            "若雪", "落雪", "明纾", "尘月", "瞑云", "川烟",
-            "秋流",
+            GdxText.val("梦琪"), GdxText.val("忆柳"), GdxText.val("之桃"), GdxText.val("慕青"), GdxText.val("问兰"), GdxText.val("语蓉"),
+            GdxText.val("尔岚"), GdxText.val("元香"), GdxText.val("初夏"), GdxText.val("沛菡"), GdxText.val("傲珊"), GdxText.val("曼文"),
+            GdxText.val("乐菱"), GdxText.val("痴珊"), GdxText.val("恨玉"), GdxText.val("惜文"), GdxText.val("香寒"), GdxText.val("新柔"),
+            GdxText.val("海安"), GdxText.val("夜蓉"), GdxText.val("宁熙"), GdxText.val("卿羽"), GdxText.val("嫣然"), GdxText.val("月华"),
+            GdxText.val("若雪"), GdxText.val("落雪"), GdxText.val("明纾"), GdxText.val("尘月"), GdxText.val("瞑云"), GdxText.val("川烟"),
+            GdxText.val("秋流"),
     };
 
     // 男名
     private static final String[] maleLastNames = {
-            "华", "伟", "强", "磊", "军", "洋",
-            "子涵", "浩然", "晨曦", "峻熙", "逸飞", "睿泽",
-            "明杰", "君浩", "宇轩", "浩淼", "文博", "俊豪",
-            "志远", "建辉", "杰森", "鑫磊", "伟强", "泽宇",
-            "云帆", "晓阳", "子淳", "昊天", "飞鸿", "书恒",
-            "润泽", "锦程", "宏图", "紫瑞", "承言", "博远",
+            GdxText.val("华"), GdxText.val("伟"), GdxText.val("强"), GdxText.val("磊"), GdxText.val("军"), GdxText.val("洋"),
+            GdxText.val("子涵"), GdxText.val("浩然"), GdxText.val("晨曦"), GdxText.val("峻熙"), GdxText.val("逸飞"), GdxText.val("睿泽"),
+            GdxText.val("明杰"), GdxText.val("君浩"), GdxText.val("宇轩"), GdxText.val("浩淼"), GdxText.val("文博"), GdxText.val("俊豪"),
+            GdxText.val("志远"), GdxText.val("建辉"), GdxText.val("杰森"), GdxText.val("鑫磊"), GdxText.val("伟强"), GdxText.val("泽宇"),
+            GdxText.val("云帆"), GdxText.val("晓阳"), GdxText.val("子淳"), GdxText.val("昊天"), GdxText.val("飞鸿"), GdxText.val("书恒"),
+            GdxText.val("润泽"), GdxText.val("锦程"), GdxText.val("宏图"), GdxText.val("紫瑞"), GdxText.val("承言"), GdxText.val("博远"),
     };
 
     // 随机数生成器

@@ -6,7 +6,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.game.ui.MainStageUIItem;
 import com.symaster.mrd.gui.BTNPosition;
-import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.util.GdxText;
 
@@ -51,28 +50,23 @@ public class PartnerMenu extends MainStageUIItem {
     }
 
     @Override
-    public LayoutConfig layoutConfig() {
-        return new LayoutConfig() {
-            @Override
-            public UIPosition uiPosition() {
-                return UIPosition.LEFT_DOWN;
-            }
+    public UIPosition uiPosition() {
+        return UIPosition.LEFT_DOWN;
+    }
 
-            @Override
-            public BTNPosition btnPosition() {
-                return BTNPosition.BottomMenu;
-            }
+    @Override
+    public BTNPosition btnPosition() {
+        return BTNPosition.BottomMenu;
+    }
 
-            @Override
-            public int panelWidth(int sceneWidth) {
-                return (int) (sceneWidth * 0.4f);
-            }
+    @Override
+    public int panelWidth(int sceneWidth) {
+        return (int) (sceneWidth * 0.4f);
+    }
 
-            @Override
-            public int panelHeight(int sceneHeight) {
-                return (int) (sceneHeight * 0.9);
-            }
-        };
+    @Override
+    public int panelHeight(int sceneHeight) {
+        return (int) (sceneHeight * 0.9);
     }
 
     @Override

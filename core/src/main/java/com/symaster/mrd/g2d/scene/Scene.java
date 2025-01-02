@@ -384,7 +384,11 @@ public class Scene implements Serializable, Disposable {
     private void nodeLogic(Node node, float delta, float parentX, float parentY) {
 
         // 处理每个节点的逻辑
-        node.logic(delta);
+        if (node.isIgnoreTimeScale()) {
+            node.logic(delta);
+        } else {
+            node.logic(delta * SystemConfig.TIME_SCALE);
+        }
 
         logicCache.add(node);
 

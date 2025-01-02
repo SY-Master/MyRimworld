@@ -3,7 +3,8 @@ package com.symaster.mrd.game.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
-import com.symaster.mrd.gui.LayoutConfig;
+import com.symaster.mrd.gui.BTNPosition;
+import com.symaster.mrd.gui.UIPosition;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -60,7 +61,23 @@ public abstract class MainStageUIItem implements Disposable {
 
     public abstract Actor panel();
 
-    public abstract LayoutConfig layoutConfig();
+    // public abstract LayoutConfig layoutConfig();
+
+    public UIPosition uiPosition() {
+        return null;
+    }
+
+    public BTNPosition btnPosition() {
+        return null;
+    }
+
+    public int panelWidth(int sceneWidth) {
+        return 0;
+    }
+
+    public int panelHeight(int sceneHeight) {
+        return 0;
+    }
 
     public void logic(float delta) {
 

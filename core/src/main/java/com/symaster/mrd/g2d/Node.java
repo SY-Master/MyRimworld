@@ -66,6 +66,10 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * 是否强制逻辑计算，如果强制逻辑计算的话：不管节点是否处在激活区块内，都会逻辑计算
      */
     private boolean forcedLogic;
+    /**
+     * 是否忽略时间速率缩放
+     */
+    private boolean ignoreTimeScale;
 
     public Node() {
         this.positionX = 0.0f;
@@ -77,6 +81,14 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.height = 0.0f;
         this.zIndex = 0;
         this.uid = UUID.randomUUID().toString();
+    }
+
+    public boolean isIgnoreTimeScale() {
+        return ignoreTimeScale;
+    }
+
+    public void setIgnoreTimeScale(boolean ignoreTimeScale) {
+        this.ignoreTimeScale = ignoreTimeScale;
     }
 
     public boolean isLimit2activityBlock() {

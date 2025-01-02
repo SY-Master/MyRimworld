@@ -161,7 +161,7 @@ public class Main extends ApplicationAdapter {
         style.background = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
         skin.add("nameLabel", style);
 
-        SolidColorDrawable transparentDrawable = new SolidColorDrawable(new Color(0, 0, 0, 0));
+        SolidColorDrawable transparentDrawable = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
 
         TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(transparentDrawable, transparentDrawable, transparentDrawable, skin.getFont("font-16"));
         skin.add("switch", switchBtn);
@@ -227,7 +227,7 @@ public class Main extends ApplicationAdapter {
 
     @Override
     public void render() {
-        float delta = SystemConfig.TIME_SCALE * Gdx.graphics.getDeltaTime();
+        float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
         // 加载资源

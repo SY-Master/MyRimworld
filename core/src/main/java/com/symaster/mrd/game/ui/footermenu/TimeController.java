@@ -7,8 +7,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.game.ui.MainStageUIItem;
-import com.symaster.mrd.gui.BTNPosition;
-import com.symaster.mrd.gui.LayoutConfig;
 import com.symaster.mrd.gui.UIPosition;
 
 /**
@@ -119,28 +117,18 @@ public class TimeController extends MainStageUIItem {
     }
 
     @Override
-    public LayoutConfig layoutConfig() {
-        return new LayoutConfig() {
-            @Override
-            public UIPosition uiPosition() {
-                return UIPosition.RIGHT_DOWN;
-            }
+    public UIPosition uiPosition() {
+        return UIPosition.RIGHT_DOWN;
+    }
 
-            @Override
-            public BTNPosition btnPosition() {
-                return null;
-            }
+    @Override
+    public int panelWidth(int sceneWidth) {
+        return 300;
+    }
 
-            @Override
-            public int panelWidth(int sceneWidth) {
-                return 300;
-            }
-
-            @Override
-            public int panelHeight(int sceneHeight) {
-                return 30;
-            }
-        };
+    @Override
+    public int panelHeight(int sceneHeight) {
+        return 30;
     }
 
     @Override
