@@ -75,4 +75,12 @@ public class PartnerMenu extends MainStageUIItem {
         };
     }
 
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        if (partnerPanel != null) {
+            partnerPanel.dispose();
+        }
+    }
 }

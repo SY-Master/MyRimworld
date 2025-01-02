@@ -61,6 +61,7 @@ public class Main extends ApplicationAdapter {
 
         TransformMove transformMove = new TransformMove(wasdInput.getVector2());
         transformMove.setSpeed(UnitUtil.ofM(18));
+        transformMove.setIgnoreTimeScale(true);
 
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
 
@@ -158,11 +159,11 @@ public class Main extends ApplicationAdapter {
 
         Label.LabelStyle style = new Label.LabelStyle(skin.getFont("font-16"), new Color(1f, 1f, 1f, 1f));
         style.background = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
-
         skin.add("nameLabel", style);
 
-        TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, skin.getFont("font-16"));
-        switchBtn.focused = nDFocused;
+        SolidColorDrawable transparentDrawable = new SolidColorDrawable(new Color(0, 0, 0, 0));
+
+        TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(transparentDrawable, transparentDrawable, transparentDrawable, skin.getFont("font-16"));
         skin.add("switch", switchBtn);
 
         return skin;
@@ -307,7 +308,6 @@ public class Main extends ApplicationAdapter {
 
         GameGenerateData gameGenerateData = new GameGenerateData();
         gameGenerateData.mapSeed = UUID.randomUUID().toString();
-        // gameGenerateData.spriteBatch = this.spriteBatch;
         gameGenerateData.inputFactory = inputFactory;
         gameGenerateData.assetManager = assetManager;
         gameGenerateData.skin = skin;

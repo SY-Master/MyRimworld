@@ -4,11 +4,8 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.SystemConfig;
-import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.ui.MainStageUI;
 import com.symaster.mrd.game.ui.MainStageUIItem;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.LayoutConfig;
@@ -98,12 +95,12 @@ public class TimeController extends MainStageUIItem {
         });
         group.addActor(play6);
 
-        play10 = new TextButton("X10", getSkin().get("switch", TextButton.TextButtonStyle.class));
+        play10 = new TextButton("X30", getSkin().get("switch", TextButton.TextButtonStyle.class));
         play10.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
-                SystemConfig.TIME_SCALE = 10f;
+                SystemConfig.TIME_SCALE = 30f;
             }
         });
         group.addActor(play10);
@@ -136,7 +133,7 @@ public class TimeController extends MainStageUIItem {
 
             @Override
             public int panelWidth(int sceneWidth) {
-                return 250;
+                return 300;
             }
 
             @Override
@@ -170,5 +167,10 @@ public class TimeController extends MainStageUIItem {
 
         play10.setSize(width, 30);
         play10.setPosition(width * 6, 0);
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
     }
 }

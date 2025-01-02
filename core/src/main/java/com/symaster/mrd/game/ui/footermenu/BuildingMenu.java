@@ -56,12 +56,12 @@ public class BuildingMenu extends MainStageUIItem {
 
             @Override
             public int panelWidth(int sceneWidth) {
-                return (int) (sceneWidth * 0.4);
+                return 300;
             }
 
             @Override
             public int panelHeight(int sceneHeight) {
-                return 0;
+                return Math.round(sceneHeight * 0.7f);
             }
         };
     }
