@@ -7,7 +7,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.ui.footermenu.*;
-import com.symaster.mrd.gui.*;
+import com.symaster.mrd.gui.BTNPosition;
+import com.symaster.mrd.gui.LayoutConfig;
+import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
@@ -38,6 +40,7 @@ public class MainStageUI extends Stage {
         addTo(new PartnerMenu());
         addTo(new Setting());
         addTo(new TimeView());
+        addTo(new TimeController());
 
         this.addActor(this.table);
     }
@@ -109,16 +112,18 @@ public class MainStageUI extends Stage {
 
             int panelWidth = layoutConfig.panelWidth(width);
             int panelHeight = layoutConfig.panelHeight(height);
+            int min = Math.min(avaHeight, panelHeight);
 
             UIPosition uiPosition = layoutConfig.uiPosition();
             if (UIPosition.LEFT_DOWN == uiPosition) {
-                panel.setSize(panelWidth, Math.min(avaHeight, panelHeight));
+                panel.setSize(panelWidth, min);
                 panel.setPosition(0, bottomMenuHeight);
-            }
-            if (UIPosition.LEFT_UP == uiPosition) {
-                int min = Math.min(avaHeight, panelHeight);
+            } else if (UIPosition.LEFT_UP == uiPosition) {
                 panel.setSize(panelWidth, min);
                 panel.setPosition(0, height - min);
+            } else if (UIPosition.RIGHT_DOWN == uiPosition) {
+                panel.setSize(panelWidth, min);
+                panel.setPosition(width - panelWidth, bottomMenuHeight);
             }
 
 
@@ -138,22 +143,6 @@ public class MainStageUI extends Stage {
         for (MainStageUIItem footerMenu : footerMenus) {
             footerMenu.logic(delta);
         }
-
-        // for (FooterMenuContainer footerMenu : footerMenus) {
-        //     if (footerMenu.getMenuActor() != null && footerMenu.getMenuBtn().isChecked()) {
-        //         footerMenu.getMenuBtn().toggle();
-        //
-        //         for (FooterMenuContainer menu : footerMenus) {
-        //             MenuActor menuActor = menu.getMenuActor();
-        //             if (menuActor.isVisible()) {
-        //                 menuActor.setVisible(false);
-        //             }
-        //         }
-        //
-        //         MenuActor menuActor = footerMenu.getMenuActor();
-        //         menuActor.setVisible(true);
-        //     }
-        // }
     }
 
     public void render() {
@@ -167,5 +156,14 @@ public class MainStageUI extends Stage {
 
     public void setScene(Scene scene) {
         this.scene = scene;
+    }
+
+    @Override
+    public void dispose() {
+        super.dispose();
+
+        for (MainStageUIItem footerMenu : footerMenus) {
+            footerMenu.dispose();
+        }
     }
 }

@@ -74,8 +74,8 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
         // 游戏时间
-        // scene.add(new GameTime(new Random().nextFloat() * 1000000), Groups.TIMER);
-        scene.add(new GameTime(), Groups.TIMER);
+        scene.add(new GameTime(new Random().nextFloat() * 9999999 + 2000000), Groups.TIMER);
+        // scene.add(new GameTime(), Groups.TIMER);
 
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.setZIndex(100);
