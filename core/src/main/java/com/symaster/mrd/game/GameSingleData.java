@@ -21,6 +21,4 @@ public class GameSingleData {
      */
     public static LoadingType loadingType;
 
-    // public static Status systemStatus;
-
 }
