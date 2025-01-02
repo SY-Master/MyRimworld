@@ -6,9 +6,13 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.GamePageStatus;
+import com.symaster.mrd.game.GameSingleData;
+import com.symaster.mrd.game.PageLayer;
 import com.symaster.mrd.game.ui.footermenu.*;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
+import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.util.ClassUtil;
 
 import java.lang.reflect.Constructor;
@@ -21,7 +25,7 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class MainStageUI extends Stage {
+public class MainStageUI extends Stage implements BridgeInputProcessor {
 
     private final Table table;
     private final List<MainStageUIItem> footerMenus;
@@ -108,8 +112,8 @@ public class MainStageUI extends Stage {
                 continue;
             }
 
-            int panelWidth = footerMenu.panelWidth(width);
-            int panelHeight = footerMenu.panelHeight(height);
+            int panelWidth = footerMenu.panelWidth(width, height);
+            int panelHeight = footerMenu.panelHeight(width, height);
             int min = Math.min(avaHeight, panelHeight);
 
             if (UIPosition.LEFT_DOWN == uiPosition) {
@@ -161,6 +165,20 @@ public class MainStageUI extends Stage {
 
         for (MainStageUIItem footerMenu : footerMenus) {
             footerMenu.dispose();
+        }
+    }
+
+    @Override
+    public int layer() {
+        return PageLayer.Gui.getLayer();
+    }
+
+    @Override
+    public int sort() {
+        if (GameSingleData.gamePageStatus == GamePageStatus.Game) {
+            return 0;
+        } else {
+            return 99;
         }
     }
 }

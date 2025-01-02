@@ -1,13 +1,15 @@
 package com.symaster.mrd.g2d;
 
-import com.badlogic.gdx.InputProcessor;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.PageLayer;
+import com.symaster.mrd.input.BridgeInputProcessor;
+import com.symaster.mrd.game.GameSingleData;
 
 /**
  * @author yinmiao
  * @since 2024/12/31
  */
-public class InputNode extends Node implements InputProcessor {
+public class InputNode extends Node implements BridgeInputProcessor {
 
     @Override
     public boolean keyDown(int keycode) {
@@ -56,11 +58,21 @@ public class InputNode extends Node implements InputProcessor {
 
     @Override
     public void onScene(Scene scene) {
-        scene.getInputFactory().add(this);
+        GameSingleData.inputBridge.add(this);
     }
 
     @Override
     public void extScene(Scene scene) {
-        scene.getInputFactory().remove(this);
+        GameSingleData.inputBridge.remove(this);
+    }
+
+    @Override
+    public int layer() {
+        return PageLayer.Scene.getLayer();
+    }
+
+    @Override
+    public int sort() {
+        return 0;
     }
 }

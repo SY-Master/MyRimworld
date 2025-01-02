@@ -5,7 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.service.ai.AI;
-import com.symaster.mrd.input.InputFactory;
+import com.symaster.mrd.input.InputBridge;
 
 /**
  * @author yinmiao
@@ -20,10 +20,10 @@ public class GameGenerateData {
      * 指定场景
      */
     public Scene scene;
-    /**
-     * 输入处理器工厂
-     */
-    public InputFactory inputFactory;
+    // /**
+    //  * 输入处理器工厂
+    //  */
+    // public InputBridge inputBridge;
     /**
      * 资源管理器
      */
