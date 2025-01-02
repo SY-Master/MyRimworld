@@ -1,8 +1,16 @@
 package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.Groups;
+import com.symaster.mrd.game.entity.GameTime;
+import com.symaster.mrd.game.ui.MainStageUI;
 import com.symaster.mrd.game.ui.MainStageUIItem;
 import com.symaster.mrd.gui.UIPosition;
+
+import java.util.Set;
 
 /**
  * @author yinmiao
@@ -10,7 +18,7 @@ import com.symaster.mrd.gui.UIPosition;
  */
 public class TimeView extends MainStageUIItem {
 
-    private TimeViewPanel timeViewPanel;
+    private Label label;
 
     public TimeView() {
         setPanelNormallyOpen(true);
@@ -19,7 +27,8 @@ public class TimeView extends MainStageUIItem {
     @Override
     public void create() {
         super.create();
-        timeViewPanel = new TimeViewPanel(getSkin(), this);
+
+        label = new Label("0000-00-00-00-00", getSkin().get("nameLabel", Label.LabelStyle.class));
     }
 
     @Override
@@ -29,7 +38,7 @@ public class TimeView extends MainStageUIItem {
 
     @Override
     public Actor panel() {
-        return timeViewPanel;
+        return label;
     }
 
     @Override
@@ -50,6 +59,27 @@ public class TimeView extends MainStageUIItem {
     @Override
     public void logic(float delta) {
         super.logic(delta);
-        timeViewPanel.logic(delta);
+
+        MainStageUI mainStageUI = getMainStageUI();
+        if (mainStageUI == null) {
+            return;
+        }
+
+        if (mainStageUI.getScene() == null) {
+            return;
+        }
+
+        Scene scene = mainStageUI.getScene();
+
+        Set<Node> byGroup = scene.getByGroup(Groups.TIMER);
+        if (byGroup == null) {
+            return;
+        }
+
+        GameTime gameTime = (GameTime) byGroup.iterator().next();
+
+        String format = String.format("%s年-%s月-%s日-%s时-%s分", gameTime.getYear(), gameTime.getMonth(), gameTime.getDay(), gameTime.getHour(), gameTime.getMinute());
+        label.setText(format);
+
     }
 }
