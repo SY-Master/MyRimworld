@@ -29,8 +29,12 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
         this.viewport = viewport;
     }
 
+    public Viewport getViewport() {
+        return viewport;
+    }
+
     @Override
-    public PositionConverter getConverter() {
+    public PositionConverter newConverter() {
         return new PositionConverter() {
             @Override
             public void toWorld(Vector2 screen) {
@@ -42,10 +46,6 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
                 viewport.project(world);
             }
         };
-    }
-
-    public Viewport getViewport() {
-        return viewport;
     }
 
     @Override
