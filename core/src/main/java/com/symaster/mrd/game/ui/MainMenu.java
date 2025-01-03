@@ -107,4 +107,12 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
             return 99;
         }
     }
+
+    /**
+     * @return 是否启用输入事件
+     */
+    @Override
+    public boolean actionEnable() {
+        return GameSingleData.gamePageStatus == GamePageStatus.Menu;
+    }
 }
