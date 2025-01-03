@@ -10,6 +10,8 @@ public class Measure {
     private float max;
 
     public Measure() {
+        this.value = 1f;
+        this.max = 100f;
     }
 
     public Measure(float value, float max) {
