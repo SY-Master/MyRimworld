@@ -3,8 +3,6 @@ package com.symaster.mrd.input;
 import com.badlogic.gdx.InputProcessor;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.stream.Collectors;
@@ -27,7 +25,8 @@ public class InputBridge implements InputProcessor, Serializable {
     }
 
     private List<BridgeInputProcessor> updateSort() {
-        return listeners.stream().sorted((o1, o2) -> {
+        return listeners.stream().filter(BridgeInputProcessor::actionEnable)
+                .sorted((o1, o2) -> {
             if (o1.layer() == o2.layer()) {
                 return Integer.compare(o1.sort(), o2.sort());
             } else {

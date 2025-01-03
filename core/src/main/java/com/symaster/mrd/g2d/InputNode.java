@@ -1,6 +1,7 @@
 package com.symaster.mrd.g2d;
 
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.GamePageStatus;
 import com.symaster.mrd.game.PageLayer;
 import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.game.GameSingleData;
@@ -74,5 +75,13 @@ public class InputNode extends Node implements BridgeInputProcessor {
     @Override
     public int sort() {
         return 0;
+    }
+
+    /**
+     * @return 是否启用输入事件
+     */
+    @Override
+    public boolean actionEnable() {
+        return GameSingleData.gamePageStatus == GamePageStatus.Game;
     }
 }

@@ -79,12 +79,7 @@ public class RollerDragInput extends InputNode {
     }
 
     private void draggedStart(int screenX, int screenY) {
-        // cache_vector2.set(screenX, screenY);
-        // positionConverter.toWorld(cache_vector2);
-
-        // this.startX = cache_vector2.x;
         this.startX = screenX;
-        // this.startY = cache_vector2.y;
         this.startY = screenY;
 
         this.nodeStartX = target.getPositionX();

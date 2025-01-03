@@ -18,4 +18,9 @@ public interface BridgeInputProcessor extends InputProcessor {
      */
     int sort();
 
+    /**
+     * @return 是否启用输入事件
+     */
+    boolean actionEnable();
+
 }
