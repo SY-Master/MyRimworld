@@ -11,12 +11,12 @@ public interface BridgeInputProcessor extends InputProcessor {
     /**
      * @return 层
      */
-    int layer();
+    int uiLayer();
 
     /**
      * @return 返回当前事件顺序
      */
-    int sort();
+    int uiSort();
 
     /**
      * @return 是否启用输入事件

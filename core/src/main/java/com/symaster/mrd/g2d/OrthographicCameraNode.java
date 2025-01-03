@@ -8,7 +8,6 @@ import com.badlogic.gdx.math.Vector3;
 import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.g2d.scene.Scene;
 
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -103,7 +102,12 @@ public class OrthographicCameraNode extends Node {
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
-        caches.stream().sorted(Comparator.comparingInt(Node::getZIndex)).forEach(this::drawNode);
+        caches.stream().sorted((o1, o2) -> {
+            if (o1.getLayer() == o2.getLayer()) {
+                return Integer.compare(o1.getZIndex(), o2.getZIndex());
+            }
+            return Integer.compare(o1.getLayer(), o2.getLayer());
+        }).forEach(this::drawNode);
         spriteBatch.end();
     }
 

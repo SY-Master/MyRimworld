@@ -2,7 +2,7 @@ package com.symaster.mrd.g2d;
 
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.GamePageStatus;
-import com.symaster.mrd.game.PageLayer;
+import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.game.GameSingleData;
 
@@ -68,12 +68,12 @@ public class InputNode extends Node implements BridgeInputProcessor {
     }
 
     @Override
-    public int layer() {
-        return PageLayer.Scene.getLayer();
+    public int uiLayer() {
+        return UILayer.SceneNode.getLayer();
     }
 
     @Override
-    public int sort() {
+    public int uiSort() {
         return 0;
     }
 

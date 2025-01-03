@@ -11,7 +11,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.game.GamePageStatus;
 import com.symaster.mrd.game.GameSingleData;
-import com.symaster.mrd.game.PageLayer;
+import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.game.ui.page.MainMenuBtn;
 import com.symaster.mrd.game.ui.page.PlayGameSetting;
 import com.symaster.mrd.input.BridgeInputProcessor;
@@ -95,12 +95,12 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
     }
 
     @Override
-    public int layer() {
-        return PageLayer.Gui.getLayer();
+    public int uiLayer() {
+        return UILayer.Gui.getLayer();
     }
 
     @Override
-    public int sort() {
+    public int uiSort() {
         if (GameSingleData.gamePageStatus == GamePageStatus.Menu) {
             return 0;
         } else {

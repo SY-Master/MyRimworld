@@ -27,10 +27,10 @@ public class InputBridge implements InputProcessor, Serializable {
     private List<BridgeInputProcessor> updateSort() {
         return listeners.stream().filter(BridgeInputProcessor::actionEnable)
                 .sorted((o1, o2) -> {
-            if (o1.layer() == o2.layer()) {
-                return Integer.compare(o1.sort(), o2.sort());
+            if (o1.uiLayer() == o2.uiLayer()) {
+                return Integer.compare(o1.uiSort(), o2.uiSort());
             } else {
-                return Integer.compare(o1.layer(), o2.layer());
+                return Integer.compare(o1.uiLayer(), o2.uiLayer());
             }
         }).collect(Collectors.toList());
     }

@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
+import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.g2d.scene.Scene;
@@ -56,6 +57,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
                 sprite.setSize(mapSize, mapSize);
 
                 SpriteNode map = new SpriteNode(sprite);
+                map.setLayer(Layer.MAP.getLayer());
                 map.setZIndex(0);
                 map.setVisible(true);
                 map.setPosition(mapX, mapY);
