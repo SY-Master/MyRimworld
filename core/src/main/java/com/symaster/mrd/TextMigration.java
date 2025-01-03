@@ -11,15 +11,14 @@ import java.util.stream.Collectors;
 public class TextMigration {
 
     private static final String folder = "E:\\projects\\symaster\\MyRimworld2\\core\\src\\main\\java\\com\\symaster\\mrd";
-    private static final String txtFile = "E:\\projects\\symaster\\MyRimworld2\\assets\\language\\cd.txt";
+    private static final String txtFile = "E:\\projects\\symaster\\MyRimworld2\\assets\\language\\ch.txt";
     private static final List<String> suffix = Arrays.asList(".java");
     private static final String flag = "GdxText.val(";
-    private static final String flagTo = "GdxText.get(";
 
     public static void main(String[] args) {
 
-        Map<String, String> map;
-        Map<String, String> map2;
+        Map<String, String> languageMap;
+        // Map<String, String> map2;
 
         File file1 = new File(txtFile);
         if (!file1.isFile()) {
@@ -27,21 +26,21 @@ public class TextMigration {
             if (!parentFile.isDirectory() && !parentFile.mkdirs()) {
                 throw new RuntimeException(parentFile.getAbsolutePath() + " is not a directory");
             }
-            map = new HashMap<>();
-            map2 = new HashMap<>();
+            languageMap = new HashMap<>();
+            // map2 = new HashMap<>();
         } else {
 
             try (BufferedReader bufferedReader = new BufferedReader(new FileReader(txtFile));) {
                 List<String> collect = bufferedReader.lines().collect(Collectors.toList());
-                map = new HashMap<>();
-                map2 = new HashMap<>();
+                languageMap = new HashMap<>();
+                // map2 = new HashMap<>();
 
                 for (String s : collect) {
                     int i = s.indexOf("=");
                     String k1 = s.substring(0, i);
                     String k2 = s.substring(i + 1);
-                    map.put(k1, k2);
-                    map2.put(k2, k1);
+                    languageMap.put(k1, k2);
+                    // map2.put(k2, k1);
                 }
             } catch (Exception e) {
                 throw new RuntimeException(e);
@@ -49,11 +48,11 @@ public class TextMigration {
         }
 
 
-        directory(new File(folder), map, map2);
+        directory(new File(folder), languageMap);
 
         List<String> lines = new ArrayList<>();
-        for (String s : map.keySet()) {
-            lines.add(s + "=" + map.get(s));
+        for (String s : languageMap.keySet()) {
+            lines.add(s + "=" + languageMap.get(s));
         }
 
         String collect = lines.stream().collect(Collectors.joining(System.lineSeparator()));
@@ -64,7 +63,7 @@ public class TextMigration {
         }
     }
 
-    private static Integer[] readRange(Integer startIndex, char[] charArray) {
+    private static Integer[] searchTextRange(Integer startIndex, char[] charArray) {
         Integer[] rtn = new Integer[2];
 
         for (int i = startIndex + flag.length(); i < charArray.length; i++) {
@@ -80,7 +79,7 @@ public class TextMigration {
         return rtn;
     }
 
-    private static List<Integer> findIndex(String s2) {
+    private static List<Integer> searchStartIndex(String s2) {
         char[] charArray1 = flag.toCharArray();
         char[] charArray = s2.toCharArray();
 
@@ -105,7 +104,7 @@ public class TextMigration {
         return rtn;
     }
 
-    private static void directory(File f, Map<String, String> map, Map<String, String> map2) {
+    private static void directory(File f, Map<String, String> languageMap) {
 
         File[] files = f.listFiles();
         if (files == null) {
@@ -113,14 +112,14 @@ public class TextMigration {
         }
         for (File file : files) {
             if (file.isDirectory()) {
-                directory(file, map, map2);
+                directory(file, languageMap);
             } else if (file.isFile()) {
-                file(file, map, map2);
+                file(file, languageMap);
             }
         }
     }
 
-    private static void file(File f, Map<String, String> map, Map<String, String> map2) {
+    private static void file(File f, Map<String, String> languageMap) {
         String name = f.getName();
 
         if (name.startsWith("TextMigration")) {
@@ -134,59 +133,29 @@ public class TextMigration {
         try (FileReader fileReader = new FileReader(f);
              BufferedReader bufferedReader = new BufferedReader(fileReader)) {
 
-            List<String> collect = bufferedReader.lines().collect(Collectors.toList());
+            for (String codeLine : bufferedReader.lines().collect(Collectors.toList())) {
+                if (codeLine.contains(flag)) {
 
-            boolean match = false;
-            for (int iii = 0; iii < collect.size(); iii++) {
-                String e = collect.get(iii);
-                if (e.contains(flag)) {
-                    List<Integer> indexList = findIndex(e);
-                    if (indexList.isEmpty()) {
+                    List<Integer> startIndexList = searchStartIndex(codeLine);
+                    if (startIndexList.isEmpty()) {
                         continue;
                     }
 
-                    char[] charArray = e.toCharArray();
+                    char[] charArray = codeLine.toCharArray();
 
-                    String s2 = e;
-                    for (Integer i : indexList) {
-                        Integer[] integers = readRange(i, charArray);
-                        if (integers[0] == null || integers[1] == null) {
+                    for (Integer startIndex : startIndexList) {
+                        Integer[] textRange = searchTextRange(startIndex, charArray);
+                        if (textRange[0] == null || textRange[1] == null) {
                             continue;
                         }
 
-                        if (integers[0] + 1 >= integers[1]) {
+                        if (textRange[0] + 1 >= textRange[1]) {
                             continue;
                         }
 
-                        String t1 = s2.substring(0, integers[0] + 1);
-                        String t2 = s2.substring(integers[1]);
-                        String txt = s2.substring(integers[0] + 1, integers[1]);
-
-                        String key = map2.get(txt);
-                        if (key == null) {
-                            String string = UUID.randomUUID().toString();
-                            map2.put(txt, string);
-                            map.put(string, txt);
-                            s2 = t1 + string + t2;
-                        } else {
-                            s2 = t1 + key + t2;
-                        }
+                        String txt = codeLine.substring(textRange[0] + 1, textRange[1]);
+                        languageMap.putIfAbsent(txt, txt);
                     }
-
-                    String replace = s2.replace(flag, flagTo);
-
-                    collect.set(iii, replace);
-
-                    match = true;
-                }
-            }
-
-            if (match) {
-                String collect1 = collect.stream()
-                        .collect(Collectors.joining(System.lineSeparator()));
-
-                try (BufferedWriter bw = new BufferedWriter(new FileWriter(f));) {
-                    bw.write(collect1);
                 }
             }
         } catch (Exception e) {
