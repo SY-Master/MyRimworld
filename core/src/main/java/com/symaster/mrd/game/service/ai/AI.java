@@ -54,47 +54,33 @@ public class AI {
             return;
         }
 
-        //   - 休息区间：当时间段处于休息区间时，相应的生物会休息。
-        //      - 睡觉：只有睡觉一种行为会发生。
-        //
-        //   - 工作：工作区间，理论上是工作，但是当没有任何工作的时间会执行其他事情，工作也分为了两种：命令、普通工作。行为顺序如下：
-        //     1. 吃东西：最高优先级。当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
-        //     2. 命令工作：只有吃饱后才有力气干活。
-        //     3. 普通工作：有工作时，会自动工作。
-        //     4. 互动：概率发生，每个生物会主动根据策略寻找附近的生物互动，互动类型定义。
-        //     5. 娱乐：概率发生，随机和各种娱乐设施互动。
-        //     6. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
-        //     7. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
-        //
-        //   - 娱乐：娱乐时间段，生物不会干活。行为顺序如下：
-        //     1. 吃东西：最高优先级。当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
-        //     2. 互动：概率发生，每个生物会主动根据策略寻找附近的生物互动，互动类型定义。
-        //     3. 娱乐：概率发生，较大概率，随机和各种娱乐设施互动。
-        //     4. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
-        //     5. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
-        //
-        //   - 自由活动：自由活动区间比较难定义。理论上所有行为都可能发生。
-        //     1. 吃东西：当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
-        //     2. 睡觉：当休息值小于20%时会睡觉。
-        //     3. 互动：概率发生，每个生物会主动根据策略寻找附近的生物互动，互动类型定义。
-        //     4. 娱乐：概率发生，随机和各种娱乐设施互动。
-        //     5. 命令工作：有命令工作时，会执行相应的命令。
-        //     6. 普通工作：有工作时，会自动工作。
-        //     7. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
-        //     8. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
-        // - 行为设定：
-        //   - 吃东西：生物会自动寻找并吃掉相应的食物，一直到饱食度达到100%。
-        //   - 互动：生物会主动根据策略寻找附近的生物互动，互动类型定义如下：
-        //     - 打招呼：生物会找到目标生物，然后移动到目标生物身边，目标生物要求如下：
-        //       - 不处于睡觉行为下
+        HumanAction humanAction1 = database.getHumanAction(nodes.getUid());
+        if (humanAction1 != null) {
+            humanAction1.logic(scene, database, gameTime, nodes, delta);
+            return;
+        }
 
+        // 时间分配设定
+        TimeAllocation timeAllocation;
+        if (database.getTimeAllocation(gameTime.getHour()) == null) { // null 为未定义（自由活动）
+            timeAllocation = TimeAllocation.FreeActivities;
+        } else {
+            timeAllocation = database.getTimeAllocation(gameTime.getHour());
+        }
 
+        // 当前时间分配
+        HumanAction[] humanAction = timeAllocation.getHumanAction();
 
-        Status status = database.getStatus(nodes.getUid());
+        HumanAction action = null;
+        for (HumanAction actionFor : humanAction) {
+            if (actionFor.available(scene, database, gameTime, nodes, delta)) {
+                action = actionFor;
+                break;
+            }
+        }
 
-        // 当前角色无状态（通常是没有执行任何动作的情况）
-        if (status == null) {
-
+        if (action != null) {
+            action.logic(scene, database, gameTime, nodes, delta);
         }
     }
 }

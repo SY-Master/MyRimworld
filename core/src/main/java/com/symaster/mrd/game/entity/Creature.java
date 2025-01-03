@@ -12,9 +12,17 @@ import com.symaster.mrd.game.service.ai.AI;
 public class Creature extends Node {
 
     /**
-     * 生命值
+     * 生命值，自然回复或治疗
      */
     private Measure hp;
+    /**
+     * 食物，吃东西回复
+     */
+    private Measure food;
+    /**
+     * 精力，睡觉恢复
+     */
+    private Measure energy;
     /**
      * 性别
      */
@@ -43,6 +51,22 @@ public class Creature extends Node {
      * 生物的最大寿命（年）
      */
     private int lifetime;
+
+    public Measure getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Measure energy) {
+        this.energy = energy;
+    }
+
+    public Measure getFood() {
+        return food;
+    }
+
+    public void setFood(Measure food) {
+        this.food = food;
+    }
 
     public Measure getHp() {
         return hp;

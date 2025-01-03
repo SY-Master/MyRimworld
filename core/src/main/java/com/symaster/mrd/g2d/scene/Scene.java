@@ -277,11 +277,11 @@ public class Scene implements Serializable, Disposable {
         }
     }
 
-    private Block getBlockIndex(float x, float y) {
+    public Block getBlockIndex(float x, float y) {
         return new Block(getBlockIndex(x), getBlockIndex(y));
     }
 
-    private int getBlockIndex(float n) {
+    public int getBlockIndex(float n) {
         return (int) Math.floor(n / blockSize);
     }
 

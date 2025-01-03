@@ -11,33 +11,19 @@ import java.util.Map;
  */
 public class Database extends Node {
 
-    /**
-     * 保存所有节点的状态
-     */
-    private final Map<String, Status> statusMap;
 
-    private final Map<Integer, Period> periodMap;
+    /**
+     * 某个生物当前的动作
+     */
+    private final Map<String, HumanAction> humanActionMap;
+    /**
+     * 时间分配
+     */
+    private final Map<Integer, TimeAllocation> periodMap;
 
     public Database() {
-        this.statusMap = new HashMap<>();
         this.periodMap = new HashMap<>();
-    }
-
-    /**
-     * 获取节点的状态
-     */
-    public Status getStatus(String uid) {
-        return statusMap.get(uid);
-    }
-
-    /**
-     * 修改节点状态
-     *
-     * @param uid    节点id
-     * @param status 状态
-     */
-    public void setStatus(String uid, Status status) {
-        statusMap.put(uid, status);
+        this.humanActionMap = new HashMap<>();
     }
 
     /**
@@ -45,15 +31,23 @@ public class Database extends Node {
      *
      * @param hour 当天的小时
      */
-    public Period getPeriod(int hour) {
+    public TimeAllocation getTimeAllocation(int hour) {
         return periodMap.get(hour);
     }
 
     /**
      * 设置时间周期
      */
-    public void setPeriod(int hour, Period period) {
-        periodMap.put(hour, period);
+    public void setTimeAllocation(int hour, TimeAllocation timeAllocation) {
+        periodMap.put(hour, timeAllocation);
+    }
+
+    public HumanAction getHumanAction(String uid) {
+        return humanActionMap.get(uid);
+    }
+
+    public void setHumanAction(String uid, HumanAction humanAction) {
+        humanActionMap.put(uid, humanAction);
     }
 
 
