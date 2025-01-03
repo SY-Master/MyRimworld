@@ -34,29 +34,7 @@ public class OrthographicCameraNode extends Node {
         this.camera = camera;
         this.spriteBatch = spriteBatch;
         setForcedLogic(true);
-        this.positionConverter = getConverter();
-    }
-
-    public PositionConverter getConverter() {
-        return new PositionConverter() {
-            @Override
-            public void toWorld(Vector2 screen) {
-                Vector3 vector3 = new Vector3(screen.x, screen.y, 0);
-
-                camera.unproject(vector3);
-
-                screen.set(vector3.x, vector3.y);
-            }
-
-            @Override
-            public void toScreen(Vector2 world) {
-                Vector3 vector3 = new Vector3(world.x, world.y, 0);
-
-                camera.project(vector3);
-
-                world.set(vector3.x, vector3.y);
-            }
-        };
+        this.positionConverter = newConverter();
     }
 
     public PositionConverter getPositionConverter() {
@@ -109,6 +87,28 @@ public class OrthographicCameraNode extends Node {
             return Integer.compare(o1.getLayer(), o2.getLayer());
         }).forEach(this::drawNode);
         spriteBatch.end();
+    }
+
+    public PositionConverter newConverter() {
+        return new PositionConverter() {
+            @Override
+            public void toWorld(Vector2 screen) {
+                Vector3 vector3 = new Vector3(screen.x, screen.y, 0);
+
+                camera.unproject(vector3);
+
+                screen.set(vector3.x, vector3.y);
+            }
+
+            @Override
+            public void toScreen(Vector2 world) {
+                Vector3 vector3 = new Vector3(world.x, world.y, 0);
+
+                camera.project(vector3);
+
+                world.set(vector3.x, vector3.y);
+            }
+        };
     }
 
     private void drawNode(Node node) {

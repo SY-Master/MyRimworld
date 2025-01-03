@@ -69,7 +69,6 @@ public class Main extends ApplicationAdapter {
         GameSingleData.positionConverter = cam.getPositionConverter();
 
         RollerDragInput rollerDragInput = new RollerDragInput(cam);
-        rollerDragInput.setPositionConverter(cam.getPositionConverter());
 
         cam.add(rollerDragInput);
         cam.add(wasdInput);
