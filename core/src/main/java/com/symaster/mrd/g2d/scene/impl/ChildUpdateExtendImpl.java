@@ -1,7 +1,6 @@
 package com.symaster.mrd.g2d.scene.impl;
 
 import com.symaster.mrd.api.ChildUpdateExtend;
-import com.symaster.mrd.g2d.OrthographicCameraNode;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 

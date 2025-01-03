@@ -28,7 +28,8 @@ public abstract class MainStageUIItem implements Disposable {
         this.insets = new Insets(0, 0, 0, 0);
     }
 
-    public void create() {}
+    public void create() {
+    }
 
     public boolean isPanelNormallyOpen() {
         return panelNormallyOpen;

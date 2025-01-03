@@ -12,7 +12,7 @@ public class TextMigration {
 
     private static final String folder = "E:\\projects\\symaster\\MyRimworld2\\core\\src\\main\\java\\com\\symaster\\mrd";
     private static final String txtFile = "E:\\projects\\symaster\\MyRimworld2\\assets\\language\\ch.txt";
-    private static final List<String> suffix = Arrays.asList(".java");
+    private static final List<String> suffix = Collections.singletonList(".java");
     private static final String flag = "GdxText.val(";
 
     public static void main(String[] args) {
@@ -30,7 +30,7 @@ public class TextMigration {
             // map2 = new HashMap<>();
         } else {
 
-            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(txtFile));) {
+            try (BufferedReader bufferedReader = new BufferedReader(new FileReader(txtFile))) {
                 List<String> collect = bufferedReader.lines().collect(Collectors.toList());
                 languageMap = new HashMap<>();
                 // map2 = new HashMap<>();
@@ -56,7 +56,7 @@ public class TextMigration {
         }
 
         String collect = lines.stream().collect(Collectors.joining(System.lineSeparator()));
-        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file1));) {
+        try (BufferedWriter bw = new BufferedWriter(new FileWriter(file1))) {
             bw.write(collect);
         } catch (Exception e) {
             throw new RuntimeException(e);

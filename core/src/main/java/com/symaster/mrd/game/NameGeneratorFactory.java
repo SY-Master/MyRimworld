@@ -1,6 +1,5 @@
 package com.symaster.mrd.game;
 
-import com.symaster.mrd.game.entity.Gender;
 import com.symaster.mrd.game.entity.Race;
 import com.symaster.mrd.game.service.NameGenerator;
 

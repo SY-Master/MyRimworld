@@ -46,7 +46,7 @@ public class OrthographicCameraNode extends Node {
     }
 
     public Rectangle getWorldRectangle() {
-        Vector3 topRight = camera.unproject(new Vector3(camera.viewportWidth , 0 , 0));
+        Vector3 topRight = camera.unproject(new Vector3(camera.viewportWidth, 0, 0));
         Vector3 bottomLeft = camera.unproject(new Vector3(0, camera.viewportHeight, 0));
 
         return new Rectangle(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);

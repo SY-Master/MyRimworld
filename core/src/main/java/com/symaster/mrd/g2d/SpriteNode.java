@@ -2,7 +2,6 @@ package com.symaster.mrd.g2d;
 
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 
 /**
  * @author yinmiao

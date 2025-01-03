@@ -14,6 +14,6 @@ public enum UIPosition {
     RIGHT_DOWN,
     RIGHT_CENTER,
     RIGHT_UP,
-    CENTER;
+    CENTER
 
 }

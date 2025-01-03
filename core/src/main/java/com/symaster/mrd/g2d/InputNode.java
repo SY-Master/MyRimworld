@@ -2,9 +2,9 @@ package com.symaster.mrd.g2d;
 
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.GamePageStatus;
+import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.input.BridgeInputProcessor;
-import com.symaster.mrd.game.GameSingleData;
 
 /**
  * @author yinmiao
