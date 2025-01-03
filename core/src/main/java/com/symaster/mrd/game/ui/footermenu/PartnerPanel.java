@@ -6,11 +6,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.Creature;
-import com.symaster.mrd.game.entity.Human;
-import com.symaster.mrd.game.entity.Race;
 
 import java.util.List;
 import java.util.Set;

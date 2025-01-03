@@ -31,7 +31,7 @@ public class Human extends Creature {
         float iconW = UnitUtil.ofM(0.7f);
         float iconH = UnitUtil.ofM(1f);
 
-        Sprite  sprite = new Sprite(texture);
+        Sprite sprite = new Sprite(texture);
         sprite.setSize(iconW, iconH);
 
         add((nodes = new SpriteNode(sprite)));

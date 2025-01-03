@@ -34,7 +34,7 @@ public class TimeController extends MainStageUIItem {
         group = new Group();
 
         pause = new TextButton("暂停", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        pause.addListener(new ClickListener(){
+        pause.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -44,7 +44,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(pause);
 
         play0_5 = new TextButton("0.5", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play0_5.addListener(new ClickListener(){
+        play0_5.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -54,7 +54,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(play0_5);
 
         play = new TextButton("常速", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play.addListener(new ClickListener(){
+        play.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -64,7 +64,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(play);
 
         play2 = new TextButton("X2", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play2.addListener(new ClickListener(){
+        play2.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -74,7 +74,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(play2);
 
         play4 = new TextButton("X4", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play4.addListener(new ClickListener(){
+        play4.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -84,7 +84,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(play4);
 
         play6 = new TextButton("X6", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play6.addListener(new ClickListener(){
+        play6.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);
@@ -94,7 +94,7 @@ public class TimeController extends MainStageUIItem {
         group.addActor(play6);
 
         play10 = new TextButton("X30", getSkin().get("switch", TextButton.TextButtonStyle.class));
-        play10.addListener(new ClickListener(){
+        play10.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 super.clicked(event, x, y);

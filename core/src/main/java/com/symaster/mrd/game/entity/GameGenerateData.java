@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.service.ai.AI;
-import com.symaster.mrd.input.InputBridge;
 
 /**
  * @author yinmiao

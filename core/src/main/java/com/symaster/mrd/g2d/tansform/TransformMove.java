@@ -1,7 +1,6 @@
 package com.symaster.mrd.g2d.tansform;
 
 import com.badlogic.gdx.math.Vector2;
-import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Node;
 
 /**
