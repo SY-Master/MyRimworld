@@ -1,4 +1,4 @@
-package com.symaster.mrd.game.entity;
+package com.symaster.mrd.game;
 
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
@@ -9,8 +9,6 @@ import com.badlogic.gdx.math.Vector2;
 import com.symaster.mrd.g2d.InputNode;
 import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.game.GameSingleData;
-import com.symaster.mrd.game.UILayer;
 
 /**
  * @author yinmiao
@@ -32,7 +30,7 @@ public class FrameSelector extends InputNode {
         down = false;
 
         sprite = new Sprite(assetManager.get("white.png", Texture.class));
-        sprite.setColor(new Color(0.129f, 0.847f, 0.427f, 0.5f));
+        sprite.setColor(new Color(0.129f, 0.847f, 0.427f, 0.3f));
 
         add(new SpriteNode(sprite));
 

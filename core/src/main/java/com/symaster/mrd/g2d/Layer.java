@@ -6,10 +6,10 @@ package com.symaster.mrd.g2d;
  */
 public enum Layer {
 
-    MAP(0), // 地图
-    OBJECT(1), // 物体
+    MAP(0), // 地图层
+    OBJECT(1), // 物体层
     FLOAT(2), // 浮层
-    SKY(3), // 天空
+    SKY(3), // 天空层
     ;
 
     private final int layer;
