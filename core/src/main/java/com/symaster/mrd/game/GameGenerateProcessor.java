@@ -70,6 +70,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
+        scene.add(new FrameSelector(gameGenerateData.assetManager));
 
         // 游戏时间
         // scene.add(new GameTime(new Random().nextFloat() * 9999999 + 2000000), Groups.TIMER);

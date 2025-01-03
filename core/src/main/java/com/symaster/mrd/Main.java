@@ -66,6 +66,7 @@ public class Main extends ApplicationAdapter {
         transformMove.setIgnoreTimeScale(true);
 
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
+        GameSingleData.positionConverter = cam.getPositionConverter();
 
         RollerDragInput rollerDragInput = new RollerDragInput(cam);
         rollerDragInput.setPositionConverter(cam.getPositionConverter());
@@ -200,10 +201,6 @@ public class Main extends ApplicationAdapter {
     public void loadGUI() {
         gui = new MainStageUI(skin);
         GameSingleData.inputBridge.add(gui);
-    }
-
-    private void assetLoading(float delta) {
-
     }
 
     public void loadMainMenu() {

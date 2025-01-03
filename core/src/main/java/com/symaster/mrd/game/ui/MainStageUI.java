@@ -8,7 +8,7 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.GamePageStatus;
 import com.symaster.mrd.game.GameSingleData;
-import com.symaster.mrd.game.PageLayer;
+import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.game.ui.footermenu.*;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
@@ -169,12 +169,12 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
     }
 
     @Override
-    public int layer() {
-        return PageLayer.Gui.getLayer();
+    public int uiLayer() {
+        return UILayer.Gui.getLayer();
     }
 
     @Override
-    public int sort() {
+    public int uiSort() {
         if (GameSingleData.gamePageStatus == GamePageStatus.Game) {
             return 0;
         } else {

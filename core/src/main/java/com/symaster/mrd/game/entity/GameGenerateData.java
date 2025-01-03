@@ -20,10 +20,6 @@ public class GameGenerateData {
      * 指定场景
      */
     public Scene scene;
-    // /**
-    //  * 输入处理器工厂
-    //  */
-    // public InputBridge inputBridge;
     /**
      * 资源管理器
      */

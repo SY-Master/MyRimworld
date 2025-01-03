@@ -70,6 +70,10 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      * 是否忽略时间速率缩放
      */
     private boolean ignoreTimeScale;
+    /**
+     * 渲染层
+     */
+    private int layer;
 
     public Node() {
         this.positionX = 0.0f;
@@ -81,6 +85,15 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.height = 0.0f;
         this.zIndex = 0;
         this.uid = UUID.randomUUID().toString();
+        this.layer = Layer.OBJECT.getLayer();
+    }
+
+    public int getLayer() {
+        return layer;
+    }
+
+    public void setLayer(int layer) {
+        this.layer = layer;
     }
 
     public boolean isIgnoreTimeScale() {
