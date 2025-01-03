@@ -40,7 +40,12 @@ public class GdxText {
     }
 
     public static String val(String val) {
-        return val;
+        if (val == null || val.isEmpty()) {
+            return "";
+        }
+
+        String rtn1 = get(val);
+        return rtn1.isEmpty() ? val : rtn1;
     }
 
     public static List<String> values() {
@@ -78,3 +83,4 @@ public class GdxText {
         textCollect = null;
     }
 }
+
