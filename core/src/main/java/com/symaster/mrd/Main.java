@@ -77,32 +77,6 @@ public class Main extends ApplicationAdapter {
         return cam;
     }
 
-    @Override
-    public void create() {
-
-        // 界面状态为加载界面
-        GameSingleData.loadingType = LoadingType.ApplicationRunnerLoading;
-        GameSingleData.gamePageStatus = GamePageStatus.Loading;
-        GameSingleData.inputBridge = new InputBridge();
-
-        Gdx.input.setInputProcessor(GameSingleData.inputBridge);
-
-        assetManager = new AssetManager();
-        assetManager.load("TX Tileset Grass.png", Texture.class);
-        assetManager.load("user.png", Texture.class);
-        assetManager.load("default-checked.9.png", Texture.class);
-        assetManager.load("default-focused.9.png", Texture.class);
-        assetManager.load("default-up.9.png", Texture.class);
-        assetManager.load("log.png", Texture.class);
-        assetManager.load("white.png", Texture.class);
-        assetManager.load("left.png", Texture.class);
-
-        this.ai = new AI();
-        this.loading = new Loading();
-        this.asyncExecutor = new AsyncExecutor(1);
-        this.cam = getCam();
-    }
-
     public Skin defaultSkin(AssetManager assetManager) {
         Skin skin = new Skin();
 
@@ -162,41 +136,6 @@ public class Main extends ApplicationAdapter {
         return font;
     }
 
-    @Override
-    public void resize(int width, int height) {
-        if (loading != null) {
-            loading.resize(width, height);
-        }
-
-        if (mainMenu != null) {
-            mainMenu.resize(width, height);
-        }
-
-        if (gui != null) {
-            gui.resize(width, height);
-        }
-
-        if (save != null && save.getScene() != null) {
-            save.getScene().resize(width, height);
-        }
-
-        if (cam != null) {
-            cam.getViewport().update(width, height);
-        }
-
-        // fillViewport.getViewport().update(width, height);
-        // gui.resize(width, height);
-        // scene.resize(width, height);
-    }
-
-    @Override
-    public void render() {
-        float delta = Gdx.graphics.getDeltaTime();
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
-        GameSingleData.gamePageStatus.render(this, delta);
-    }
-
     public void loadGUI() {
         gui = new MainStageUI(skin);
         GameSingleData.inputBridge.add(gui);
@@ -232,25 +171,6 @@ public class Main extends ApplicationAdapter {
 
         GameSingleData.loadingType = LoadingType.GamePlayLoading;
         GameSingleData.gamePageStatus = GamePageStatus.Loading;
-    }
-
-    @Override
-    public void dispose() {
-        if (assetManager != null) {
-            assetManager.dispose();
-        }
-        if (skin != null) {
-            skin.dispose();
-        }
-        if (loading != null) {
-            loading.dispose();
-        }
-        if (mainMenu != null) {
-            mainMenu.dispose();
-        }
-        if (gui != null) {
-            gui.dispose();
-        }
     }
 
     public void applicationRunnerLoading(float delta) {
@@ -305,5 +225,85 @@ public class Main extends ApplicationAdapter {
         cam.render();
         // 绘制GUI
         gui.render();
+    }
+
+    @Override
+    public void create() {
+
+        // 界面状态为加载界面
+        GameSingleData.loadingType = LoadingType.ApplicationRunnerLoading;
+        GameSingleData.gamePageStatus = GamePageStatus.Loading;
+        GameSingleData.inputBridge = new InputBridge();
+
+        Gdx.input.setInputProcessor(GameSingleData.inputBridge);
+
+        assetManager = new AssetManager();
+        assetManager.load("TX Tileset Grass.png", Texture.class);
+        assetManager.load("user.png", Texture.class);
+        assetManager.load("default-checked.9.png", Texture.class);
+        assetManager.load("default-focused.9.png", Texture.class);
+        assetManager.load("default-up.9.png", Texture.class);
+        assetManager.load("log.png", Texture.class);
+        assetManager.load("white.png", Texture.class);
+        assetManager.load("left.png", Texture.class);
+
+        this.ai = new AI();
+        this.loading = new Loading();
+        this.asyncExecutor = new AsyncExecutor(1);
+        this.cam = getCam();
+    }
+
+    @Override
+    public void resize(int width, int height) {
+        if (loading != null) {
+            loading.resize(width, height);
+        }
+
+        if (mainMenu != null) {
+            mainMenu.resize(width, height);
+        }
+
+        if (gui != null) {
+            gui.resize(width, height);
+        }
+
+        if (save != null && save.getScene() != null) {
+            save.getScene().resize(width, height);
+        }
+
+        if (cam != null) {
+            cam.getViewport().update(width, height);
+        }
+
+        // fillViewport.getViewport().update(width, height);
+        // gui.resize(width, height);
+        // scene.resize(width, height);
+    }
+
+    @Override
+    public void render() {
+        float delta = Gdx.graphics.getDeltaTime();
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+
+        GameSingleData.gamePageStatus.render(this, delta);
+    }
+
+    @Override
+    public void dispose() {
+        if (assetManager != null) {
+            assetManager.dispose();
+        }
+        if (skin != null) {
+            skin.dispose();
+        }
+        if (loading != null) {
+            loading.dispose();
+        }
+        if (mainMenu != null) {
+            mainMenu.dispose();
+        }
+        if (gui != null) {
+            gui.dispose();
+        }
     }
 }
