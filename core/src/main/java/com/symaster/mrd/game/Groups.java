@@ -18,5 +18,8 @@ public class Groups {
      * 时间
      */
     public static final String TIMER = "timer";
-
+    /**
+     * 地图噪声
+     */
+    public static final String NOISE = "noise";
 }
