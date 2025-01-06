@@ -246,6 +246,7 @@ public class Main extends ApplicationAdapter {
         assetManager.load("log.png", Texture.class);
         assetManager.load("white.png", Texture.class);
         assetManager.load("left.png", Texture.class);
+        assetManager.load("Water.png", Texture.class);
 
         this.ai = new AI();
         this.loading = new Loading();

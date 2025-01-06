@@ -11,7 +11,9 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
+import com.symaster.mrd.game.entity.Noise;
 
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Random;
 import java.util.Set;
@@ -31,37 +33,49 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getMapSize(float mapSize, Texture mapTexture, float startX, float startY) {
+    private Set<Node> getTileSet(float tileSize, Texture grassTexture, Texture waterTexture, float startX, float startY, Noise noise) {
         Set<Node> rtn = new HashSet<>();
 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
             for (int y = 0; y < SystemConfig.MAP_NUMBER; y++) {
 
-                TextureRegion textureRegion;
-                float v = random.nextFloat();
+                float worldX = tileSize * x + startX;
+                float worldY = tileSize * y + startY;
 
-                if (v < 0.3f) {
-                    textureRegion = new TextureRegion(mapTexture, 0, 0, 32, 32);
-                } else if (v < 0.6f) {
-                    textureRegion = new TextureRegion(mapTexture, 32, 0, 32, 32);
-                } else if (v < 0.9f) {
-                    textureRegion = new TextureRegion(mapTexture, 128, 0, 32, 32);
+                float noiseValue = noise.interpolatedNoise(Math.round(worldX / tileSize), Math.round(worldY / tileSize));
+
+                TextureRegion textureRegion;
+
+                if (noiseValue < 0f) {
+                    float v = random.nextFloat();
+
+                    if (v < 0.33) {
+                        textureRegion = new TextureRegion(waterTexture, 0, 0, 16, 16);
+                    } else if (v < 0.66) {
+                        textureRegion = new TextureRegion(waterTexture, 0, 0, 32, 16);
+                    } else {
+                        textureRegion = new TextureRegion(waterTexture, 0, 0, 48, 16);
+                    }
+
+                } else if (noiseValue < 0.3f) {
+                    textureRegion = new TextureRegion(grassTexture, 0, 0, 32, 32);
+                } else if (noiseValue < 0.6f) {
+                    textureRegion = new TextureRegion(grassTexture, 32, 0, 32, 32);
+                } else if (noiseValue < 0.9f) {
+                    textureRegion = new TextureRegion(grassTexture, 128, 0, 32, 32);
                 } else {
-                    textureRegion = new TextureRegion(mapTexture, 160, 32, 32, 32);
+                    textureRegion = new TextureRegion(grassTexture, 160, 32, 32, 32);
                 }
 
-                float mapX = mapSize * x + startX;
-                float mapY = mapSize * y + startY;
-
                 Sprite sprite = new Sprite(textureRegion);
-                sprite.setSize(mapSize, mapSize);
+                sprite.setSize(tileSize, tileSize);
 
-                SpriteNode map = new SpriteNode(sprite);
-                map.setLayer(Layer.MAP.getLayer());
-                map.setZIndex(0);
-                map.setVisible(true);
-                map.setPosition(mapX, mapY);
-                rtn.add(map);
+                SpriteNode tile = new SpriteNode(sprite);
+                tile.setLayer(Layer.MAP.getLayer());
+                tile.setZIndex(0);
+                tile.setVisible(true);
+                tile.setPosition(worldX, worldY);
+                rtn.add(tile);
             }
         }
         return rtn;
@@ -69,15 +83,23 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
     @Override
     public Set<Node> generate(Scene scene, Block take) {
-        Texture mapTexture = assetManager.get("TX Tileset Grass.png", Texture.class);
+        Texture grassTexture = assetManager.get("TX Tileset Grass.png", Texture.class);
+        Texture waterTexture = assetManager.get("Water.png", Texture.class);
+
+        Set<Node> noiseGroup = scene.getByGroup(Groups.NOISE);
+        if (noiseGroup == null || noiseGroup.isEmpty()) {
+            return Collections.emptySet();
+        }
+
+        Noise noise = (Noise) noiseGroup.iterator().next();
 
         float blockSize = scene.getBlockSize();
 
         float startX = take.getX() * blockSize;
         float startY = take.getY() * blockSize;
 
-        float mapSize = blockSize / SystemConfig.MAP_NUMBER;
+        float tileSize = blockSize / SystemConfig.MAP_NUMBER;
 
-        return getMapSize(mapSize, mapTexture, startX, startY);
+        return getTileSet(tileSize, grassTexture, waterTexture, startX, startY, noise);
     }
 }
