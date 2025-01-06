@@ -15,7 +15,7 @@ public class Database extends Node {
     /**
      * 某个生物当前的动作
      */
-    private final Map<String, HumanAction> humanActionMap;
+    private final Map<Long, HumanAction> humanActionMap;
     /**
      * 时间分配
      */
@@ -42,12 +42,12 @@ public class Database extends Node {
         periodMap.put(hour, timeAllocation);
     }
 
-    public HumanAction getHumanAction(String uid) {
-        return humanActionMap.get(uid);
+    public HumanAction getHumanAction(long id) {
+        return humanActionMap.get(id);
     }
 
-    public void setHumanAction(String uid, HumanAction humanAction) {
-        humanActionMap.put(uid, humanAction);
+    public void setHumanAction(long id, HumanAction humanAction) {
+        humanActionMap.put(id, humanAction);
     }
 
 

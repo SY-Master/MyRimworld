@@ -6,6 +6,7 @@ import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.EntityIdGenerator;
 
 import java.io.Serializable;
 import java.util.*;
@@ -20,7 +21,7 @@ import java.util.function.Predicate;
 public class Node extends LinkedList<Node> implements Disposable, Serializable, Creation {
     private static final long serialVersionUID = 1L;
 
-    private final String uid;
+    private final long id;
     private float positionY;
     private float width;
     private float height;
@@ -75,6 +76,8 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      */
     private int layer;
 
+    private int logicId;
+
     public Node() {
         this.positionX = 0.0f;
         this.positionY = 0.0f;
@@ -84,8 +87,16 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.width = 0.0f;
         this.height = 0.0f;
         this.zIndex = 0;
-        this.uid = UUID.randomUUID().toString();
+        this.id = EntityIdGenerator.nextId();
         this.layer = Layer.OBJECT.getLayer();
+    }
+
+    public int getLogicId() {
+        return logicId;
+    }
+
+    public void setLogicId(int logicId) {
+        this.logicId = logicId;
     }
 
     public int getLayer() {
@@ -321,8 +332,8 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         }
     }
 
-    public String getUid() {
-        return uid;
+    public long getId() {
+        return id;
     }
 
     public Scene getScene() {
@@ -461,13 +472,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         if (!super.equals(o)) return false;
 
         Node node = (Node) o;
-        return uid.equals(node.uid);
+        return id == node.id;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + uid.hashCode();
+        result = 31 * result + Long.hashCode(id);
         return result;
     }
 

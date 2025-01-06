@@ -42,29 +42,25 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
                 float worldX = tileSize * x + startX;
                 float worldY = tileSize * y + startY;
 
-                float noiseValue = noise.interpolatedNoise(Math.round(worldX / tileSize), Math.round(worldY / tileSize));
+                float noiseValue = noise.interpolatedNoise(worldX / tileSize / 50, worldY / tileSize / 50);
 
                 TextureRegion textureRegion;
+                if (noiseValue < -0.1f) {
+                    textureRegion = new TextureRegion(waterTexture, 0, 0, 16, 16);
+                } else {
 
-                if (noiseValue < 0f) {
                     float v = random.nextFloat();
 
-                    if (v < 0.33) {
-                        textureRegion = new TextureRegion(waterTexture, 0, 0, 16, 16);
-                    } else if (v < 0.66) {
-                        textureRegion = new TextureRegion(waterTexture, 0, 0, 32, 16);
+                    if (v < 0.25) {
+                        textureRegion = new TextureRegion(grassTexture, 0, 0, 32, 32);
+                    } else if (v < 0.5) {
+                        textureRegion = new TextureRegion(grassTexture, 32, 0, 32, 32);
+                    } else if (v < 0.75) {
+                        textureRegion = new TextureRegion(grassTexture, 128, 0, 32, 32);
                     } else {
-                        textureRegion = new TextureRegion(waterTexture, 0, 0, 48, 16);
+                        textureRegion = new TextureRegion(grassTexture, 160, 32, 32, 32);
                     }
 
-                } else if (noiseValue < 0.3f) {
-                    textureRegion = new TextureRegion(grassTexture, 0, 0, 32, 32);
-                } else if (noiseValue < 0.6f) {
-                    textureRegion = new TextureRegion(grassTexture, 32, 0, 32, 32);
-                } else if (noiseValue < 0.9f) {
-                    textureRegion = new TextureRegion(grassTexture, 128, 0, 32, 32);
-                } else {
-                    textureRegion = new TextureRegion(grassTexture, 160, 32, 32, 32);
                 }
 
                 Sprite sprite = new Sprite(textureRegion);
@@ -92,6 +88,8 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         }
 
         Noise noise = (Noise) noiseGroup.iterator().next();
+
+        String mapSeed = scene.getMapSeed();
 
         float blockSize = scene.getBlockSize();
 

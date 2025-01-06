@@ -61,16 +61,19 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
     private Save generate() {
         List<Block> blocks = new ArrayList<>();
 
-        int initSize = 10;
+        int initSize = 100; // 初始化区块大小
         for (int x = -initSize; x < initSize; x++) {
             for (int y = -initSize; y < initSize; y++) {
                 blocks.add(new Block(x, y));
             }
         }
 
+        Noise noise = new Noise(gameGenerateData.mapSeed.hashCode());
+        // noise.setScale(1);
+
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.add(new FrameSelector(gameGenerateData.assetManager));
-        scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
+        scene.add(noise, Groups.NOISE);
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
         // 游戏时间
