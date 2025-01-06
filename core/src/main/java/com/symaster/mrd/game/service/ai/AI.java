@@ -54,7 +54,7 @@ public class AI {
             return;
         }
 
-        HumanAction humanAction1 = database.getHumanAction(nodes.getUid());
+        HumanAction humanAction1 = database.getHumanAction(nodes.getId());
         if (humanAction1 != null) {
             humanAction1.logic(scene, database, gameTime, nodes, delta);
             return;

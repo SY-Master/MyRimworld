@@ -46,8 +46,6 @@ public class Scene implements Serializable, Disposable {
 
     private final Set<Node> forceLogicNodes;
 
-    private final Set<Node> logicCache;
-
     /**
      * 激活的区块
      */
@@ -89,7 +87,6 @@ public class Scene implements Serializable, Disposable {
         this.renderCache = new Cache();
         this.nodeGroups = new HashMap<>();
         this.forceLogicNodes = new HashSet<>();
-        this.logicCache = new HashSet<>();
         if (mapSeed == null) {
             this.mapSeed = UUID.randomUUID().toString();
         } else {
@@ -350,8 +347,12 @@ public class Scene implements Serializable, Disposable {
         extScene(node);
     }
 
+    private int logicId = 0;
+
     private void nodesLogic(float delta) {
-        logicCache.clear();
+        logicId++;
+        logicId = logicId % 100;
+        // String logicUid = UUID.randomUUID().toString();
 
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
@@ -360,20 +361,20 @@ public class Scene implements Serializable, Disposable {
             }
 
             for (Node node : nodes1) {
-                nodeLogic(node, delta, 0f, 0f);
+                nodeLogic(node, delta, 0f, 0f, logicId);
             }
         }
 
         for (Node forceLogicNode : forceLogicNodes) {
-            if (logicCache.contains(forceLogicNode)) {
+            if (forceLogicNode.getLogicId() == logicId) {
                 continue;
             }
 
-            nodeLogic(forceLogicNode, delta, 0f, 0f);
+            nodeLogic(forceLogicNode, delta, 0f, 0f, logicId);
         }
     }
 
-    private void nodeLogic(Node node, float delta, float parentX, float parentY) {
+    private void nodeLogic(Node node, float delta, float parentX, float parentY, int logicId) {
 
         // 处理每个节点的逻辑
         if (node.isIgnoreTimeScale()) {
@@ -382,7 +383,7 @@ public class Scene implements Serializable, Disposable {
             node.logic(delta * SystemConfig.TIME_SCALE);
         }
 
-        logicCache.add(node);
+        node.setLogicId(logicId);
 
         // 显示组件的世界坐标
         float worldX = node.getPositionX() + parentX;
@@ -393,7 +394,7 @@ public class Scene implements Serializable, Disposable {
 
         // 所有子节点
         for (Node c : node) {
-            nodeLogic(c, delta, worldX, worldY);
+            nodeLogic(c, delta, worldX, worldY, logicId);
         }
     }
 

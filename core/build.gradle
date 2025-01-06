@@ -7,6 +7,7 @@ dependencies {
   api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
   api "cn.hutool:hutool-all:$hutoolVersion"
 //  implementation 'com.ToxicBakery.library.noise:generator:1.0.10'
+  implementation 'io.github.over-run:perlinoisej:0.2.0'
 
 //  api "implementation 'io.marauder.charger:clipper:1.0.0'"
 //  api "io.github.libktx:ktx-freetype:$ktxVersion"
