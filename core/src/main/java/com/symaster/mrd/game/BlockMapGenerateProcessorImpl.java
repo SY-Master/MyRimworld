@@ -34,8 +34,11 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getTileSet(float tileSize, GrassTexture grassTexture, WaterTexture waterTexture, float startX, float startY, Noise noise) {
+    private Set<Node> getTileSet(float tileSize, TileMapFactory tileMapFactory, float startX, float startY, Noise noise) {
         Set<Node> rtn = new HashSet<>();
+
+        TileSet tileSet = new TileSet();
+        rtn.add(tileSet);
 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
             for (int y = 0; y < SystemConfig.MAP_NUMBER; y++) {
@@ -47,16 +50,16 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
                 TileMap tileMap;
                 if (noiseValue < -0.15f) {
-                    tileMap = new TileMapWater(waterTexture);
+                    tileMap = new TileMapWater(tileMapFactory.getWaterTexture());
                 } else if (noiseValue < 0.95f) {
-                    tileMap = new TileMapGrass(grassTexture.grass());
+                    tileMap = new TileMapGrass(tileMapFactory.getGrassTexture().grass());
                 } else {
-                    tileMap = new TileMapGrass(grassTexture.flower());
+                    tileMap = new TileMapGrass(tileMapFactory.getGrassTexture().flower());
                 }
 
                 tileMap.setSize(tileSize, tileSize);
                 tileMap.setPosition(worldX, worldY);
-                rtn.add(tileMap);
+                tileSet.add(tileMap);
             }
         }
         return rtn;
@@ -65,18 +68,11 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
     @Override
     public Set<Node> generate(Scene scene, Block take) {
 
-        Set<Node> grassSet = scene.getByGroup(Groups.TEXTURE_GRASS);
+        Set<Node> grassSet = scene.getByGroup(Groups.TILEMAP_FACTORY);
         if (grassSet == null || grassSet.isEmpty()) {
             return Collections.emptySet();
         }
-        GrassTexture grassTexture = (GrassTexture) grassSet.iterator().next();
-
-
-        Set<Node> byGroup = scene.getByGroup(Groups.TEXTURE_WATER);
-        if (byGroup == null || byGroup.isEmpty()) {
-            return Collections.emptySet();
-        }
-        WaterTexture waterTexture = (WaterTexture) byGroup.iterator().next();
+        TileMapFactory tileMapFactory = (TileMapFactory) grassSet.iterator().next();
 
         Set<Node> noiseGroup = scene.getByGroup(Groups.NOISE);
         if (noiseGroup == null || noiseGroup.isEmpty()) {
@@ -94,6 +90,6 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
         float tileSize = blockSize / SystemConfig.MAP_NUMBER;
 
-        return getTileSet(tileSize, grassTexture, waterTexture, startX, startY, noise);
+        return getTileSet(tileSize, tileMapFactory, startX, startY, noise);
     }
 }

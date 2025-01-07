@@ -376,11 +376,13 @@ public class Scene implements Serializable, Disposable {
 
     private void nodeLogic(Node node, float delta, float parentX, float parentY, int logicId) {
 
+        boolean childLogic;
+
         // 处理每个节点的逻辑
         if (node.isIgnoreTimeScale()) {
-            node.logic(delta);
+            childLogic = node.logic(delta);
         } else {
-            node.logic(delta * SystemConfig.TIME_SCALE);
+            childLogic = node.logic(delta * SystemConfig.TIME_SCALE);
         }
 
         node.setLogicId(logicId);
@@ -393,8 +395,10 @@ public class Scene implements Serializable, Disposable {
         node.setGdxNodePosition(worldX, worldY);
 
         // 所有子节点
-        for (Node c : node) {
-            nodeLogic(c, delta, worldX, worldY, logicId);
+        if (childLogic) {
+            for (Node c : node) {
+                nodeLogic(c, delta, worldX, worldY, logicId);
+            }
         }
     }
 

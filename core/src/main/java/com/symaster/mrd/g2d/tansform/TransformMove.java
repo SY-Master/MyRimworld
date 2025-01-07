@@ -47,7 +47,7 @@ public class TransformMove extends Node {
     }
 
     @Override
-    public void logic(float delta) {
+    public boolean logic(float delta) {
         super.logic(delta);
 
         Node node;
@@ -58,7 +58,7 @@ public class TransformMove extends Node {
         }
 
         if (input == null || node == null) {
-            return;
+            return true;
         }
 
         // 获取到当前速度(每秒移动速度)
@@ -68,6 +68,8 @@ public class TransformMove extends Node {
         float dis = delta * speed;
 
         node.translate(input.x * dis, input.y * dis);
+
+        return true;
     }
 
 }
