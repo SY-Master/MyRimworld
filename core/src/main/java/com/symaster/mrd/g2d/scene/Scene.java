@@ -9,6 +9,7 @@ import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.api.ProgressProcessor;
 import com.symaster.mrd.g2d.Block;
+import com.symaster.mrd.g2d.BlockArrayList;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
 import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
@@ -36,7 +37,8 @@ public class Scene implements Serializable, Disposable {
     /**
      * 分区块Node表
      */
-    private final Map<Block, Set<Node>> nodes;
+    // private final Map<Block, Set<Node>> nodes;
+    private final BlockArrayList<Set<Node>> nodes;
     /**
      * 激活区块的节点
      */
@@ -81,7 +83,8 @@ public class Scene implements Serializable, Disposable {
      */
     public Scene(AssetManager assetManager, String mapSeed, float blockSize) {
         this.blockSize = blockSize;
-        this.nodes = new HashMap<>();
+        // this.nodes = new HashMap<>();
+        this.nodes = new BlockArrayList<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
         this.renderCache = new Cache();
@@ -120,6 +123,9 @@ public class Scene implements Serializable, Disposable {
             Set<Node> generate = this.blockMapGenerate.getBlockMapGenerateProcessor().generate(this, initBlock);
             nodes.computeIfAbsent(initBlock, k -> new HashSet<>()).addAll(generate);
 
+            // HashMap<Object, Object> objectObjectHashMap = new HashMap<>();
+            // objectObjectHashMap.computeIfAbsent()
+
             if (progressProcessor != null) {
                 progressProcessor.update(i + 1f / initBlocks.size());
             }
@@ -134,7 +140,7 @@ public class Scene implements Serializable, Disposable {
         return blockSize;
     }
 
-    public Map<Block, Set<Node>> getNodes() {
+    public BlockArrayList<Set<Node>> getNodes() {
         return nodes;
     }
 
@@ -352,7 +358,6 @@ public class Scene implements Serializable, Disposable {
     private void nodesLogic(float delta) {
         logicId++;
         logicId = logicId % 100;
-        // String logicUid = UUID.randomUUID().toString();
 
         for (Block block : activeBlocks) {
             Set<Node> nodes1 = nodes.get(block);
@@ -426,18 +431,20 @@ public class Scene implements Serializable, Disposable {
         renderCache.moveNodes.clear();
     }
 
-    public void findNodes(Rectangle worldRect, List<Node> result, boolean limitVisible) {
-        findNodes(worldRect.x, worldRect.y, worldRect.width, worldRect.height, result, limitVisible);
+    public void findNodes(Rectangle worldRect, List<Node> result, boolean limitVisible, int blockExtend) {
+        findNodes(worldRect.x, worldRect.y, worldRect.width, worldRect.height, result, limitVisible, blockExtend);
     }
 
-    public void findNodes(float worldX, float worldY, float worldW, float worldH, List<Node> result, boolean limitVisible) {
+    public void findNodes(float worldX, float worldY, float worldW, float worldH, List<Node> result, boolean limitVisible, int blockExtend) {
         int xIndex = getBlockIndex(worldX);
         int yIndex = getBlockIndex(worldY);
 
         int blockXNumber = (int) Math.ceil(worldW / blockSize) + 1;
         int blockYNumber = (int) Math.ceil(worldH / blockSize) + 1;
 
-        findNodesByBlock(blockXNumber, blockYNumber, xIndex, yIndex, result, limitVisible);
+        int i = blockExtend * 2;
+
+        findNodesByBlock(blockXNumber + i, blockYNumber + i, xIndex - blockExtend, yIndex - blockExtend, result, limitVisible);
     }
 
     public void findNodesByBlock(int blockXNumber, int blockYNumber, int x, int y, List<Node> result, boolean limitVisible) {
