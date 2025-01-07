@@ -123,8 +123,9 @@ public class GameTime extends Node {
 
 
     @Override
-    public void logic(float delta) {
+    public boolean logic(float delta) {
         super.logic(delta);
         time += delta;
+        return true;
     }
 }

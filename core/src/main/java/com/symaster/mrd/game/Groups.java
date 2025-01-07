@@ -23,6 +23,5 @@ public class Groups {
      */
     public static final String NOISE = "noise";
 
-    public static final String TEXTURE_WATER = "texture_water";
-    public static final String TEXTURE_GRASS = "texture_grass";
+    public static final String TILEMAP_FACTORY = "tilemap_factory";
 }

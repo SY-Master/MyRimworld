@@ -133,8 +133,9 @@ public class Creature extends Node {
     }
 
     @Override
-    public void logic(float delta) {
+    public boolean logic(float delta) {
         super.logic(delta);
         ai.logic(this, delta);
+        return true;
     }
 }

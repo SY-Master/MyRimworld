@@ -8,6 +8,7 @@ import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.GrassTexture;
+import com.symaster.mrd.game.entity.map.TileMapFactory;
 import com.symaster.mrd.game.entity.map.WaterTexture;
 
 import java.util.ArrayList;
@@ -76,8 +77,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.add(new FrameSelector(gameGenerateData.assetManager));
         scene.add(noise, Groups.NOISE);
-        scene.add(new WaterTexture(gameGenerateData.assetManager), Groups.TEXTURE_WATER);
-        scene.add(new GrassTexture(gameGenerateData.assetManager), Groups.TEXTURE_GRASS);
+        scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
 
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 

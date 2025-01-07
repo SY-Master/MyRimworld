@@ -196,8 +196,11 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
 
     /**
      * 每帧调用，节点逻辑处理
+     *
+     * @return 是否需要调用子节点
      */
-    public void logic(float delta) {
+    public boolean logic(float delta) {
+        return true;
     }
 
     public int getActivityBlockSize() {
