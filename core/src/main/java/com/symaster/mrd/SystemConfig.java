@@ -21,11 +21,11 @@ public class SystemConfig {
     /**
      * 区块大小（米）默认10米
      */
-    public static float BLOCK_SIZE = 10f;
+    public static float BLOCK_SIZE = 20f;
     /**
      * 一个区块的地板数量
      */
-    public static int MAP_NUMBER = 10;
+    public static int MAP_NUMBER = 20;
     /**
      * 时间缩放
      */

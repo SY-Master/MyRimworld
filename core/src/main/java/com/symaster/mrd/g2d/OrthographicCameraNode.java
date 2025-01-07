@@ -74,7 +74,8 @@ public class OrthographicCameraNode extends Node {
         caches.clear();
 
         Rectangle worldRectangle = getWorldRectangle();
-        scene.findNodes(worldRectangle, caches, true);
+        worldRectangle.set(worldRectangle.getX() - 1, worldRectangle.getY() - 1, worldRectangle.getWidth() + 2, worldRectangle.getHeight() + 2);
+        scene.findNodes(worldRectangle, caches, true, 1);
 
         beginDraw();
         spriteBatch.setProjectionMatrix(camera.combined);

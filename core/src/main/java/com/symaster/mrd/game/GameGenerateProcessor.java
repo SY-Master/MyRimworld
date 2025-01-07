@@ -69,12 +69,9 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
             }
         }
 
-        Noise noise = new Noise(gameGenerateData.mapSeed.hashCode());
-        // noise.setScale(1);
-
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.add(new FrameSelector(gameGenerateData.assetManager));
-        scene.add(noise, Groups.NOISE);
+        scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
         scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
 
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);

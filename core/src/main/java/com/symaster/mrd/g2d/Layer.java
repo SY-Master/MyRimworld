@@ -6,8 +6,8 @@ package com.symaster.mrd.g2d;
  */
 public enum Layer {
 
-    MAP(0), // 地图层
-    OBJECT(1), // 物体层
+    MAP(0), // 地图层：地图
+    OBJECT(1), // 物体层：角色、草木、建筑、动物
     FLOAT(2), // 浮层
     SKY(3), // 天空层
     ;
