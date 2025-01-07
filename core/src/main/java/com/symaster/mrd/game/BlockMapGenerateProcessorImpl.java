@@ -1,14 +1,9 @@
 package com.symaster.mrd.game;
 
 import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
-import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 import com.symaster.mrd.game.entity.Noise;

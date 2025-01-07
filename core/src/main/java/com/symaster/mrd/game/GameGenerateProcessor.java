@@ -7,9 +7,7 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
-import com.symaster.mrd.game.entity.map.GrassTexture;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
-import com.symaster.mrd.game.entity.map.WaterTexture;
 
 import java.util.ArrayList;
 import java.util.List;

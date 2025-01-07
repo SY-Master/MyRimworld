@@ -9,7 +9,10 @@ import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.EntityIdGenerator;
 
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.LinkedList;
+import java.util.List;
 import java.util.function.Predicate;
 
 /**
