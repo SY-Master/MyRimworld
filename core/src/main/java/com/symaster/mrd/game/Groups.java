@@ -22,4 +22,7 @@ public class Groups {
      * 地图噪声
      */
     public static final String NOISE = "noise";
+
+    public static final String TEXTURE_WATER = "texture_water";
+    public static final String TEXTURE_GRASS = "texture_grass";
 }

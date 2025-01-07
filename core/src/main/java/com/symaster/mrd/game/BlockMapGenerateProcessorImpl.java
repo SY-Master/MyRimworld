@@ -12,6 +12,7 @@ import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 import com.symaster.mrd.game.entity.Noise;
+import com.symaster.mrd.game.entity.map.*;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -33,7 +34,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getTileSet(float tileSize, Texture grassTexture, Texture waterTexture, float startX, float startY, Noise noise) {
+    private Set<Node> getTileSet(float tileSize, GrassTexture grassTexture, WaterTexture waterTexture, float startX, float startY, Noise noise) {
         Set<Node> rtn = new HashSet<>();
 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
@@ -42,36 +43,20 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
                 float worldX = tileSize * x + startX;
                 float worldY = tileSize * y + startY;
 
-                float noiseValue = noise.interpolatedNoise(worldX / tileSize / 50, worldY / tileSize / 50);
+                float noiseValue = noise.interpolatedNoise(worldX / tileSize / 60, worldY / tileSize / 60);
 
-                TextureRegion textureRegion;
-                if (noiseValue < -0.1f) {
-                    textureRegion = new TextureRegion(waterTexture, 0, 0, 16, 16);
+                TileMap tileMap;
+                if (noiseValue < -0.15f) {
+                    tileMap = new TileMapWater(waterTexture);
+                } else if (noiseValue < 0.95f) {
+                    tileMap = new TileMapGrass(grassTexture.grass());
                 } else {
-
-                    float v = random.nextFloat();
-
-                    if (v < 0.25) {
-                        textureRegion = new TextureRegion(grassTexture, 0, 0, 32, 32);
-                    } else if (v < 0.5) {
-                        textureRegion = new TextureRegion(grassTexture, 32, 0, 32, 32);
-                    } else if (v < 0.75) {
-                        textureRegion = new TextureRegion(grassTexture, 128, 0, 32, 32);
-                    } else {
-                        textureRegion = new TextureRegion(grassTexture, 160, 32, 32, 32);
-                    }
-
+                    tileMap = new TileMapGrass(grassTexture.flower());
                 }
 
-                Sprite sprite = new Sprite(textureRegion);
-                sprite.setSize(tileSize, tileSize);
-
-                SpriteNode tile = new SpriteNode(sprite);
-                tile.setLayer(Layer.MAP.getLayer());
-                tile.setZIndex(0);
-                tile.setVisible(true);
-                tile.setPosition(worldX, worldY);
-                rtn.add(tile);
+                tileMap.setSize(tileSize, tileSize);
+                tileMap.setPosition(worldX, worldY);
+                rtn.add(tileMap);
             }
         }
         return rtn;
@@ -79,8 +64,19 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
     @Override
     public Set<Node> generate(Scene scene, Block take) {
-        Texture grassTexture = assetManager.get("TX Tileset Grass.png", Texture.class);
-        Texture waterTexture = assetManager.get("Water.png", Texture.class);
+
+        Set<Node> grassSet = scene.getByGroup(Groups.TEXTURE_GRASS);
+        if (grassSet == null || grassSet.isEmpty()) {
+            return Collections.emptySet();
+        }
+        GrassTexture grassTexture = (GrassTexture) grassSet.iterator().next();
+
+
+        Set<Node> byGroup = scene.getByGroup(Groups.TEXTURE_WATER);
+        if (byGroup == null || byGroup.isEmpty()) {
+            return Collections.emptySet();
+        }
+        WaterTexture waterTexture = (WaterTexture) byGroup.iterator().next();
 
         Set<Node> noiseGroup = scene.getByGroup(Groups.NOISE);
         if (noiseGroup == null || noiseGroup.isEmpty()) {

@@ -7,6 +7,8 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
+import com.symaster.mrd.game.entity.map.GrassTexture;
+import com.symaster.mrd.game.entity.map.WaterTexture;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -74,6 +76,9 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
         scene.add(new FrameSelector(gameGenerateData.assetManager));
         scene.add(noise, Groups.NOISE);
+        scene.add(new WaterTexture(gameGenerateData.assetManager), Groups.TEXTURE_WATER);
+        scene.add(new GrassTexture(gameGenerateData.assetManager), Groups.TEXTURE_GRASS);
+
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 
         // 游戏时间
@@ -82,7 +87,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.setZIndex(100);
-        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
+        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE + 50);
         maleHuman.setHp(new Measure(1, 100f));
         maleHuman.setGender(Gender.MALE);
         maleHuman.setAi(gameGenerateData.ai);
