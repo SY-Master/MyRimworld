@@ -31,7 +31,7 @@ public class Loading extends Stage {
 
         texture = new Texture(Gdx.files.internal("log.png"));
         borderTexture = new Texture(Gdx.files.internal("border0.png"));
-        border1Texture = new Texture(Gdx.files.internal("border1.png"));
+        border1Texture = new Texture(Gdx.files.internal("white.png"));
 
         SolidColorDrawable solidColorDrawable = new SolidColorDrawable(new Color(0.19f, 0.56f, 0.79f, 1f));
         bg = new Image(solidColorDrawable);
@@ -45,7 +45,8 @@ public class Loading extends Stage {
 
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
         style.background = new NinePatchDrawable(new NinePatch(borderTexture, 1, 1, 1, 1));
-        style.knob = new NinePatchDrawable(new NinePatch(border1Texture, 1, 1, 1, 1));
+        // style.knob = new NinePatchDrawable(new NinePatch(border1Texture, 1, 1, 1, 1));
+        style.knob = new NinePatchDrawable(new NinePatch(border1Texture));
 
         progressBar = new ProgressBar(0, 1, 0.1f, false, style);
 

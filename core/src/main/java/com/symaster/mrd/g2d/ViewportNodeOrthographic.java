@@ -15,6 +15,9 @@ import com.symaster.mrd.api.PositionConverter;
 public class ViewportNodeOrthographic extends OrthographicCameraNode {
 
     private final Viewport viewport;
+    private final Vector2 topRight = new Vector2();
+    private final Vector2 btnLeft = new Vector2();
+    private final Rectangle worldRectangle = new Rectangle();
 
     public ViewportNodeOrthographic(float worldWidth, float worldHeight, OrthographicCamera camera) {
         this(new FillViewport(worldWidth, worldHeight, camera));
@@ -50,11 +53,15 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
 
     @Override
     public Rectangle getWorldRectangle() {
+        topRight.set(viewport.getScreenWidth(), 0);
+        btnLeft.set(0, viewport.getScreenHeight());
 
-        Vector2 topRight = viewport.unproject(new Vector2(viewport.getScreenWidth(), 0));
-        Vector2 btnLeft = viewport.unproject(new Vector2(0, viewport.getScreenHeight()));
+        viewport.unproject(topRight);
+        viewport.unproject(btnLeft);
 
-        return new Rectangle(btnLeft.x, btnLeft.y, topRight.x - btnLeft.x, topRight.y - btnLeft.y);
+        worldRectangle.set(btnLeft.x, btnLeft.y, topRight.x - btnLeft.x, topRight.y - btnLeft.y);
+
+        return worldRectangle;
     }
 
     @Override
