@@ -8,6 +8,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.g2d.scene.Scene;
 
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -21,6 +22,10 @@ public class OrthographicCameraNode extends Node {
     private final SpriteBatch spriteBatch;
     private final List<Node> caches = new LinkedList<>();
     private final PositionConverter positionConverter;
+    private final Comparator<Node> comparator;
+    private final Vector3 topRight = new Vector3();
+    private final Vector3 bottomLeft = new Vector3();
+    private final Rectangle worldRectangle = new Rectangle();
 
     public OrthographicCameraNode() {
         this(new OrthographicCamera(), new SpriteBatch());
@@ -30,12 +35,6 @@ public class OrthographicCameraNode extends Node {
         this(new OrthographicCamera(), spriteBatch);
     }
 
-    public OrthographicCameraNode(OrthographicCamera camera, SpriteBatch spriteBatch) {
-        this.camera = camera;
-        this.spriteBatch = spriteBatch;
-        setForcedLogic(true);
-        this.positionConverter = newConverter();
-    }
 
     public PositionConverter getPositionConverter() {
         return positionConverter;
@@ -45,11 +44,28 @@ public class OrthographicCameraNode extends Node {
         return camera;
     }
 
-    public Rectangle getWorldRectangle() {
-        Vector3 topRight = camera.unproject(new Vector3(camera.viewportWidth, 0, 0));
-        Vector3 bottomLeft = camera.unproject(new Vector3(0, camera.viewportHeight, 0));
+    public OrthographicCameraNode(OrthographicCamera camera, SpriteBatch spriteBatch) {
+        this.camera = camera;
+        this.spriteBatch = spriteBatch;
+        setForcedLogic(true);
+        this.positionConverter = newConverter();
+        this.comparator = (o1, o2) -> {
+            if (o1.getLayer() == o2.getLayer()) {
+                return Integer.compare(o1.getZIndex(), o2.getZIndex());
+            }
+            return Integer.compare(o1.getLayer(), o2.getLayer());
+        };
+    }
 
-        return new Rectangle(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
+    public Rectangle getWorldRectangle() {
+        topRight.set(camera.viewportWidth, 0, 0);
+        camera.unproject(topRight);
+
+        bottomLeft.set(0, camera.viewportHeight, 0);
+        camera.unproject(bottomLeft);
+
+        worldRectangle.set(bottomLeft.x, bottomLeft.y, topRight.x - bottomLeft.x, topRight.y - bottomLeft.y);
+        return worldRectangle;
     }
 
     @Override
@@ -74,19 +90,13 @@ public class OrthographicCameraNode extends Node {
         caches.clear();
 
         Rectangle worldRectangle = getWorldRectangle();
-        worldRectangle.set(worldRectangle.getX() - 1, worldRectangle.getY() - 1, worldRectangle.getWidth() + 2, worldRectangle.getHeight() + 2);
         scene.findNodes(worldRectangle, caches, true, 1);
 
         beginDraw();
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
-        caches.stream().sorted((o1, o2) -> {
-            if (o1.getLayer() == o2.getLayer()) {
-                return Integer.compare(o1.getZIndex(), o2.getZIndex());
-            }
-            return Integer.compare(o1.getLayer(), o2.getLayer());
-        }).forEach(this::drawNode);
+        caches.stream().sorted(comparator).forEach(this::drawNode);
         spriteBatch.end();
     }
 
