@@ -45,11 +45,11 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
                 TileMap tileMap;
                 if (noiseValue < -0.15f) {
-                    tileMap = new TileMapWater(tileMapFactory.getWaterTexture());
+                    tileMap = new TileMap(tileMapFactory.getWaterTexture());
                 } else if (noiseValue < 0.95f) {
-                    tileMap = new TileMapGrass(tileMapFactory.getGrassTexture().grass());
+                    tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
                 } else {
-                    tileMap = new TileMapGrass(tileMapFactory.getGrassTexture().flower());
+                    tileMap = new TileMap(tileMapFactory.getGrassTexture().flower());
                 }
 
                 tileMap.setSize(tileSize, tileSize);
