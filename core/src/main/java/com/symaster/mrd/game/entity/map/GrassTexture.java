@@ -31,4 +31,14 @@ public class GrassTexture extends TileMapTexture {
         textureRegion.setRegion(128, 32, 32, 32);
         return this;
     }
+
+    public GrassTexture flower2() {
+        textureRegion.setRegion(192, 32, 32, 32);
+        return this;
+    }
+
+    public GrassTexture flower3() {
+        textureRegion.setRegion(192, 64, 32, 32);
+        return this;
+    }
 }
