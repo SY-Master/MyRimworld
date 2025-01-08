@@ -62,7 +62,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
     private Save generate() {
         List<Block> blocks = new ArrayList<>();
 
-        int initSize = 100; // 初始化区块大小
+        int initSize = 50; // 初始化区块大小
         for (int x = -initSize; x < initSize; x++) {
             for (int y = -initSize; y < initSize; y++) {
                 blocks.add(new Block(x, y));
@@ -82,7 +82,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.setZIndex(100);
-        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE + 50);
+        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE + 30);
         maleHuman.setHp(new Measure(1, 100f));
         maleHuman.setGender(Gender.MALE);
         maleHuman.setAi(gameGenerateData.ai);
