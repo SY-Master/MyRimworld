@@ -3,13 +3,12 @@ package com.symaster.mrd.game.entity.map;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.symaster.mrd.g2d.Node;
 
 /**
  * @author yinmiao
  * @since 2025/1/6
  */
-public class GrassTexture extends Node {
+public class GrassTexture extends TileMapTexture {
 
     private final TextureRegion textureRegion;
 
