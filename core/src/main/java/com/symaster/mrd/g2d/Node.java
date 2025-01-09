@@ -80,6 +80,10 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     private int layer;
 
     private int logicId;
+    /**
+     * 融合渲染
+     */
+    private boolean fusionRender;
 
     public Node() {
         this.positionX = 0.0f;
@@ -92,6 +96,15 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.zIndex = 0;
         this.id = EntityIdGenerator.nextId();
         this.layer = Layer.OBJECT.getLayer();
+        this.fusionRender = false;
+    }
+
+    public boolean isFusionRender() {
+        return fusionRender;
+    }
+
+    public void setFusionRender(boolean fusionRender) {
+        this.fusionRender = fusionRender;
     }
 
     public int getLogicId() {

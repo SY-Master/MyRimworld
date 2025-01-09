@@ -5,10 +5,13 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
+import com.badlogic.gdx.math.Matrix4;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,6 +19,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.badlogic.gdx.utils.viewport.Viewport;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
@@ -68,12 +72,26 @@ public class Main extends ApplicationAdapter {
         ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
         GameSingleData.positionConverter = cam.getPositionConverter();
 
+        // transformMove.setSpeed(cam.getWorldRectangle().getWidth() * 0.1f);
+
         RollerDragInput rollerDragInput = new RollerDragInput(cam);
 
         cam.add(rollerDragInput);
         cam.add(wasdInput);
         cam.add(transformMove);
-        cam.add(new TransformZoom(cam.getCamera(), cam));
+
+        TransformZoom nodes = new TransformZoom(cam.getCamera(), cam) {
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                boolean scrolled = super.scrolled(amountX, amountY);
+
+                transformMove.setSpeed(cam.getWorldRectangle().getWidth() * 0.25f);
+
+                return scrolled;
+            }
+        };
+
+        cam.add(nodes);
         return cam;
     }
 

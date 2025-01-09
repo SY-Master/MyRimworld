@@ -14,6 +14,7 @@ import com.symaster.mrd.util.GdxText;
  */
 public class CreatureMenu extends MainStageUIItem {
     private TextButton textButton;
+    private Panel panel;
 
     @Override
     public void create() {
@@ -26,6 +27,7 @@ public class CreatureMenu extends MainStageUIItem {
                 openPanel();
             }
         });
+        panel = new Panel();
     }
 
     @Override
@@ -35,12 +37,16 @@ public class CreatureMenu extends MainStageUIItem {
 
     @Override
     public Actor panel() {
-        return null;
+        return panel;
     }
 
     @Override
     public BTNPosition btnPosition() {
         return BTNPosition.BottomMenu;
+    }
+
+    public static class Panel extends Actor {
+
     }
 
 }

@@ -25,7 +25,7 @@ public class SystemConfig {
     /**
      * 一个区块的地板数量
      */
-    public static int MAP_NUMBER = 20;
+    public static int MAP_NUMBER = 40;
     /**
      * 时间缩放
      */

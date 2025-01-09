@@ -50,6 +50,10 @@ public class TransformMove extends Node {
     public boolean logic(float delta) {
         super.logic(delta);
 
+        if (speed <= 0) {
+            return true;
+        }
+
         Node node;
         if (this.operate == null) {
             node = getParent();

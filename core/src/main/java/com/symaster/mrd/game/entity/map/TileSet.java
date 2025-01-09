@@ -13,6 +13,7 @@ public class TileSet extends Node {
 
     public TileSet() {
         setLayer(Layer.MAP.getLayer());
+        setFusionRender(true);
         setVisible(true);
     }
 

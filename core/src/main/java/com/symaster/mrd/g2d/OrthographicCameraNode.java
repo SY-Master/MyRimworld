@@ -36,7 +36,6 @@ public class OrthographicCameraNode extends Node {
         this(new OrthographicCamera(), spriteBatch);
     }
 
-
     public PositionConverter getPositionConverter() {
         return positionConverter;
     }
@@ -99,19 +98,25 @@ public class OrthographicCameraNode extends Node {
             addTo(item, caches2);
         }
 
+        caches2.sort(comparator);
+
         beginDraw();
         spriteBatch.setProjectionMatrix(camera.combined);
-
         spriteBatch.begin();
-        caches2.stream().sorted(comparator).forEach(this::drawNode);
+        for (Node node : caches2) {
+            drawNode(node);
+        }
         spriteBatch.end();
     }
 
     private void addTo(Node item, List<Node> caches2) {
         if (item.isVisible()) {
             caches2.add(item);
-            for (Node node : item) {
-                addTo(node, caches2);
+
+            if (!item.isFusionRender()) {
+                for (Node node : item) {
+                    addTo(node, caches2);
+                }
             }
         }
     }
@@ -139,14 +144,14 @@ public class OrthographicCameraNode extends Node {
     }
 
     private void drawNode(Node node) {
-        if (!node.isVisible()) {
-            return;
+        if (node.isVisible()) {
+            node.draw(spriteBatch);
+
+            if (node.isFusionRender()) {
+                for (Node child : node) {
+                    drawNode(child);
+                }
+            }
         }
-
-        node.draw(spriteBatch);
-
-        // for (Node child : node) {
-        //     drawNode(child);
-        // }
     }
 }

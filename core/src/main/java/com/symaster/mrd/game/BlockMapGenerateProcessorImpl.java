@@ -86,10 +86,8 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
             tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
 
-            if (random.nextFloat() < 0.01f) {
-
-                float v1 = random.nextFloat();
-                if (v1 < 0.5f) {
+            if (random.nextFloat() < 0.001f) {
+                if (random.nextFloat() < 0.5f) {
                     // 灌木丛
                     bushes(tileMapFactory, rtn, tileSet, worldX, worldY, tileSize);
                 } else {
