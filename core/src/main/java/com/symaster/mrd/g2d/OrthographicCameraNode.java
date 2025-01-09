@@ -70,6 +70,7 @@ public class OrthographicCameraNode extends Node {
 
     @Override
     public void setGdxNodePosition(float x, float y) {
+        super.setGdxNodePosition(x, y);
         camera.position.set(x, y, 0);
     }
 

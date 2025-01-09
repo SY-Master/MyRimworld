@@ -59,11 +59,13 @@ public class InputNode extends Node implements BridgeInputProcessor {
 
     @Override
     public void onScene(Scene scene) {
+        super.onScene(scene);
         GameSingleData.inputBridge.add(this);
     }
 
     @Override
     public void extScene(Scene scene) {
+        super.extScene(scene);
         GameSingleData.inputBridge.remove(this);
     }
 

@@ -1,5 +1,6 @@
 package com.symaster.mrd.game.entity.map;
 
+import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
 
 /**
@@ -11,6 +12,7 @@ public class TileSet extends Node {
     public boolean initialized = false;
 
     public TileSet() {
+        setLayer(Layer.MAP.getLayer());
         setVisible(true);
     }
 
