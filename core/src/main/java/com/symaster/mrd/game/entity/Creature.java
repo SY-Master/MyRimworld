@@ -138,4 +138,9 @@ public class Creature extends Node {
         ai.logic(this, delta);
         return true;
     }
+
+    @Override
+    public int getZIndex() {
+        return (int) -getPositionY();
+    }
 }

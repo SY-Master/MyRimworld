@@ -10,7 +10,7 @@ import com.symaster.mrd.game.entity.Noise;
 import com.symaster.mrd.game.entity.map.TileMap;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
 import com.symaster.mrd.game.entity.map.TileSet;
-import com.symaster.mrd.game.entity.obj.Tree;
+import com.symaster.mrd.game.entity.obj.*;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -86,17 +86,57 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
             tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
 
-            // if (random.nextFloat() < 0.1f) {
-            //     // 添加树
-            //     Tree nodes = new Tree(assetManager);
-            //     nodes.setPosition(worldX, worldY);
-            //     rtn.add(nodes);
-            // }
+            if (random.nextFloat() < 0.01f) {
+
+                float v1 = random.nextFloat();
+                if (v1 < 0.5f) {
+                    // 灌木丛
+                    bushes(tileMapFactory, rtn, tileSet, worldX, worldY, tileSize);
+                } else {
+                    // 大树
+                    tree(tileMapFactory, rtn, tileSet, worldX, worldY, tileSize);
+                }
+            }
         }
 
         tileMap.setSize(tileSize, tileSize);
         tileMap.setPosition(worldX, worldY);
         tileSet.add(tileMap);
+    }
+
+    private void bushes(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+        Bushes bushes;
+        float v1 = random.nextFloat();
+        if (v1 < 0.33f) {
+            // 添加树
+            bushes = new BushesType1(assetManager);
+        } else {
+            // 添加树
+            bushes = new BushesType2(assetManager);
+        }
+
+        bushes.setScale(random.nextFloat() * 0.5f + 0.75f);
+        bushes.setPosition(worldX - bushes.getWidth() / 2 + tileSize / 2, worldY);
+        rtn.add(bushes);
+    }
+
+    private void tree(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+        Tree tree;
+        float v1 = random.nextFloat();
+        if (v1 < 0.33f) {
+            // 添加树
+            tree = new TreeType1(assetManager);
+        } else if (v1 < 0.66f) {
+            // 添加树
+            tree = new TreeType2(assetManager);
+        } else {
+            // 添加树
+            tree = new TreeType3(assetManager);
+        }
+
+        tree.setScale(random.nextFloat() + 0.5f);
+        tree.setPosition(worldX - tree.getWidth() / 2 + tileSize / 2, worldY);
+        rtn.add(tree);
     }
 
     private void water(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {

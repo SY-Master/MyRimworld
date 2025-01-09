@@ -3,17 +3,15 @@ package com.symaster.mrd.game.entity.obj;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.util.UnitUtil;
 
 /**
  * @author yinmiao
  * @since 2025/1/8
  */
-public class Tree extends Node {
+public class Bushes extends Node {
 
     private final Sprite shadowSprite;
     private final Sprite plantSprite;
@@ -21,7 +19,7 @@ public class Tree extends Node {
     private final float defaultWidth;
     private float scale = 1f;
 
-    public Tree(AssetManager assetManager, int x, int y, int width, int height, float defaultWidth) {
+    public Bushes(AssetManager assetManager, int x, int y, int width, int height, float defaultWidth) {
         Texture plant = assetManager.get("TX Plant.png", Texture.class);
         Texture shadow = assetManager.get("TX Shadow Plant.png", Texture.class);
 
@@ -41,7 +39,7 @@ public class Tree extends Node {
         SpriteNode nodes1 = new SpriteNode(plantSprite) {
             @Override
             public int getZIndex() {
-                return (int) -Tree.this.getPositionY();
+                return (int) -Bushes.this.getPositionY();
             }
         };
         add(nodes1);
