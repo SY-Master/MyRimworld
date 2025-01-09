@@ -156,9 +156,4 @@ public class TimeController extends MainStageUIItem {
         play10.setSize(width, 30);
         play10.setPosition(width * 6, 0);
     }
-
-    @Override
-    public void dispose() {
-        super.dispose();
-    }
 }

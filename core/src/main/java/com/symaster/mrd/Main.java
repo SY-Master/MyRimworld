@@ -14,10 +14,12 @@ import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
 import com.badlogic.gdx.utils.viewport.Viewport;
 import com.symaster.mrd.drawable.SolidColorDrawable;
@@ -103,25 +105,32 @@ public class Main extends ApplicationAdapter {
             skin.add("font-" + fontSize, font);
         }
 
-        NinePatch checked = new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2);
-        NinePatch focused = new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2);
-        NinePatch up = new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2);
+        /// Drawables
+        NinePatchDrawable nDChecked = new NinePatchDrawable(new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDFocused = new NinePatchDrawable(new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDUp = new NinePatchDrawable(new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable border0 = new NinePatchDrawable(new NinePatch(assetManager.get("border0.png", Texture.class), 1, 1, 1, 1));
+        SolidColorDrawable back_05 = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
+        SolidColorDrawable white = new SolidColorDrawable(new Color(1, 1, 1, 1));
 
-        NinePatchDrawable nDChecked = new NinePatchDrawable(checked);
-        NinePatchDrawable nDFocused = new NinePatchDrawable(focused);
-        NinePatchDrawable nDUp = new NinePatchDrawable(up);
-        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, skin.getFont("font-16"));
+        /// Fonts
+        BitmapFont font16 = skin.getFont("font-16");
+
+        TextButton.TextButtonStyle textButtonStyle = new TextButton.TextButtonStyle(nDUp, nDChecked, nDUp, font16);
         textButtonStyle.focused = nDFocused;
         skin.add("default", textButtonStyle);
 
-        Label.LabelStyle style = new Label.LabelStyle(skin.getFont("font-16"), new Color(1f, 1f, 1f, 1f));
-        style.background = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
+        Label.LabelStyle style = new Label.LabelStyle(font16, new Color(1f, 1f, 1f, 1f));
+        style.background = back_05;
         skin.add("nameLabel", style);
 
-        SolidColorDrawable transparentDrawable = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
-
-        TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(transparentDrawable, transparentDrawable, transparentDrawable, skin.getFont("font-16"));
+        TextButton.TextButtonStyle switchBtn = new TextButton.TextButtonStyle(back_05, back_05, back_05, font16);
         skin.add("switch", switchBtn);
+
+        ProgressBar.ProgressBarStyle progressBarStyle = new ProgressBar.ProgressBarStyle();
+        progressBarStyle.background = border0;
+        progressBarStyle.knobBefore = white;
+        skin.add("default", progressBarStyle);
 
         return skin;
     }
@@ -267,6 +276,7 @@ public class Main extends ApplicationAdapter {
         assetManager.load("Water.png", Texture.class);
         assetManager.load("TX Plant.png", Texture.class);
         assetManager.load("TX Shadow Plant.png", Texture.class);
+        assetManager.load("border0.png", Texture.class);
 
         this.ai = new AI();
         this.loading = new Loading();

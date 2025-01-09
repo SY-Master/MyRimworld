@@ -15,6 +15,7 @@ import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.util.ClassUtil;
 
+import java.awt.*;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
@@ -44,6 +45,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
         addTo(new Setting());
         addTo(new TimeView());
         addTo(new TimeController());
+        addTo(new CameraZoomView());
 
         this.addActor(this.table);
     }
@@ -101,33 +103,57 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
     public void resize(int width, int height) {
         getViewport().update(width, height, true);
 
+        // 底部菜单高度
         final int bottomMenuHeight = 50;
+
+        // 屏幕可用高度
         int avaHeight = height - bottomMenuHeight;
+
+        // 底部菜单尺寸设置
         table.setSize(width, bottomMenuHeight);
 
+        // 面板布局与尺寸设置
         for (MainStageUIItem footerMenu : footerMenus) {
+
+            // 面板
             Actor panel = footerMenu.panel();
+            // 面板位置
             UIPosition uiPosition = footerMenu.uiPosition();
+
             if (panel == null || uiPosition == null) {
                 continue;
             }
 
+            // 面板宽度
             int panelWidth = footerMenu.panelWidth(width, height);
-            int panelHeight = footerMenu.panelHeight(width, height);
-            int min = Math.min(avaHeight, panelHeight);
+            // 面板高度
+            int panelHeight = Math.min(avaHeight, footerMenu.panelHeight(width, height));
+
+            // 面板边距
+            Insets marge = footerMenu.marge(width, height);
+
+            // 设置面板尺寸
+            panel.setSize(panelWidth, panelHeight);
+
+            // 靠下边距
+            int down = bottomMenuHeight + marge.bottom;
+            // 靠上边距
+            int up = height - panelHeight - marge.top;
+            // 靠左边距
+            int left = marge.left;
+            // 靠右边距
+            int right = width - panelWidth - marge.right;
 
             if (UIPosition.LEFT_DOWN == uiPosition) {
-                panel.setSize(panelWidth, min);
-                panel.setPosition(0, bottomMenuHeight);
+                // 左下角
+                panel.setPosition(left, down);
             } else if (UIPosition.LEFT_UP == uiPosition) {
-                panel.setSize(panelWidth, min);
-                panel.setPosition(0, height - min);
+                // 左上角
+                panel.setPosition(left, up);
             } else if (UIPosition.RIGHT_DOWN == uiPosition) {
-                panel.setSize(panelWidth, min);
-                panel.setPosition(width - panelWidth, bottomMenuHeight);
+                // 右下角
+                panel.setPosition(right, down);
             }
-
-
         }
     }
 

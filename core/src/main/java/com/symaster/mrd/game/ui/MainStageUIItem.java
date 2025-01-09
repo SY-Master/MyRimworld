@@ -19,8 +19,14 @@ public abstract class MainStageUIItem implements Disposable {
     private final Set<PanelOpenListener> panelOpenListeners;
     private Skin skin;
     private MainStageUI mainStageUI;
-    private boolean panelNormallyOpen;
+    /**
+     * 边距
+     */
     private final Insets insets;
+    /**
+     * 面板常开
+     */
+    private boolean panelNormallyOpen;
 
     public MainStageUIItem() {
         this.panelOpenListeners = new HashSet<>();
@@ -86,7 +92,7 @@ public abstract class MainStageUIItem implements Disposable {
         return insets;
     }
 
-    private void updateMarge(Insets insets, int sceneWidth, int sceneHeight) {
+    public void updateMarge(Insets insets, int sceneWidth, int sceneHeight) {
 
     }
 

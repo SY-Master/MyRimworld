@@ -46,7 +46,7 @@ public class Loading extends Stage {
         ProgressBar.ProgressBarStyle style = new ProgressBar.ProgressBarStyle();
         style.background = new NinePatchDrawable(new NinePatch(borderTexture, 1, 1, 1, 1));
         // style.knob = new NinePatchDrawable(new NinePatch(border1Texture, 1, 1, 1, 1));
-        style.knob = new NinePatchDrawable(new NinePatch(border1Texture));
+        style.knobBefore = new NinePatchDrawable(new NinePatch(border1Texture));
 
         progressBar = new ProgressBar(0, 1, 0.1f, false, style);
 
