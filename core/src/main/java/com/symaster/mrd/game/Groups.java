@@ -24,4 +24,6 @@ public class Groups {
     public static final String NOISE = "noise";
 
     public static final String TILEMAP_FACTORY = "tilemap_factory";
+
+    public static final String MOUSE_MOVEMENT = "mouse_movement";
 }

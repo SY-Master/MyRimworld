@@ -7,7 +7,10 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.scene.impl.BlockMapGenerateProcessor;
 import com.symaster.mrd.game.entity.Noise;
-import com.symaster.mrd.game.entity.map.*;
+import com.symaster.mrd.game.entity.map.TileMap;
+import com.symaster.mrd.game.entity.map.TileMapFactory;
+import com.symaster.mrd.game.entity.map.TileSet;
+import com.symaster.mrd.game.entity.obj.Tree;
 
 import java.util.Collections;
 import java.util.HashSet;
@@ -45,39 +48,62 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
                 TileMap tileMap;
                 if (noiseValue < -0.15f) {
-                    tileMap = new TileMap(tileMapFactory.getWaterTexture());
+                    // 水
+                    water(tileMapFactory, rtn, tileSet, worldX, worldY, tileSize);
                 } else {
 
-
-                    float v = random.nextFloat();
-                    if (v < 0.05f) {
-
-                        float v1 = random.nextFloat();
-                        if (v1 < 0.33) {
-                            tileMap = new TileMap(tileMapFactory.getGrassTexture().flower());
-                        } else if (v1 < 0.66) {
-                            tileMap = new TileMap(tileMapFactory.getGrassTexture().flower2());
-                        } else {
-                            tileMap = new TileMap(tileMapFactory.getGrassTexture().flower3());
-                        }
-
-                    } else {
-                        tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
-                    }
+                    // 草地
+                    flower(tileMapFactory, rtn, tileSet, worldX, worldY, tileSize);
                 }
-
-
-
-                 /*else {
-                    tileMap = new TileMap(tileMapFactory.getGrassTexture().flower());
-                }*/
-
-                tileMap.setSize(tileSize, tileSize);
-                tileMap.setPosition(worldX, worldY);
-                tileSet.add(tileMap);
             }
         }
         return rtn;
+    }
+
+    private void flower(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+        TileMap tileMap;
+
+        float v = random.nextFloat();
+        if (v < 0.05f) {
+
+            float v1 = random.nextFloat();
+            if (v1 < 0.33) {
+                tileMap = new TileMap(tileMapFactory.getGrassTexture().flower());
+            } else if (v1 < 0.66) {
+                tileMap = new TileMap(tileMapFactory.getGrassTexture().flower2());
+            } else {
+                tileMap = new TileMap(tileMapFactory.getGrassTexture().flower3());
+            }
+
+        } else if (v < 0.1f) {
+            if (random.nextFloat() < 0.5) {
+                tileMap = new TileMap(tileMapFactory.getGrassTexture().grass2());
+            } else {
+                tileMap = new TileMap(tileMapFactory.getGrassTexture().grass3());
+            }
+
+        } else {
+
+            tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
+
+            // if (random.nextFloat() < 0.1f) {
+            //     // 添加树
+            //     Tree nodes = new Tree(assetManager);
+            //     nodes.setPosition(worldX, worldY);
+            //     rtn.add(nodes);
+            // }
+        }
+
+        tileMap.setSize(tileSize, tileSize);
+        tileMap.setPosition(worldX, worldY);
+        tileSet.add(tileMap);
+    }
+
+    private void water(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+        TileMap tileMap = new TileMap(tileMapFactory.getWaterTexture());
+        tileMap.setSize(tileSize, tileSize);
+        tileMap.setPosition(worldX, worldY);
+        tileSet.add(tileMap);
     }
 
     @Override
