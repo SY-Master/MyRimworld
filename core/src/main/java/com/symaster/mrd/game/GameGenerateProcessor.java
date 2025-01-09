@@ -72,11 +72,11 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         }
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
-        // scene.add(new FrameSelector(gameGenerateData.assetManager));
+        scene.add(new FrameSelector(gameGenerateData.assetManager));
         scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
         scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
-        scene.add(new Tree(gameGenerateData.assetManager), Groups.MOUSE_MOVEMENT);
-        scene.add(new MouseMovement());
+        // scene.add(new Tree(gameGenerateData.assetManager), Groups.MOUSE_MOVEMENT);
+        // scene.add(new MouseMovement());
 
         scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
 

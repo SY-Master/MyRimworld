@@ -21,6 +21,7 @@ public class OrthographicCameraNode extends Node {
     private final OrthographicCamera camera;
     private final SpriteBatch spriteBatch;
     private final List<Node> caches = new LinkedList<>();
+    private final List<Node> caches2 = new LinkedList<>();
     private final PositionConverter positionConverter;
     private final Comparator<Node> comparator;
     private final Vector3 topRight = new Vector3();
@@ -89,16 +90,30 @@ public class OrthographicCameraNode extends Node {
         }
 
         caches.clear();
+        caches2.clear();
 
         Rectangle worldRectangle = getWorldRectangle();
         scene.findNodes(worldRectangle, caches, true, 1);
+
+        for (Node item : caches) {
+            addTo(item, caches2);
+        }
 
         beginDraw();
         spriteBatch.setProjectionMatrix(camera.combined);
 
         spriteBatch.begin();
-        caches.stream().sorted(comparator).forEach(this::drawNode);
+        caches2.stream().sorted(comparator).forEach(this::drawNode);
         spriteBatch.end();
+    }
+
+    private void addTo(Node item, List<Node> caches2) {
+        if (item.isVisible()) {
+            caches2.add(item);
+            for (Node node : item) {
+                addTo(node, caches2);
+            }
+        }
     }
 
     public PositionConverter newConverter() {
@@ -130,8 +145,8 @@ public class OrthographicCameraNode extends Node {
 
         node.draw(spriteBatch);
 
-        for (Node child : node) {
-            drawNode(child);
-        }
+        // for (Node child : node) {
+        //     drawNode(child);
+        // }
     }
 }
