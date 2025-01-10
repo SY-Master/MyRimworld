@@ -5,13 +5,10 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
-import com.badlogic.gdx.math.Matrix4;
-import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
@@ -19,9 +16,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
-import com.badlogic.gdx.utils.viewport.Viewport;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
@@ -61,43 +56,47 @@ public class Main extends ApplicationAdapter {
     private Loading loading;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
-    private ViewportNodeOrthographic cam;
+    private ViewportNodeOrthographic camera;
     private AI ai;
 
-    private ViewportNodeOrthographic getCam() {
+    private ViewportNodeOrthographic buildCamera() {
         WASDInput wasdInput = new WASDInput();
 
         TransformMove transformMove = new TransformMove(wasdInput.getVector2());
         transformMove.setSpeed(UnitUtil.ofM(18));
         transformMove.setIgnoreTimeScale(true);
 
-        ViewportNodeOrthographic cam = new ViewportNodeOrthographic(960, 540);
-        GameSingleData.positionConverter = cam.getPositionConverter();
+        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(960, 540);
+        GameSingleData.positionConverter = camera.getPositionConverter();
 
-        // transformMove.setSpeed(cam.getWorldRectangle().getWidth() * 0.1f);
+        RollerDragInput rollerDragInput = new RollerDragInput(camera);
 
-        RollerDragInput rollerDragInput = new RollerDragInput(cam);
+        camera.add(rollerDragInput);
+        camera.add(wasdInput);
+        camera.add(transformMove);
 
-        cam.add(rollerDragInput);
-        cam.add(wasdInput);
-        cam.add(transformMove);
-
-        TransformZoom nodes = new TransformZoom(cam.getCamera(), cam) {
+        TransformZoom nodes = new TransformZoom(camera.getCamera(), camera) {
             @Override
             public boolean scrolled(float amountX, float amountY) {
                 boolean scrolled = super.scrolled(amountX, amountY);
 
-                transformMove.setSpeed(cam.getWorldRectangle().getWidth() * 0.25f);
+                // 相机越高，移动越快
+                if (camera.getWorldRectangle().getWidth() > 0) {
+                    transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
+                }
 
                 return scrolled;
             }
         };
 
-        cam.add(nodes);
-        return cam;
+        camera.add(nodes);
+        return camera;
     }
 
-    public Skin defaultSkin(AssetManager assetManager) {
+    /**
+     * 构建 Skin
+     */
+    public Skin buildSkin(AssetManager assetManager) {
         Skin skin = new Skin();
 
         for (int fontSize : SystemConfig.FONT_SIZES) {
@@ -136,7 +135,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public void loadSkin() {
-        skin = defaultSkin(assetManager);
+        skin = buildSkin(assetManager);
     }
 
     public BitmapFont textLoad(String textPath, String fontPath, int size) {
@@ -221,7 +220,7 @@ public class Main extends ApplicationAdapter {
         } else if (gameGenerateProcessor != null) {
             this.save = gameGenerateProcessor.getSave();
             this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            this.save.getScene().add(cam);
+            this.save.getScene().add(camera);
             this.ai.setScene(this.save.getScene());
             this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.gui.setScene(save.getScene());
@@ -249,7 +248,7 @@ public class Main extends ApplicationAdapter {
         gui.logic(delta);
 
         // 绘制相机
-        cam.render();
+        camera.render();
         // 绘制GUI
         gui.render();
     }
@@ -281,7 +280,7 @@ public class Main extends ApplicationAdapter {
         this.ai = new AI();
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
-        this.cam = getCam();
+        this.camera = buildCamera();
     }
 
     @Override
@@ -302,8 +301,8 @@ public class Main extends ApplicationAdapter {
             save.getScene().resize(width, height);
         }
 
-        if (cam != null) {
-            cam.getViewport().update(width, height);
+        if (camera != null) {
+            camera.getViewport().update(width, height);
         }
 
         // fillViewport.getViewport().update(width, height);
