@@ -23,6 +23,7 @@
 
 坐标系：
 
+```svg
 <svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
 
   <line x1="2" y1="98" x2="2" y2="10" stroke="black"/>
@@ -34,7 +35,7 @@
 
   <circle cx="2" cy="98" r="2" fill="black"/>
 </svg>
-
+```
 
 ---
 
