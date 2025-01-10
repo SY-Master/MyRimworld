@@ -8,8 +8,9 @@ public enum Layer {
 
     MAP(0), // 地图层：地图
     OBJECT(1), // 物体层：角色、草木、建筑、动物
-    FLOAT(2), // 浮层
-    SKY(3), // 天空层
+    WEATHER(2), // 天气层
+    FLOAT(3), // 浮层
+    SKY(4), // 天空层
     ;
 
     private final int layer;

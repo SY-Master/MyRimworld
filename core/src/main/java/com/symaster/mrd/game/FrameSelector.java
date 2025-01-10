@@ -36,6 +36,7 @@ public class FrameSelector extends InputNode {
 
         setLayer(Layer.FLOAT.getLayer());
         setVisible(false);
+        setFusionRender(true);
     }
 
     @Override

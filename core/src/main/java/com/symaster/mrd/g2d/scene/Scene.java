@@ -123,6 +123,10 @@ public class Scene implements Serializable, Disposable {
             Set<Node> generate = this.blockMapGenerate.getBlockMapGenerateProcessor().generate(this, initBlock);
             nodes.computeIfAbsent(initBlock, k -> new HashSet<>()).addAll(generate);
 
+            for (Node node : generate) {
+                onScene(node);
+            }
+
             if (progressProcessor != null) {
                 progressProcessor.update(i + 1f / initBlocks.size());
             }

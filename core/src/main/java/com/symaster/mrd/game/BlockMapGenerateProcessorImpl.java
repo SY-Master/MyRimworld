@@ -32,7 +32,7 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getTileSet(float tileSize, TileMapFactory tileMapFactory, float startX, float startY, Noise noise) {
+    private Set<Node> getTileSet(float tileSize, TileMapFactory tileMapFactory, float startX, float startY, Noise noise, float blockSize) {
         Set<Node> rtn = new HashSet<>();
 
         TileSet tileSet = new TileSet();
@@ -57,6 +57,13 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
                 }
             }
         }
+
+        WorldTime nodes = new WorldTime(assetManager);
+        nodes.setPosition(startX, startY);
+        nodes.setWidth(blockSize);
+        nodes.setHeight(blockSize);
+        rtn.add(nodes);
+
         return rtn;
     }
 
@@ -169,6 +176,6 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
         float tileSize = blockSize / SystemConfig.MAP_NUMBER;
 
-        return getTileSet(tileSize, tileMapFactory, startX, startY, noise);
+        return getTileSet(tileSize, tileMapFactory, startX, startY, noise, blockSize);
     }
 }

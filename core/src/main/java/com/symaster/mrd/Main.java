@@ -21,10 +21,7 @@ import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
-import com.symaster.mrd.game.GameGenerateProcessor;
-import com.symaster.mrd.game.GamePageStatus;
-import com.symaster.mrd.game.GameSingleData;
-import com.symaster.mrd.game.LoadingType;
+import com.symaster.mrd.game.*;
 import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.service.ai.AI;
@@ -59,7 +56,7 @@ public class Main extends ApplicationAdapter {
     private ViewportNodeOrthographic camera;
     private AI ai;
 
-    private ViewportNodeOrthographic buildCamera() {
+    public ViewportNodeOrthographic buildCamera() {
         WASDInput wasdInput = new WASDInput();
 
         TransformMove transformMove = new TransformMove(wasdInput.getVector2());
@@ -67,7 +64,6 @@ public class Main extends ApplicationAdapter {
         transformMove.setIgnoreTimeScale(true);
 
         ViewportNodeOrthographic camera = new ViewportNodeOrthographic(960, 540);
-        GameSingleData.positionConverter = camera.getPositionConverter();
 
         RollerDragInput rollerDragInput = new RollerDragInput(camera);
 
@@ -81,7 +77,7 @@ public class Main extends ApplicationAdapter {
                 boolean scrolled = super.scrolled(amountX, amountY);
 
                 // 相机越高，移动越快
-                if (camera.getWorldRectangle().getWidth() > 0) {
+                if (camera.getWorldRectangle().getWidth() > 0 && scrolled) {
                     transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
                 }
 
@@ -182,7 +178,7 @@ public class Main extends ApplicationAdapter {
     /**
      * 开始游戏
      */
-    private void playGameClick() {
+    public void playGameClick() {
         if (save != null) {
             save.dispose();
             save = null;
@@ -220,7 +216,7 @@ public class Main extends ApplicationAdapter {
         } else if (gameGenerateProcessor != null) {
             this.save = gameGenerateProcessor.getSave();
             this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            this.save.getScene().add(camera);
+            this.save.getScene().add(camera, Groups.CAMERA);
             this.ai.setScene(this.save.getScene());
             this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.gui.setScene(save.getScene());
@@ -281,6 +277,7 @@ public class Main extends ApplicationAdapter {
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
         this.camera = buildCamera();
+        GameSingleData.positionConverter = camera.getPositionConverter();
     }
 
     @Override

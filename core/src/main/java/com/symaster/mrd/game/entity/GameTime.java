@@ -90,20 +90,25 @@ public class GameTime extends Node {
      * 小时
      */
     public int getHour() {
+        return (int) Math.floor(getHour(time));
+    }
+
+    /**
+     * 小时
+     */
+    public double getHourD() {
         return getHour(time);
     }
 
     /**
      * 小时
      */
-    public int getHour(double time) {
+    public double getHour(double time) {
         double v = time / (config.minute * config.second);
 
         double v1 = v % (config.month * config.day * config.hour);
         double v2 = v1 % (config.day * config.hour);
-        double v3 = v2 % config.hour;
-
-        return (int) Math.floor(v3);
+        return v2 % config.hour;
     }
 
     public int getMinute() {

@@ -3,6 +3,7 @@ package com.symaster.mrd.lwjgl3;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3Application;
 import com.badlogic.gdx.backends.lwjgl3.Lwjgl3ApplicationConfiguration;
 import com.symaster.mrd.Main;
+import com.symaster.mrd.OrthographicCameraExample;
 import com.symaster.mrd.test.Test001;
 import com.symaster.mrd.test.Test002;
 import com.symaster.mrd.test.Test003;
