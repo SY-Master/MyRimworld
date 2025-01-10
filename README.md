@@ -23,11 +23,17 @@
 
 坐标系：
 
-y
-。
-。
-。
-。。。。。。x
+<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
+  <!-- X Axis -->
+  <line x1="50" y1="10" x2="50" y2="90" stroke="black"/>
+  <text x="55" y="15">Y</text>
+  <text x="46" y="4">x</text>
+  <!-- Y Axis -->
+  <line x1="10" y1="50" x2="90" y2="50" stroke="black"/>
+  <text x="85" y="45">X</text>
+  <!-- Origin Point -->
+  <circle cx="50" cy="50" r="2" fill="black"/>
+</svg>
 
 
 ---
