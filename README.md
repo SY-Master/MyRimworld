@@ -23,17 +23,7 @@
 
 坐标系：
 
-<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg">
-
-  <line x1="2" y1="98" x2="2" y2="10" stroke="black"/>
-  <line x1="2" y1="10" x2="5" y2="15" stroke="black"/>
-  <text x="10" y="20">Y</text>
-
-  <line x1="2" y1="98" x2="90" y2="98" stroke="black"/>
-  <text x="80" y="90">x</text>
-
-  <circle cx="2" cy="98" r="2" fill="black"/>
-</svg>
+![坐标系示例](./diagram.svg)
 
 ---
 
