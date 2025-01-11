@@ -30,6 +30,8 @@ public class Human extends Creature {
 
         float iconW = UnitUtil.ofM(0.7f);
         float iconH = UnitUtil.ofM(1f);
+        setWidth(iconW);
+        setHeight(iconH);
 
         Sprite sprite = new Sprite(texture);
         sprite.setSize(iconW, iconH);
@@ -45,7 +47,7 @@ public class Human extends Creature {
         float x = iconW / 2f - labelW / 2f;
 
         LabelNode nodes1 = new LabelNode(label);
-        nodes1.setPosition(x, -5);
+        nodes1.setPosition(x, -8);
         add(nodes1);
 
         setVisible(true);

@@ -88,7 +88,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     public Node() {
         this.positionX = 0.0f;
         this.positionY = 0.0f;
-        this.visible = false;
+        this.visible = true;
         this.limit2activityBlock = false;
         this.activityBlockSize = 0;
         this.width = 0.0f;

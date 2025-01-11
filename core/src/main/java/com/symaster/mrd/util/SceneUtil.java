@@ -3,6 +3,9 @@ package com.symaster.mrd.util;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.Groups;
+import com.symaster.mrd.game.entity.Database;
+import com.symaster.mrd.game.entity.SelectData;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,6 +23,20 @@ public class SceneUtil {
         }
 
         return getTopParent(child.getParent());
+    }
+
+    public static SelectData getSelectData(Scene scene) {
+        if (scene == null) {
+            return null;
+        }
+        Set<Node> byGroup = scene.getByGroup(Groups.DATABASE);
+        if (byGroup == null || byGroup.isEmpty()) {
+            return null;
+        }
+
+        Database database = (Database) byGroup.iterator().next();
+
+        return database.getSelectData();
     }
 
     /**

@@ -5,6 +5,7 @@ import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
+import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
@@ -81,6 +82,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         initBlock(scene);
 
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
+        maleHuman.add(new SelectNode(gameGenerateData.assetManager));
         maleHuman.setZIndex(100);
         maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         maleHuman.setHp(new Measure(1, 100f));
@@ -90,6 +92,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         scene.add(maleHuman, Groups.PARTNER);
 
         Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
+        human.add(new SelectNode(gameGenerateData.assetManager));
         human.setZIndex(100);
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         human.setHp(new Measure(1, 100f));

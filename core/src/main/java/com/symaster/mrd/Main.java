@@ -272,6 +272,8 @@ public class Main extends ApplicationAdapter {
         assetManager.load("TX Plant.png", Texture.class);
         assetManager.load("TX Shadow Plant.png", Texture.class);
         assetManager.load("border0.png", Texture.class);
+        assetManager.load("select.png", Texture.class);
+        assetManager.load("select-1.png", Texture.class);
 
         this.ai = new AI();
         this.loading = new Loading();
