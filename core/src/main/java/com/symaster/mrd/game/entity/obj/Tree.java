@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.SpriteNode;
 import com.symaster.mrd.util.UnitUtil;
 
@@ -47,6 +48,8 @@ public class Tree extends Node {
         add(nodes1);
 
         updateSize();
+
+        add(new SelectNode(assetManager));
 
         setVisible(true);
     }

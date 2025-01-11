@@ -203,6 +203,12 @@ public class FrameSelector extends InputNode {
         }
 
         selectData.clearPreSelection();
+
+        findNodes(worldX, worldY);
+
+        for (Node node : cache1) {
+            selectData.select(node);
+        }
     }
 
     @Override

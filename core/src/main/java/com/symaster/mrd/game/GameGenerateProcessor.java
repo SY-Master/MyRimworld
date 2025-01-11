@@ -84,7 +84,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.add(new SelectNode(gameGenerateData.assetManager));
         maleHuman.setZIndex(100);
-        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
+        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE + 50);
         maleHuman.setHp(new Measure(1, 100f));
         maleHuman.setGender(Gender.MALE);
         maleHuman.setAi(gameGenerateData.ai);

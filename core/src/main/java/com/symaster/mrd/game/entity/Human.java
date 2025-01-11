@@ -51,6 +51,7 @@ public class Human extends Creature {
         add(nodes1);
 
         setVisible(true);
+        setFusionRender(true);
 
         if (getGender() != null) {
             updateSpriteColor();

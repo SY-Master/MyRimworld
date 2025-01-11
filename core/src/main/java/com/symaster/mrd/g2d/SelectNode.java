@@ -46,7 +46,7 @@ public class SelectNode extends Node {
     public void draw(SpriteBatch spriteBatch) {
         super.draw(spriteBatch);
         Node topParent = SceneUtil.getTopParent(this);
-
+        ninePatch.setColor(Color.WHITE);
         ninePatch.draw(spriteBatch, topParent.getPositionX() - 2, topParent.getPositionY() - 2, topParent.getWidth() + 4, topParent.getHeight() + 4);
     }
 }

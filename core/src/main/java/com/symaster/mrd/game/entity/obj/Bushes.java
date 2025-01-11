@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.SpriteNode;
 
 /**
@@ -43,6 +44,8 @@ public class Bushes extends Node {
             }
         };
         add(nodes1);
+
+        add(new SelectNode(assetManager));
 
         updateSize();
 

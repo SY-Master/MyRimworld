@@ -317,6 +317,9 @@ public class Scene implements Serializable, Disposable {
             if (result != null) {
                 Set<Node> nodes2 = nodes.computeIfAbsent(result.block, k -> new HashSet<>());
                 nodes2.addAll(result.nodes);
+                for (Node node : nodes2) {
+                    node.onScene(this);
+                }
             }
         }
     }
