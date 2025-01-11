@@ -61,12 +61,12 @@ public class PartnerMenu extends MainStageUIItem {
 
     @Override
     public int panelWidth(int sceneWidth, int sceneHeight) {
-        return (int) (sceneWidth * 0.4f);
+        return 400;
     }
 
     @Override
     public int panelHeight(int sceneWidth, int sceneHeight) {
-        return (int) (sceneHeight * 0.9);
+        return sceneHeight - 100;
     }
 
     @Override

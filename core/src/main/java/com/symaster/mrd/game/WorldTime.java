@@ -22,7 +22,6 @@ public class WorldTime extends Node {
 
     public WorldTime(AssetManager assetManager) {
         sprite = new Sprite(assetManager.get("white.png", Texture.class));
-        // sprite.setColor(0,0,0, 0.5f);
         add(new SpriteNode(sprite));
         setLayer(Layer.WEATHER.getLayer());
         setFusionRender(true);

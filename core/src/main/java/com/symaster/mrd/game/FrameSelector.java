@@ -1,5 +1,6 @@
 package com.symaster.mrd.game;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
@@ -8,9 +9,17 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Vector2;
 import com.symaster.mrd.g2d.InputNode;
 import com.symaster.mrd.g2d.Layer;
+import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.SpriteNode;
+import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.game.entity.Database;
+import com.symaster.mrd.game.entity.SelectData;
+
+import java.util.Set;
 
 /**
+ * 选择器
+ *
  * @author yinmiao
  * @since 2025/1/3
  */
@@ -86,6 +95,16 @@ public class FrameSelector extends InputNode {
     }
 
     private void draggedStart(int screenX, int screenY) {
+        SelectData selectData = getSelectData();
+        if (selectData == null) {
+            return;
+        }
+
+        // 如果没有按住左Shift则清空上次选择的内容
+        if (!Gdx.input.isKeyPressed(Input.Keys.SHIFT_LEFT)) {
+            selectData.clearAll();
+        }
+
         cache.x = screenX;
         cache.y = screenY;
         GameSingleData.positionConverter.toWorld(cache);
@@ -100,6 +119,22 @@ public class FrameSelector extends InputNode {
         setVisible(true);
     }
 
+    private SelectData getSelectData() {
+        Scene scene = getScene();
+        if (scene == null) {
+            return null;
+        }
+
+        Set<Node> byGroup = scene.getByGroup(Groups.DATABASE);
+        if (byGroup == null || byGroup.isEmpty()) {
+            return null;
+        }
+
+        Database database = (Database) byGroup.iterator().next();
+
+        return database.getSelectData();
+    }
+
     private void draggedOver(int screenX, int screenY) {
         cache.x = screenX;
         cache.y = screenY;
@@ -109,6 +144,15 @@ public class FrameSelector extends InputNode {
         endY = cache.y;
         dragged = false;
         setVisible(false);
+        startSelect();
+    }
+
+    /**
+     * 开始选择内容
+     */
+    private void startSelect() {
+
+
     }
 
     @Override

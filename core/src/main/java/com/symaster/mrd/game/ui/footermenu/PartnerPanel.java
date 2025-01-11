@@ -1,17 +1,17 @@
 package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Action;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.*;
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.game.Groups;
-import com.symaster.mrd.game.entity.Creature;
+import com.symaster.mrd.game.entity.Human;
 
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * @author yinmiao
@@ -21,12 +21,31 @@ public class PartnerPanel extends Group implements Disposable {
     private final PartnerMenu partnerMenu;
     private final Image background;
     private final SolidColorDrawable solidColorDrawable;
+    private final Map<Node, Item> items;
+    private final List<Node> deletes;
+    private final Skin skin;
+    private final VerticalGroup list;
+    private final ScrollPane scrollPane;
 
     public PartnerPanel(PartnerMenu partnerMenu) {
         this.partnerMenu = partnerMenu;
-        this.solidColorDrawable = new SolidColorDrawable(new Color(0, 0, 0, 0.6f));
-        this.background = new Image();
+        skin = partnerMenu.getSkin();
+        this.solidColorDrawable = new SolidColorDrawable(new Color(0.1f, 0.1f, 0.1f, 0.8f));
+        this.background = new Image(this.solidColorDrawable);
+        background.addAction(new Action() {
+            @Override
+            public boolean act(float delta) {
+                return true;
+            }
+        });
+        this.items = new HashMap<>();
+        this.deletes = new LinkedList<>();
+
+        list = new VerticalGroup();
+        scrollPane = new ScrollPane(list);
+
         addActor(this.background);
+        addActor(this.scrollPane);
     }
 
     public PartnerMenu getPartner() {
@@ -38,33 +57,64 @@ public class PartnerPanel extends Group implements Disposable {
     }
 
     public void logic(float delta) {
-        background.setSize(getWidth(), getHeight());
-
         if (!isVisible() || partnerMenu.getMainStageUI() == null || partnerMenu.getMainStageUI().getScene() == null) {
             return;
         }
 
+        background.setSize(getWidth(), getHeight());
+        scrollPane.setSize(getWidth(), getHeight());
+
         Set<Node> byGroup = partnerMenu.getMainStageUI().getScene().getByGroup(Groups.PARTNER);
         if (byGroup != null) {
-            List<Creature> creatures = byGroup.stream()
-                    .filter(e -> e instanceof Creature)
-                    .map(e -> (Creature) e)
-                    .sorted((o1, o2) -> {
-                        if (o1.getRace() == o2.getRace()) {
-                            return o1.getName().compareToIgnoreCase(o2.getName());
-                        }
-
-                        return Integer.compare(o1.getRace().ordinal(), o2.getRace().ordinal());
-                    }).collect(Collectors.toList());
-
-            for (Creature node : creatures) {
-
+            for (Node node : byGroup) {
+                if (!items.containsKey(node)) {
+                    Item item = new Item(node, Math.round(getWidth()) - 10, 40, this);
+                    items.put(node, item);
+                    list.addActor(item);
+                }
             }
         }
+
+        for (Node node : items.keySet()) {
+            if (byGroup == null || !byGroup.contains(node)) {
+                deletes.add(node);
+            }
+        }
+
+        for (Node delete : deletes) {
+            Item item = items.get(delete);
+            list.removeActor(item);
+            items.remove(delete);
+        }
+
+        for (Item value : items.values()) {
+            value.logic(delta);
+        }
+
+        // Array<Action> actions = list.getActions();
+
     }
 
     @Override
     public void dispose() {
         solidColorDrawable.dispose();
+    }
+
+    private static class Item extends Group {
+        private final Node node;
+        private final Label label;
+
+        private Item(Node node, int w, int h, PartnerPanel partnerPanel) {
+            this.node = node;
+            setSize(w, h);
+            label = new Label("", partnerPanel.skin.get("nameLabel", Label.LabelStyle.class));
+            addActor(label);
+        }
+
+        public void logic(float delta) {
+            if (node instanceof Human) {
+                label.setText(((Human) node).getName());
+            }
+        }
     }
 }

@@ -8,8 +8,6 @@ import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
-import com.symaster.mrd.game.entity.obj.Tree;
-import com.symaster.mrd.test.MouseMovement;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -63,28 +61,24 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
     }
 
     private Save generate() {
-        List<Block> blocks = new ArrayList<>();
-
-        int initSize = 20; // 初始化区块大小
-        for (int x = -initSize; x < initSize; x++) {
-            for (int y = -initSize; y < initSize; y++) {
-                blocks.add(new Block(x, y));
-            }
-        }
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
-        scene.add(new FrameSelector(gameGenerateData.assetManager));
-        scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
-        scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
-        // scene.add(new WorldTime(gameGenerateData.assetManager));
-        // scene.add(new Tree(gameGenerateData.assetManager), Groups.MOUSE_MOVEMENT);
-        // scene.add(new MouseMovement());
 
-        scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
+        // 选择器
+        scene.add(new FrameSelector(gameGenerateData.assetManager));
+
+        // 噪声算法
+        scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
+
+        // 地图工厂
+        scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
 
         // 游戏时间
         scene.add(new GameTime(new Random().nextFloat() * 9999999 + 2000000), Groups.TIMER);
         // scene.add(new GameTime(), Groups.TIMER);
+
+        // 初始化区块
+        initBlock(scene);
 
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.setZIndex(100);
@@ -112,6 +106,18 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         finished = true;
         return save;
+    }
+
+    private void initBlock(Scene scene) {
+        List<Block> blocks = new ArrayList<>();
+
+        int initSize = 20; // 初始化区块大小
+        for (int x = -initSize; x < initSize; x++) {
+            for (int y = -initSize; y < initSize; y++) {
+                blocks.add(new Block(x, y));
+            }
+        }
+        scene.initBlocks(blocks, progress -> GameGenerateProcessor.this.progress = progress);
     }
 
 }

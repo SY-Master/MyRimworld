@@ -37,7 +37,6 @@ public class Scene implements Serializable, Disposable {
     /**
      * 分区块Node表
      */
-    // private final Map<Block, Set<Node>> nodes;
     private final BlockArrayList<Set<Node>> nodes;
     /**
      * 激活区块的节点
@@ -61,6 +60,8 @@ public class Scene implements Serializable, Disposable {
      */
     private final BlockMapGenerate blockMapGenerate;
 
+    private int logicId = 0;
+
     private final NodePropertiesChangeExtend nodePropertiesChangeExtend;
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
@@ -83,7 +84,6 @@ public class Scene implements Serializable, Disposable {
      */
     public Scene(AssetManager assetManager, String mapSeed, float blockSize) {
         this.blockSize = blockSize;
-        // this.nodes = new HashMap<>();
         this.nodes = new BlockArrayList<>();
         this.activityBlockMap = new HashMap<>();
         this.activeBlocks = new HashSet<>();
@@ -354,8 +354,6 @@ public class Scene implements Serializable, Disposable {
         extScene(node);
     }
 
-    private int logicId = 0;
-
     private void nodesLogic(float delta) {
         logicId++;
         logicId = logicId % 100;
@@ -480,6 +478,5 @@ public class Scene implements Serializable, Disposable {
     @Override
     public void dispose() {
         blockMapGenerate.dispose();
-        // spriteBatch.dispose();
     }
 }
