@@ -24,7 +24,6 @@ import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.*;
 import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
-import com.symaster.mrd.game.service.ai.AI;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
 import com.symaster.mrd.game.ui.MainStageUI;
@@ -54,7 +53,7 @@ public class Main extends ApplicationAdapter {
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
     private ViewportNodeOrthographic camera;
-    private AI ai;
+    // private AI ai;
 
     public ViewportNodeOrthographic buildCamera() {
         WASDInput wasdInput = new WASDInput();
@@ -188,7 +187,7 @@ public class Main extends ApplicationAdapter {
         gameGenerateData.mapSeed = UUID.randomUUID().toString();
         gameGenerateData.assetManager = assetManager;
         gameGenerateData.skin = skin;
-        gameGenerateData.ai = ai;
+        // gameGenerateData.ai = ai;
         asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
 
         GameSingleData.loadingType = LoadingType.GamePlayLoading;
@@ -217,7 +216,7 @@ public class Main extends ApplicationAdapter {
             this.save = gameGenerateProcessor.getSave();
             this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.save.getScene().add(camera, Groups.CAMERA);
-            this.ai.setScene(this.save.getScene());
+            // this.ai.setScene(this.save.getScene());
             this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
             this.gui.setScene(save.getScene());
 
@@ -275,7 +274,7 @@ public class Main extends ApplicationAdapter {
         assetManager.load("select.png", Texture.class);
         assetManager.load("select-1.png", Texture.class);
 
-        this.ai = new AI();
+        // this.ai = new AI();
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
         this.camera = buildCamera();

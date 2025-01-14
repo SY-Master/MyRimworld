@@ -64,6 +64,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         nodes.setHeight(blockSize);
         rtn.add(nodes);
 
+        TileMap grass = new TileMap(tileMapFactory.getGrassTexture().grass());
+        grass.setZIndex(-1);
+        grass.setSize(blockSize, blockSize);
+        grass.setPosition(startX, startY);
+        rtn.add(grass);
+
         return rtn;
     }
 
@@ -91,7 +97,9 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
         } else {
 
-            tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
+            tileMap = null;
+
+            // tileMap = new TileMap(tileMapFactory.getGrassTexture().grass());
 
             if (random.nextFloat() < 0.001f) {
                 if (random.nextFloat() < 0.5f) {
@@ -104,9 +112,11 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
             }
         }
 
-        tileMap.setSize(tileSize, tileSize);
-        tileMap.setPosition(worldX, worldY);
-        tileSet.add(tileMap);
+        if (tileMap != null) {
+            tileMap.setSize(tileSize, tileSize);
+            tileMap.setPosition(worldX, worldY);
+            tileSet.add(tileMap);
+        }
     }
 
     private void bushes(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {

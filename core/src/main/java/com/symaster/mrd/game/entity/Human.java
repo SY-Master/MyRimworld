@@ -22,6 +22,7 @@ public class Human extends Creature {
     private final SpriteNode nodes;
     private final Label label;
     private float fontScale;
+    private HumanBodyType bodyType;
 
     public Human(AssetManager assetManager, Skin skin, float fontScale) {
         setRace(Race.Human);
@@ -56,6 +57,14 @@ public class Human extends Creature {
         if (getGender() != null) {
             updateSpriteColor();
         }
+    }
+
+    public HumanBodyType getBodyType() {
+        return bodyType;
+    }
+
+    public void setBodyType(HumanBodyType bodyType) {
+        this.bodyType = bodyType;
     }
 
     @Override

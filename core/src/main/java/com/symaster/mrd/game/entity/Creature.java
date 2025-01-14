@@ -1,6 +1,7 @@
 package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.g2d.Node;
+import com.symaster.mrd.game.service.DSS;
 import com.symaster.mrd.game.service.ai.AI;
 
 /**
@@ -36,10 +37,6 @@ public class Creature extends Node {
      */
     private Race race;
     /**
-     * ai
-     */
-    private AI ai;
-    /**
      * 是否是活着的
      */
     private boolean alive;
@@ -51,6 +48,18 @@ public class Creature extends Node {
      * 生物的最大寿命（年）
      */
     private int lifetime;
+    /**
+     * 决策系统
+     */
+    private DSS dss;
+
+    public DSS getDss() {
+        return dss;
+    }
+
+    public void setDss(DSS dss) {
+        this.dss = dss;
+    }
 
     public Measure getEnergy() {
         return energy;
@@ -108,14 +117,6 @@ public class Creature extends Node {
         return race;
     }
 
-    public AI getAi() {
-        return ai;
-    }
-
-    public void setAi(AI ai) {
-        this.ai = ai;
-    }
-
     public Gender getGender() {
         return gender;
     }
@@ -135,7 +136,7 @@ public class Creature extends Node {
     @Override
     public boolean logic(float delta) {
         super.logic(delta);
-        ai.logic(this, delta);
+        dss.logic(this, delta);
         return true;
     }
 

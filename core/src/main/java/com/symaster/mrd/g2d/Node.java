@@ -67,7 +67,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      */
     private Scene scene;
     /**
-     * 是否强制逻辑计算，如果强制逻辑计算的话：不管节点是否处在激活区块内，都会逻辑计算
+     * 是否强制逻辑计算，如果强制逻辑计算的话：不管节点是否处在激活区块内，logic方法都会触发
      */
     private boolean forcedLogic;
     /**

@@ -9,6 +9,7 @@ import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
+import com.symaster.mrd.game.service.DSS;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -76,18 +77,23 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         // 游戏时间
         scene.add(new GameTime(new Random().nextFloat() * 9999999 + 2000000), Groups.TIMER);
+
+        // scene.add(new DSS(), );
         // scene.add(new GameTime(), Groups.TIMER);
 
         // 初始化区块
         initBlock(scene);
 
+        DSS dss = new DSS();
+
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.add(new SelectNode(gameGenerateData.assetManager));
         maleHuman.setZIndex(100);
-        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE + 50);
+        maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         maleHuman.setHp(new Measure(1, 100f));
         maleHuman.setGender(Gender.MALE);
-        maleHuman.setAi(gameGenerateData.ai);
+        maleHuman.setDss(dss);
+        // maleHuman.setAi(gameGenerateData.ai);
         maleHuman.setName(NameGeneratorFactory.getNameGenerator(maleHuman.getRace()).generateName(Gender.MALE));
         scene.add(maleHuman, Groups.PARTNER);
 
@@ -97,7 +103,8 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         human.setHp(new Measure(1, 100f));
         human.setGender(Gender.FEMALE);
-        human.setAi(gameGenerateData.ai);
+        // human.setAi(gameGenerateData.ai);
+        human.setDss(dss);
         human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName(Gender.FEMALE));
         human.setPosition(20, 0);
         scene.add(human, Groups.PARTNER);

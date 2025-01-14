@@ -40,4 +40,6 @@
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/TimeView.java" title="时间显示器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Database.java" title="数据库"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/FrameSelector.java" title="选择器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/service/DSS.java" title="决策系统"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/Paths.java" title="路径"/>
 </trees>
