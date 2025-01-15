@@ -3,6 +3,8 @@ package com.symaster.mrd.api;
 import com.symaster.mrd.g2d.Node;
 
 /**
+ * {@link Node} 坐标更新事件
+ *
  * @author yinmiao
  * @since 2024/12/24
  */

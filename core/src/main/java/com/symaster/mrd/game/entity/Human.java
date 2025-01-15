@@ -91,9 +91,9 @@ public class Human extends Creature {
 
     private void updateSpriteColor() {
         if (getGender() == Gender.FEMALE) {
-            nodes.getSprite().setColor(new Color(1f, 0, 0, 1));
+            nodes.getSprite().setColor(new Color(1f, 0, 0, 0.8f));
         } else {
-            nodes.getSprite().setColor(new Color(0, 0, 1f, 1f));
+            nodes.getSprite().setColor(new Color(0f, 0f, 1f, 0.8f));
         }
     }
 

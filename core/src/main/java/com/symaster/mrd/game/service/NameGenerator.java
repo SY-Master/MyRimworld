@@ -10,6 +10,12 @@ import com.symaster.mrd.game.entity.Gender;
  */
 public interface NameGenerator {
 
+    /**
+     * 生成名字
+     *
+     * @param gender 性别
+     * @return 生成后的名字
+     */
     String generateName(Gender gender);
 
 }

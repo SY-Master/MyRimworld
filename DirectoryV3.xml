@@ -42,4 +42,12 @@
     <tree path="/core/src/main/java/com/symaster/mrd/game/FrameSelector.java" title="选择器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/service/DSS.java" title="决策系统"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/Paths.java" title="路径"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/service/HumanNameGenerator.java" title="人类名称生成器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/service/NameGenerator.java" title="名称生成器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/ChildUpdateExtend.java" title="Node子节点操作事件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/NodePropertiesChangeExtend.java" title="Node 属性更新事件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/PositionConverter.java" title="坐标转换器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/PositionUpdateExtend.java" title="Node 坐标更新事件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/ProgressProcessor.java" title="进度条更新事件"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/api/RenderProxy.java" title="渲染代理"/>
 </trees>

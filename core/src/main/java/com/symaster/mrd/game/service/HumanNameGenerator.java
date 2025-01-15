@@ -5,6 +5,12 @@ import com.symaster.mrd.util.GdxText;
 
 import java.util.Random;
 
+/**
+ * 人类名称生成器
+ *
+ * @author yinmiao
+ * @since 2025/1/13
+ */
 public class HumanNameGenerator implements NameGenerator {
 
     // 姓
@@ -42,6 +48,7 @@ public class HumanNameGenerator implements NameGenerator {
     /**
      * 生成一个随机的人名
      *
+     * @param gender 性别
      * @return 生成的随机人名
      */
     @Override
