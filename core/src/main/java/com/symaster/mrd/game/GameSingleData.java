@@ -4,6 +4,8 @@ import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.input.InputBridge;
 
 /**
+ * 游戏数据库
+ *
  * @author yinmiao
  * @since 2025/1/2
  */
