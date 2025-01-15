@@ -53,8 +53,16 @@ public class Main extends ApplicationAdapter {
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
     private ViewportNodeOrthographic camera;
-    // private AI ai;
 
+    /**
+     * 构建相机,相机自带:
+     * <pre>
+     *  1：{@link WASDInput}、{@link TransformMove}：WASD移动组件
+     *  2：{@link RollerDragInput}：鼠标中间拖动组件
+     *  3：{@link TransformZoom}：滚轮缩放组件
+     *</pre>
+     * @return 相机
+     */
     public ViewportNodeOrthographic buildCamera() {
         WASDInput wasdInput = new WASDInput();
 
@@ -89,13 +97,15 @@ public class Main extends ApplicationAdapter {
     }
 
     /**
-     * 构建 Skin
+     * 构建 Skin。本项目里面Skin主要用户GUI的皮肤
+     *
+     * @return Skin
      */
     public Skin buildSkin(AssetManager assetManager) {
         Skin skin = new Skin();
 
         for (int fontSize : SystemConfig.FONT_SIZES) {
-            BitmapFont font = textLoad(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, fontSize);
+            BitmapFont font = buildFont(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, fontSize);
             skin.add("font-" + fontSize, font);
         }
 
@@ -133,7 +143,7 @@ public class Main extends ApplicationAdapter {
         skin = buildSkin(assetManager);
     }
 
-    public BitmapFont textLoad(String textPath, String fontPath, int size) {
+    public BitmapFont buildFont(String textPath, String fontPath, int size) {
         List<String> values = GdxText.values();
 
         String collect = values.stream()
