@@ -14,6 +14,8 @@ import java.util.List;
 import java.util.*;
 
 /**
+ * 伙伴面板
+ *
  * @author yinmiao
  * @since 2025/1/1
  */

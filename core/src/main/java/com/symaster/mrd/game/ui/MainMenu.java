@@ -17,7 +17,7 @@ import com.symaster.mrd.game.ui.page.PlayGameSetting;
 import com.symaster.mrd.input.BridgeInputProcessor;
 
 /**
- * 主菜单
+ * 主页
  *
  * @author yinmiao
  * @since 2024/12/28

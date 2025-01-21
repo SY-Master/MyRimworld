@@ -6,7 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.symaster.mrd.SystemConfig;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.UIPosition;
 
 /**
@@ -15,7 +15,7 @@ import com.symaster.mrd.gui.UIPosition;
  * @author yinmiao
  * @since 2025/1/1
  */
-public class TimeController extends MainStageUIItem {
+public class TimeController extends GameUIItem {
 
     private Group group;
     private TextButton pause;

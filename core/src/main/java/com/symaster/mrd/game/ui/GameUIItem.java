@@ -11,14 +11,18 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
+ *
+ * 游戏UI的一项
+ *
  * @author yinmiao
  * @since 2024/12/16
+ * @see GameUI#GameUI(Skin)
  */
-public abstract class MainStageUIItem implements Disposable {
+public abstract class GameUIItem implements Disposable {
 
     private final Set<PanelOpenListener> panelOpenListeners;
     private Skin skin;
-    private MainStageUI mainStageUI;
+    private GameUI gameUI;
     /**
      * 边距
      */
@@ -28,7 +32,7 @@ public abstract class MainStageUIItem implements Disposable {
      */
     private boolean panelNormallyOpen;
 
-    public MainStageUIItem() {
+    public GameUIItem() {
         this.panelOpenListeners = new HashSet<>();
         this.panelNormallyOpen = false;
         this.insets = new Insets(0, 0, 0, 0);
@@ -45,8 +49,8 @@ public abstract class MainStageUIItem implements Disposable {
         this.panelNormallyOpen = panelNormallyOpen;
     }
 
-    public void setMainStageUI(MainStageUI mainStageUI) {
-        this.mainStageUI = mainStageUI;
+    public void setMainStageUI(GameUI gameUI) {
+        this.gameUI = gameUI;
     }
 
     public Skin getSkin() {
@@ -57,8 +61,8 @@ public abstract class MainStageUIItem implements Disposable {
         this.skin = skin;
     }
 
-    public MainStageUI getMainStageUI() {
-        return mainStageUI;
+    public GameUI getMainStageUI() {
+        return gameUI;
     }
 
     public void openPanel() {

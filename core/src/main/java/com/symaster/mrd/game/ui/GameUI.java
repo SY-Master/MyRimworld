@@ -26,14 +26,14 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class MainStageUI extends Stage implements BridgeInputProcessor {
+public class GameUI extends Stage implements BridgeInputProcessor {
 
     private final Table table;
-    private final List<MainStageUIItem> footerMenus;
+    private final List<GameUIItem> footerMenus;
     private Scene scene;
     private final Skin skin;
 
-    public MainStageUI(Skin skin) {
+    public GameUI(Skin skin) {
         super(new ScreenViewport());
         this.skin = skin;
         this.table = new Table();
@@ -46,6 +46,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
         addTo(new TimeView());
         addTo(new TimeController());
         addTo(new CameraZoomView());
+        addTo(new PartnerControllerPanel());
 
         this.addActor(this.table);
     }
@@ -58,7 +59,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
         return scene;
     }
 
-    private void addTo(MainStageUIItem o) {
+    private void addTo(GameUIItem o) {
         o.setSkin(skin);
         o.setMainStageUI(this);
         o.create();
@@ -82,22 +83,22 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
         }
     }
 
-    public List<MainStageUIItem> findFooterMenus() {
-        Set<Class<?>> scan = ClassUtil.scan("com.symaster.mrd.gui", MainStageUIItem.class::isAssignableFrom);
-        List<MainStageUIItem> mainStageUIItems = new ArrayList<>();
+    public List<GameUIItem> findFooterMenus() {
+        Set<Class<?>> scan = ClassUtil.scan("com.symaster.mrd.gui", GameUIItem.class::isAssignableFrom);
+        List<GameUIItem> gameUIItems = new ArrayList<>();
 
         try {
             for (Class<?> aClass : scan) {
 
                 Constructor<?> constructor = aClass.getConstructor();
-                MainStageUIItem o = (MainStageUIItem) constructor.newInstance();
-                mainStageUIItems.add(o);
+                GameUIItem o = (GameUIItem) constructor.newInstance();
+                gameUIItems.add(o);
             }
         } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
         }
-        return mainStageUIItems;
+        return gameUIItems;
     }
 
     public void resize(int width, int height) {
@@ -113,7 +114,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
         table.setSize(width, bottomMenuHeight);
 
         // 面板布局与尺寸设置
-        for (MainStageUIItem footerMenu : footerMenus) {
+        for (GameUIItem footerMenu : footerMenus) {
 
             // 面板
             Actor panel = footerMenu.panel();
@@ -167,7 +168,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
             return;
         }
 
-        for (MainStageUIItem footerMenu : footerMenus) {
+        for (GameUIItem footerMenu : footerMenus) {
             footerMenu.logic(delta);
         }
     }
@@ -189,7 +190,7 @@ public class MainStageUI extends Stage implements BridgeInputProcessor {
     public void dispose() {
         super.dispose();
 
-        for (MainStageUIItem footerMenu : footerMenus) {
+        for (GameUIItem footerMenu : footerMenus) {
             footerMenu.dispose();
         }
     }

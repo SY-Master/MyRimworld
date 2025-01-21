@@ -4,15 +4,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.util.GdxText;
 
 /**
+ * 建筑规划
+ *
  * @author yinmiao
  * @since 2024/12/27
  */
-public class BuildingMenu extends MainStageUIItem {
+public class BuildingMenu extends GameUIItem {
 
     private TextButton textButton;
 

@@ -1,20 +1,20 @@
 package com.symaster.mrd.game.ui.footermenu;
 
-import com.badlogic.gdx.graphics.Camera;
-import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.symaster.mrd.game.ui.MainStageUI;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUI;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.UIPosition;
 
 import java.awt.*;
 
 /**
+ * 摄像头缩放显示
+ *
  * @author yinmiao
  * @since 2025/1/9
  */
-public class CameraZoomView extends MainStageUIItem {
+public class CameraZoomView extends GameUIItem {
 
     ProgressBar progressBar;
 
@@ -62,8 +62,8 @@ public class CameraZoomView extends MainStageUIItem {
     public void logic(float delta) {
         super.logic(delta);
 
-        MainStageUI mainStageUI = getMainStageUI();
-        if (mainStageUI == null) {
+        GameUI gameUI = getMainStageUI();
+        if (gameUI == null) {
             return;
         }
 

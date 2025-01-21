@@ -14,7 +14,8 @@
     <tree path="/core/src/main/java/com/symaster/mrd/game/BlockMapGenerateProcessorImpl.java" title="区块生成器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/GameGenerateProcessor.java" title="新游戏生成器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui/Loading.java" title="加载页面"/>
-    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/MainMenu.java" title="主菜单"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/MainMenu.java" title="主页" extension="" presentableText=""
+          tooltipTitle="" icon="" textColor="" backgroundColor=""/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui/page/MainMenuBtn.java" title="主菜单按钮"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui/page/PlayGameSetting.java" title="开始游戏页面"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/data/Save.java" title="游戏核心-存档"/>
@@ -50,4 +51,14 @@
     <tree path="/core/src/main/java/com/symaster/mrd/api/PositionUpdateExtend.java" title="Node 坐标更新事件"/>
     <tree path="/core/src/main/java/com/symaster/mrd/api/ProgressProcessor.java" title="进度条更新事件"/>
     <tree path="/core/src/main/java/com/symaster/mrd/api/RenderProxy.java" title="渲染代理"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/BuildingMenu.java" title="建筑规划"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/CameraZoomView.java" title="摄像头缩放显示"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/CreatureMenu.java" title="野生动物面板"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/PartnerMenu.java" title="伙伴列表菜单按钮"
+          extension="" presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/PartnerPanel.java" title="伙伴面板"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/Setting.java" title="设置"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/TimeController.java" title="时间控制器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/ui/footermenu/PartnerControllerPanel.java"
+          title="伙伴控制面板"/>
 </trees>

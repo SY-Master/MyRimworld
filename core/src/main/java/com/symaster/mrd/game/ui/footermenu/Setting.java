@@ -4,15 +4,17 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.util.GdxText;
 
 /**
+ * 设置
+ *
  * @author yinmiao
  * @since 2024/12/16
  */
-public class Setting extends MainStageUIItem {
+public class Setting extends GameUIItem {
     private TextButton textButton;
 
     @Override

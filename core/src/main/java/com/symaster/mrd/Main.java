@@ -26,7 +26,7 @@ import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
-import com.symaster.mrd.game.ui.MainStageUI;
+import com.symaster.mrd.game.ui.GameUI;
 import com.symaster.mrd.input.InputBridge;
 import com.symaster.mrd.input.RollerDragInput;
 import com.symaster.mrd.input.WASDInput;
@@ -45,7 +45,7 @@ public class Main extends ApplicationAdapter {
 
     private Save save;
     private MainMenu mainMenu;
-    private MainStageUI gui;
+    private GameUI gui;
 
     private Skin skin;
     private AssetManager assetManager;
@@ -55,7 +55,7 @@ public class Main extends ApplicationAdapter {
     private ViewportNodeOrthographic camera;
 
     /**
-     * 构建相机,相机自带:
+     * 构建相机,相机自带以下组件:
      * <pre>
      *  1：{@link WASDInput}、{@link TransformMove}：WASD移动组件
      *  2：{@link RollerDragInput}：鼠标中间拖动组件
@@ -168,7 +168,7 @@ public class Main extends ApplicationAdapter {
     }
 
     public void loadGUI() {
-        gui = new MainStageUI(skin);
+        gui = new GameUI(skin);
         GameSingleData.inputBridge.add(gui);
     }
 

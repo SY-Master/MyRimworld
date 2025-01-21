@@ -4,16 +4,18 @@ import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.util.GdxText;
 
 /**
+ * 伙伴列表菜单按钮
+ *
  * @author yinmiao
  * @since 2024/12/16
  */
-public class PartnerMenu extends MainStageUIItem {
+public class PartnerMenu extends GameUIItem {
 
     private TextButton textButton;
     private PartnerPanel partnerPanel;

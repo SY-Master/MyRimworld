@@ -6,8 +6,8 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.GameTime;
-import com.symaster.mrd.game.ui.MainStageUI;
-import com.symaster.mrd.game.ui.MainStageUIItem;
+import com.symaster.mrd.game.ui.GameUI;
+import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.UIPosition;
 
 import java.util.Set;
@@ -16,7 +16,7 @@ import java.util.Set;
  * @author yinmiao
  * @since 2025/1/1
  */
-public class TimeView extends MainStageUIItem {
+public class TimeView extends GameUIItem {
 
     private Label label;
 
@@ -60,16 +60,16 @@ public class TimeView extends MainStageUIItem {
     public void logic(float delta) {
         super.logic(delta);
 
-        MainStageUI mainStageUI = getMainStageUI();
-        if (mainStageUI == null) {
+        GameUI gameUI = getMainStageUI();
+        if (gameUI == null) {
             return;
         }
 
-        if (mainStageUI.getScene() == null) {
+        if (gameUI.getScene() == null) {
             return;
         }
 
-        Scene scene = mainStageUI.getScene();
+        Scene scene = gameUI.getScene();
 
         Set<Node> byGroup = scene.getByGroup(Groups.TIMER);
         if (byGroup == null) {
