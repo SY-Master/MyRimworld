@@ -81,7 +81,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
 
     private int logicId;
     /**
-     * 融合渲染
+     * 融合渲染, 该组件的所有子组件全部合并在一起渲染
      */
     private boolean fusionRender;
 

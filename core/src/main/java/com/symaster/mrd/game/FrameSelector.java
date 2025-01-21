@@ -75,8 +75,9 @@ public class FrameSelector extends InputNode {
 
     @Override
     public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        if (button == Input.Buttons.LEFT && GameSingleData.positionConverter != null) {
+        if (button == Input.Buttons.LEFT && down) {
             down = false;
+            dragged = false;
             draggedOver(screenX, screenY);
             return true;
         }
@@ -86,59 +87,27 @@ public class FrameSelector extends InputNode {
 
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
-        if (down) {
-            draggedStart(screenX, screenY);
-            return true;
-        }
-
         if (dragged) {
             dragged(screenX, screenY);
+            return true;
+        } else if (down) {
+            draggedStart(screenX, screenY);
             return true;
         }
 
         return super.touchDragged(screenX, screenY, pointer);
     }
 
-    private void dragged(int screenX, int screenY) {
-        cache.x = screenX;
-        cache.y = screenY;
-        GameSingleData.positionConverter.toWorld(cache);
-
-        float w = cache.x - startX;
-        float h = cache.y - startY;
-
-        sprite.setSize(w, h);
-
-        preSelect(cache.x, cache.y);
-    }
-
-    private void preSelect(float worldX, float worldY) {
-        findNodes(worldX, worldY);
-
-        SelectData selectData = SceneUtil.getSelectData(getScene());
-        if (selectData == null) {
-            return;
-        }
-
-        selectData.clearPreSelection();
-
-        if (!cache1.isEmpty()) {
-            for (Node node : cache1) {
-                selectData.preSelect(node);
-            }
-        }
-    }
-
-    private void findNodes(float worldX, float worldY) {
+    private void findNodes(float x, float y, float w, float h) {
         Scene scene = getScene();
         if (scene == null) {
             return;
         }
 
-        float x1 = Math.min(worldX, startX);
-        float y1 = Math.min(worldY, startY);
-        float x2 = Math.max(worldX, startX);
-        float y2 = Math.max(worldY, startY);
+        float x1 = Math.min(x, x + w);
+        float y1 = Math.min(y, y + h);
+        float x2 = Math.max(x, x + w);
+        float y2 = Math.max(y, y + h);
 
         cache1.clear();
         cache2.clear();
@@ -158,6 +127,12 @@ public class FrameSelector extends InputNode {
         }
     }
 
+    /**
+     * 拖动开始
+     *
+     * @param screenX 屏幕坐标
+     * @param screenY 屏幕坐标
+     */
     private void draggedStart(int screenX, int screenY) {
         SelectData selectData = SceneUtil.getSelectData(getScene());
         if (selectData == null) {
@@ -169,18 +144,44 @@ public class FrameSelector extends InputNode {
             selectData.clearAll();
         }
 
+        // 算出鼠标的世界坐标(不能使用屏幕坐标, 会有问腿)
         cache.x = screenX;
         cache.y = screenY;
         GameSingleData.positionConverter.toWorld(cache);
 
         startX = cache.x;
         startY = cache.y;
-        dragged = true;
-        down = false;
 
+        // 开始拖动
+        dragged = true;
+
+        // 初始化坐标
         setPosition(startX, startY);
+        // 初始化sprite的尺寸, 为了防止上次选择时残留的尺寸, 初始化之后才设置Visible为true
         sprite.setSize(0, 0);
         setVisible(true);
+    }
+
+    /**
+     * 拖动中...
+     *
+     * @param screenX 屏幕坐标
+     * @param screenY 屏幕坐标
+     */
+    private void dragged(int screenX, int screenY) {
+
+        // 世界坐标
+        cache.x = screenX;
+        cache.y = screenY;
+        GameSingleData.positionConverter.toWorld(cache);
+
+        // 拖动的矩形尺寸
+        float w = cache.x - startX;
+        float h = cache.y - startY;
+        sprite.setSize(w, h);
+
+        // 选择预览
+        preSelect(cache.x, cache.y);
     }
 
     private void draggedOver(int screenX, int screenY) {
@@ -189,8 +190,26 @@ public class FrameSelector extends InputNode {
         GameSingleData.positionConverter.toWorld(cache);
 
         dragged = false;
+        down = false;
         setVisible(false);
         startSelect(cache.x, cache.y);
+    }
+
+    private void preSelect(float worldX, float worldY) {
+        findNodes(startX, startY, worldX - startX, worldY - startY);
+
+        SelectData selectData = SceneUtil.getSelectData(getScene());
+        if (selectData == null) {
+            return;
+        }
+
+        selectData.clearPreSelection();
+
+        if (!cache1.isEmpty()) {
+            for (Node node : cache1) {
+                selectData.preSelect(node);
+            }
+        }
     }
 
     /**
@@ -204,7 +223,7 @@ public class FrameSelector extends InputNode {
 
         selectData.clearPreSelection();
 
-        findNodes(worldX, worldY);
+        findNodes(startX, startY, worldX - startX, worldY - startY);
 
         for (Node node : cache1) {
             selectData.select(node);

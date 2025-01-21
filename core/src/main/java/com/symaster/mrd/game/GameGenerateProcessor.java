@@ -66,6 +66,8 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
 
+        scene.add(new DSS());
+
         // 选择器
         scene.add(new FrameSelector(gameGenerateData.assetManager));
 

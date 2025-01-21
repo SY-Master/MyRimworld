@@ -26,6 +26,15 @@ public class SceneUtil {
     }
 
     public static SelectData getSelectData(Scene scene) {
+        Database database = getDatabase(scene);
+        if (database == null) {
+            return null;
+        }
+
+        return database.getSelectData();
+    }
+
+    public static Database getDatabase(Scene scene) {
         if (scene == null) {
             return null;
         }
@@ -34,9 +43,7 @@ public class SceneUtil {
             return null;
         }
 
-        Database database = (Database) byGroup.iterator().next();
-
-        return database.getSelectData();
+        return (Database) byGroup.iterator().next();
     }
 
     /**
