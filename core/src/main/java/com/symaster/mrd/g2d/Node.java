@@ -22,6 +22,7 @@ import java.util.function.Predicate;
  * @since 2024/12/22
  */
 public class Node extends LinkedList<Node> implements Disposable, Serializable, Creation {
+
     private static final long serialVersionUID = 1L;
 
     private final long id;
@@ -261,23 +262,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         // }
     }
 
-    public float getPositionY() {
-        return positionY;
-    }
-
-    public void setPositionY(float y) {
-        if (this.positionY == y) {
-            return;
-        }
-
-        setPosition(positionX, y);
-        // float oldY = this.positionY;
-        // this.positionY = y;
-        // if (pue != null) {
-        //     pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
-        // }
-    }
-
     public void setPosition(float x, float y) {
         if (this.positionX == x && this.positionY == y) {
             return;
@@ -293,6 +277,23 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
                 pue.afterUpdate(this, oldX, oldY, x, y);
             }
         }
+    }
+
+    public float getPositionY() {
+        return positionY;
+    }
+
+    public void setPositionY(float y) {
+        if (this.positionY == y) {
+            return;
+        }
+
+        setPosition(positionX, y);
+        // float oldY = this.positionY;
+        // this.positionY = y;
+        // if (pue != null) {
+        //     pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
+        // }
     }
 
     public void translate(float x, float y) {
@@ -372,12 +373,19 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     @Override
-    public void add(int index, Node element) {
-        super.add(index, element);
-        element.parent = this;
-        if (cue != null) {
-            cue.afterAdd(this, element);
+    public boolean remove(Object o) {
+        boolean remove = super.remove(o);
+
+        if (remove && o instanceof Node) {
+            Node node = (Node) o;
+            node.parent = null;
+
+            if (cue != null) {
+                cue.afterRemove(this, node);
+            }
         }
+
+        return remove;
     }
 
     @Override
@@ -409,6 +417,15 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     @Override
+    public void add(int index, Node element) {
+        super.add(index, element);
+        element.parent = this;
+        if (cue != null) {
+            cue.afterAdd(this, element);
+        }
+    }
+
+    @Override
     public Node remove(int index) {
         Node remove = super.remove(index);
         if (remove != null) {
@@ -417,22 +434,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         if (cue != null) {
             cue.afterRemove(this, remove);
         }
-        return remove;
-    }
-
-    @Override
-    public boolean remove(Object o) {
-        boolean remove = super.remove(o);
-
-        if (remove && o instanceof Node) {
-            Node node = (Node) o;
-            node.parent = null;
-
-            if (cue != null) {
-                cue.afterRemove(this, node);
-            }
-        }
-
         return remove;
     }
 
@@ -452,11 +453,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
             }
         }
         return b;
-    }
-
-    @Override
-    protected void removeRange(int fromIndex, int toIndex) {
-        throw new UnsupportedOperationException();
     }
 
     @Override
@@ -487,8 +483,12 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
-        if (!super.equals(o)) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
+        if (!super.equals(o)) {
+            return false;
+        }
 
         Node node = (Node) o;
         return id == node.id;
@@ -502,7 +502,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     @Override
+    protected void removeRange(int fromIndex, int toIndex) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
     public void create() {
 
     }
+
 }

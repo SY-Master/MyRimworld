@@ -38,4 +38,5 @@ public class LabelNode extends Node {
     public void draw(SpriteBatch spriteBatch) {
         label.draw(spriteBatch, parentAlpha);
     }
+
 }

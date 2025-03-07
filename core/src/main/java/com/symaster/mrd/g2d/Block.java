@@ -44,7 +44,9 @@ public class Block {
 
     @Override
     public boolean equals(Object o) {
-        if (o == null || getClass() != o.getClass()) return false;
+        if (o == null || getClass() != o.getClass()) {
+            return false;
+        }
 
         Block block = (Block) o;
         return x == block.x && y == block.y;
@@ -59,9 +61,7 @@ public class Block {
 
     @Override
     public String toString() {
-        return "Block{" +
-                "x=" + x +
-                ", y=" + y +
-                '}';
+        return "Block{" + "x=" + x + ", y=" + y + '}';
     }
+
 }

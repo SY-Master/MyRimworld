@@ -44,4 +44,5 @@ public class SolidColorDrawable extends BaseDrawable implements Disposable {
             texture.dispose();
         }
     }
+
 }

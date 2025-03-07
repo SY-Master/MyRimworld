@@ -86,4 +86,5 @@ public class InputNode extends Node implements BridgeInputProcessor {
     public boolean actionEnable() {
         return GameSingleData.gamePageStatus == GamePageStatus.Game;
     }
+
 }

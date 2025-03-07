@@ -202,11 +202,7 @@ public class GameUI extends Stage implements BridgeInputProcessor {
 
     @Override
     public int uiSort() {
-        if (GameSingleData.gamePageStatus == GamePageStatus.Game) {
-            return 0;
-        } else {
-            return 99;
-        }
+        return 0;
     }
 
     /**

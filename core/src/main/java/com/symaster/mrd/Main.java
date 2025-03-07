@@ -24,9 +24,9 @@ import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.*;
 import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
+import com.symaster.mrd.game.ui.GameUI;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.game.ui.MainMenu;
-import com.symaster.mrd.game.ui.GameUI;
 import com.symaster.mrd.input.InputBridge;
 import com.symaster.mrd.input.RollerDragInput;
 import com.symaster.mrd.input.WASDInput;
@@ -54,46 +54,23 @@ public class Main extends ApplicationAdapter {
     private AsyncExecutor asyncExecutor;
     private ViewportNodeOrthographic camera;
 
-    /**
-     * 构建相机,相机自带以下组件:
-     * <pre>
-     *  1：{@link WASDInput}、{@link TransformMove}：WASD移动组件
-     *  2：{@link RollerDragInput}：鼠标中间拖动组件
-     *  3：{@link TransformZoom}：滚轮缩放组件
-     *</pre>
-     * @return 相机
-     */
-    public ViewportNodeOrthographic buildCamera() {
-        WASDInput wasdInput = new WASDInput();
+    public void applicationRunnerLoading(float delta) {
+        if (!assetManager.update(17)) {
+            loading.setProgressValue(assetManager.getProgress());
+        } else {
+            loadSkin();
+            loadMainMenu();
+            loadGUI();
+            loading.setProgressValue(1f);
+            GameSingleData.gamePageStatus = GamePageStatus.Menu;
+        }
 
-        TransformMove transformMove = new TransformMove(wasdInput.getVector2());
-        transformMove.setSpeed(UnitUtil.ofM(18));
-        transformMove.setIgnoreTimeScale(true);
+        loading.logic(delta);
+        loading.render();
+    }
 
-        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(960, 540);
-
-        RollerDragInput rollerDragInput = new RollerDragInput(camera);
-
-        camera.add(rollerDragInput);
-        camera.add(wasdInput);
-        camera.add(transformMove);
-
-        TransformZoom nodes = new TransformZoom(camera.getCamera(), camera) {
-            @Override
-            public boolean scrolled(float amountX, float amountY) {
-                boolean scrolled = super.scrolled(amountX, amountY);
-
-                // 相机越高，移动越快
-                if (camera.getWorldRectangle().getWidth() > 0 && scrolled) {
-                    transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
-                }
-
-                return scrolled;
-            }
-        };
-
-        camera.add(nodes);
-        return camera;
+    public void loadSkin() {
+        skin = buildSkin(assetManager);
     }
 
     /**
@@ -139,18 +116,14 @@ public class Main extends ApplicationAdapter {
         return skin;
     }
 
-    public void loadSkin() {
-        skin = buildSkin(assetManager);
-    }
-
     public BitmapFont buildFont(String textPath, String fontPath, int size) {
         List<String> values = GdxText.values();
 
         String collect = values.stream()
-                .flatMap(e -> Stream.of(e.toCharArray()))
-                .map(String::new)
-                .distinct()
-                .collect(Collectors.joining());
+                               .flatMap(e -> Stream.of(e.toCharArray()))
+                               .map(String::new)
+                               .distinct()
+                               .collect(Collectors.joining());
 
         if (collect.isEmpty()) {
             return null;
@@ -165,11 +138,6 @@ public class Main extends ApplicationAdapter {
         generator.dispose();
 
         return font;
-    }
-
-    public void loadGUI() {
-        gui = new GameUI(skin);
-        GameSingleData.inputBridge.add(gui);
     }
 
     public void loadMainMenu() {
@@ -204,19 +172,9 @@ public class Main extends ApplicationAdapter {
         GameSingleData.gamePageStatus = GamePageStatus.Loading;
     }
 
-    public void applicationRunnerLoading(float delta) {
-        if (!assetManager.update(17)) {
-            loading.setProgressValue(assetManager.getProgress());
-        } else {
-            loadSkin();
-            loadMainMenu();
-            loadGUI();
-            loading.setProgressValue(1f);
-            GameSingleData.gamePageStatus = GamePageStatus.Menu;
-        }
-
-        loading.logic(delta);
-        loading.render();
+    public void loadGUI() {
+        gui = new GameUI(skin);
+        GameSingleData.inputBridge.add(gui);
     }
 
     public void gamePlayLoading(float delta) {
@@ -344,4 +302,48 @@ public class Main extends ApplicationAdapter {
             gui.dispose();
         }
     }
+
+    /**
+     * 构建相机,相机自带以下组件:
+     * <pre>
+     *  1：{@link WASDInput}、{@link TransformMove}：WASD移动组件
+     *  2：{@link RollerDragInput}：鼠标中间拖动组件
+     *  3：{@link TransformZoom}：滚轮缩放组件
+     * </pre>
+     *
+     * @return 相机
+     */
+    public ViewportNodeOrthographic buildCamera() {
+        WASDInput wasdInput = new WASDInput();
+
+        TransformMove transformMove = new TransformMove(wasdInput.getVector2());
+        transformMove.setSpeed(UnitUtil.ofM(18));
+        transformMove.setIgnoreTimeScale(true);
+
+        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(960, 540);
+
+        RollerDragInput rollerDragInput = new RollerDragInput(camera);
+
+        camera.add(rollerDragInput);
+        camera.add(wasdInput);
+        camera.add(transformMove);
+
+        TransformZoom nodes = new TransformZoom(camera.getCamera(), camera) {
+            @Override
+            public boolean scrolled(float amountX, float amountY) {
+                boolean scrolled = super.scrolled(amountX, amountY);
+
+                // 相机越高，移动越快
+                if (camera.getWorldRectangle().getWidth() > 0 && scrolled) {
+                    transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
+                }
+
+                return scrolled;
+            }
+        };
+
+        camera.add(nodes);
+        return camera;
+    }
+
 }

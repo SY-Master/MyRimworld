@@ -32,18 +32,6 @@ public class OrthographicCameraNode extends Node {
         this(new OrthographicCamera(), new SpriteBatch());
     }
 
-    public OrthographicCameraNode(SpriteBatch spriteBatch) {
-        this(new OrthographicCamera(), spriteBatch);
-    }
-
-    public PositionConverter getPositionConverter() {
-        return positionConverter;
-    }
-
-    public OrthographicCamera getCamera() {
-        return camera;
-    }
-
     public OrthographicCameraNode(OrthographicCamera camera, SpriteBatch spriteBatch) {
         this.camera = camera;
         this.spriteBatch = spriteBatch;
@@ -55,6 +43,40 @@ public class OrthographicCameraNode extends Node {
             }
             return Integer.compare(o1.getLayer(), o2.getLayer());
         };
+    }
+
+    public PositionConverter newConverter() {
+        return new PositionConverter() {
+            @Override
+            public void toWorld(Vector2 screen) {
+                Vector3 vector3 = new Vector3(screen.x, screen.y, 0);
+
+                camera.unproject(vector3);
+
+                screen.set(vector3.x, vector3.y);
+            }
+
+            @Override
+            public void toScreen(Vector2 world) {
+                Vector3 vector3 = new Vector3(world.x, world.y, 0);
+
+                camera.project(vector3);
+
+                world.set(vector3.x, vector3.y);
+            }
+        };
+    }
+
+    public OrthographicCameraNode(SpriteBatch spriteBatch) {
+        this(new OrthographicCamera(), spriteBatch);
+    }
+
+    public PositionConverter getPositionConverter() {
+        return positionConverter;
+    }
+
+    public OrthographicCamera getCamera() {
+        return camera;
     }
 
     public Rectangle getWorldRectangle() {
@@ -121,28 +143,6 @@ public class OrthographicCameraNode extends Node {
         }
     }
 
-    public PositionConverter newConverter() {
-        return new PositionConverter() {
-            @Override
-            public void toWorld(Vector2 screen) {
-                Vector3 vector3 = new Vector3(screen.x, screen.y, 0);
-
-                camera.unproject(vector3);
-
-                screen.set(vector3.x, vector3.y);
-            }
-
-            @Override
-            public void toScreen(Vector2 world) {
-                Vector3 vector3 = new Vector3(world.x, world.y, 0);
-
-                camera.project(vector3);
-
-                world.set(vector3.x, vector3.y);
-            }
-        };
-    }
-
     private void drawNode(Node node) {
         if (node.isVisible()) {
             node.draw(spriteBatch);
@@ -154,4 +154,5 @@ public class OrthographicCameraNode extends Node {
             }
         }
     }
+
 }

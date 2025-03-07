@@ -39,4 +39,5 @@ public class NinePatchNode extends Node {
         super.draw(spriteBatch);
         ninePatchDrawable.draw(spriteBatch, gdxNodePositionX, gdxNodePositionY, getWidth(), getHeight());
     }
+
 }
