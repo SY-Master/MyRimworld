@@ -7,4 +7,5 @@ package com.symaster.mrd.game.ui;
 public interface PanelOpenListener {
 
     void open(GameUIItem item);
+
 }

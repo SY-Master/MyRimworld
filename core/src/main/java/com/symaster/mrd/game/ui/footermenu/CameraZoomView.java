@@ -22,7 +22,8 @@ public class CameraZoomView extends GameUIItem {
     public void create() {
         super.create();
 
-        progressBar = new ProgressBar(0.1f, 5.0f, 0.1f, false, getSkin().get("default", ProgressBar.ProgressBarStyle.class));
+        progressBar = new ProgressBar(0.1f, 5.0f, 0.1f, false,
+                                      getSkin().get("default", ProgressBar.ProgressBarStyle.class));
         setPanelNormallyOpen(true);
     }
 
@@ -68,6 +69,6 @@ public class CameraZoomView extends GameUIItem {
         }
 
 
-
     }
+
 }

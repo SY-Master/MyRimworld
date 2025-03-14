@@ -11,6 +11,7 @@ import com.symaster.mrd.game.service.ai.AI;
  * @since 2024/12/29
  */
 public class GameGenerateData {
+
     /**
      * 种子
      */
@@ -35,4 +36,5 @@ public class GameGenerateData {
      * ai
      */
     public AI ai;
+
 }

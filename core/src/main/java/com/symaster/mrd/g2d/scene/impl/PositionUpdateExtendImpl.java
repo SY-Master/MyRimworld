@@ -73,4 +73,5 @@ public class PositionUpdateExtendImpl implements PositionUpdateExtend {
 
         return false;
     }
+
 }

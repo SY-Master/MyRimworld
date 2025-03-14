@@ -7,6 +7,8 @@ import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.g2d.tansform.TransformInput;
+import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
 import com.symaster.mrd.game.service.DSS;
@@ -43,7 +45,9 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         long endTime = TimeUtils.millis() + millis;
         while (true) {
             boolean done = update();
-            if (done || TimeUtils.millis() > endTime) return done;
+            if (done || TimeUtils.millis() > endTime) {
+                return done;
+            }
             ThreadUtils.yield();
         }
     }
@@ -95,6 +99,13 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         maleHuman.setHp(new Measure(1, 100f));
         maleHuman.setGender(Gender.MALE);
         maleHuman.setDss(dss);
+
+        TransformInput nodes1 = new TransformInput();
+        TransformMove transformMove = new TransformMove(nodes1.getVector2());
+        transformMove.setSpeed(5);
+        maleHuman.add(nodes1);
+        maleHuman.add(transformMove);
+
         // maleHuman.setAi(gameGenerateData.ai);
         maleHuman.setName(NameGeneratorFactory.getNameGenerator(maleHuman.getRace()).generateName(Gender.MALE));
         scene.add(maleHuman, Groups.PARTNER);
@@ -105,6 +116,13 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
         human.setHp(new Measure(1, 100f));
         human.setGender(Gender.FEMALE);
+
+        TransformInput nodes = new TransformInput();
+        TransformMove transformMove1 = new TransformMove(nodes.getVector2());
+        transformMove1.setSpeed(5);
+        human.add(nodes);
+        human.add(transformMove1);
+
         // human.setAi(gameGenerateData.ai);
         human.setDss(dss);
         human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName(Gender.FEMALE));

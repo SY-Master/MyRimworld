@@ -94,7 +94,9 @@ public class GameUI extends Stage implements BridgeInputProcessor {
                 GameUIItem o = (GameUIItem) constructor.newInstance();
                 gameUIItems.add(o);
             }
-        } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+        } catch (NoSuchMethodException |
+                 InstantiationException |
+                 IllegalAccessException |
                  InvocationTargetException e) {
             throw new RuntimeException(e);
         }
@@ -212,4 +214,5 @@ public class GameUI extends Stage implements BridgeInputProcessor {
     public boolean actionEnable() {
         return GameSingleData.gamePageStatus == GamePageStatus.Game;
     }
+
 }

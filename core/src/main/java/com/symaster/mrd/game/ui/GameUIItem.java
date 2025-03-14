@@ -11,12 +11,11 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- *
  * 游戏UI的一项
  *
  * @author yinmiao
- * @since 2024/12/16
  * @see GameUI#GameUI(Skin)
+ * @since 2024/12/16
  */
 public abstract class GameUIItem implements Disposable {
 
@@ -116,4 +115,5 @@ public abstract class GameUIItem implements Disposable {
     public void dispose() {
 
     }
+
 }

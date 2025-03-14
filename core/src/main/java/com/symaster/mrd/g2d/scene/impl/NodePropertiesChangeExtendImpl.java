@@ -23,4 +23,5 @@ public class NodePropertiesChangeExtendImpl implements NodePropertiesChangeExten
         }
         scene.blockUpdate(node, newSize);
     }
+
 }

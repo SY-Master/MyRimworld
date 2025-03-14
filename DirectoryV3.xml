@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="UTF-8"?>
- <trees>
-     <tree path="/core/src/main/java/com/symaster/mrd/g2d/Scene.java" title="场景"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/g2d/Node.java" title="场景节点"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/g2d/CameraNode.java" title="相机节点" extension=""
-           presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
-     <tree path="/core/src/main/java/com/symaster/mrd/drawable/SolidColorDrawable.java" title="纯色绘制器"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/g2d/SpriteNode.java" title="精灵节点"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/g2d/ViewportNode.java" title="视口节点"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Human.java" title="人类"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Creature.java" title="生物实体"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Race.java" title="种族"/>
-     <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Gender.java" title="性别枚举"/>
+<trees>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/Scene.java" title="场景"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/Node.java" title="场景节点"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/CameraNode.java" title="相机节点" extension=""
+          presentableText="" tooltipTitle="" icon="" textColor="" backgroundColor=""/>
+    <tree path="/core/src/main/java/com/symaster/mrd/drawable/SolidColorDrawable.java" title="纯色绘制器"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/SpriteNode.java" title="精灵节点"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/g2d/ViewportNode.java" title="视口节点"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Human.java" title="人类"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Creature.java" title="生物实体"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Race.java" title="种族"/>
+    <tree path="/core/src/main/java/com/symaster/mrd/game/entity/Gender.java" title="性别枚举"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/BlockMapGenerateProcessorImpl.java" title="区块生成器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/GameGenerateProcessor.java" title="新游戏生成器"/>
     <tree path="/core/src/main/java/com/symaster/mrd/game/ui/Loading.java" title="加载页面"/>

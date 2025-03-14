@@ -87,10 +87,14 @@ public class Main extends ApplicationAdapter {
         }
 
         /// Drawables
-        NinePatchDrawable nDChecked = new NinePatchDrawable(new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable nDFocused = new NinePatchDrawable(new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable nDUp = new NinePatchDrawable(new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable border0 = new NinePatchDrawable(new NinePatch(assetManager.get("border0.png", Texture.class), 1, 1, 1, 1));
+        NinePatchDrawable nDChecked = new NinePatchDrawable(
+                new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDFocused = new NinePatchDrawable(
+                new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDUp = new NinePatchDrawable(
+                new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable border0 = new NinePatchDrawable(
+                new NinePatch(assetManager.get("border0.png", Texture.class), 1, 1, 1, 1));
         SolidColorDrawable back_05 = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
         SolidColorDrawable white = new SolidColorDrawable(new Color(1, 1, 1, 1));
 

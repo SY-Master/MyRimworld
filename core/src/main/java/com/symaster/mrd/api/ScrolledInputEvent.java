@@ -7,4 +7,5 @@ package com.symaster.mrd.api;
 public interface ScrolledInputEvent {
 
     boolean scrolled(float amountX, float amountY);
+
 }

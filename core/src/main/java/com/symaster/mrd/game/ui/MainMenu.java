@@ -115,4 +115,5 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
     public boolean actionEnable() {
         return GameSingleData.gamePageStatus == GamePageStatus.Menu;
     }
+
 }

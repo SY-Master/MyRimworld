@@ -82,5 +82,6 @@ public class GdxText {
     public static void clear() {
         textCollect = null;
     }
+
 }
 

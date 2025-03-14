@@ -102,4 +102,5 @@ public class Human extends Creature {
         super.setGender(gender);
         updateSpriteColor();
     }
+
 }

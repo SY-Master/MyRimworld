@@ -20,4 +20,5 @@ public class PartnerControllerPanel extends GameUIItem {
     public Actor panel() {
         return null;
     }
+
 }

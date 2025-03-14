@@ -68,4 +68,5 @@ public class ViewportNodeOrthographic extends OrthographicCameraNode {
     public void beginDraw() {
         viewport.apply();
     }
+
 }

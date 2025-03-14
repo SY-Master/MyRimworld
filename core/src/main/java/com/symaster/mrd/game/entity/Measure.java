@@ -34,4 +34,5 @@ public class Measure {
     public void setMax(float max) {
         this.max = max;
     }
+
 }

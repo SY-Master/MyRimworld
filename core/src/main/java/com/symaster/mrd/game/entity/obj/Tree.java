@@ -3,12 +3,10 @@ package com.symaster.mrd.game.entity.obj;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.symaster.mrd.g2d.Layer;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.SpriteNode;
-import com.symaster.mrd.util.UnitUtil;
 
 /**
  * @author yinmiao
@@ -72,4 +70,5 @@ public class Tree extends Node {
         this.scale = scale;
         updateSize();
     }
+
 }

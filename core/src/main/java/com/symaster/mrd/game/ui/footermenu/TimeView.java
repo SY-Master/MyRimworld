@@ -78,8 +78,10 @@ public class TimeView extends GameUIItem {
 
         GameTime gameTime = (GameTime) byGroup.iterator().next();
 
-        String format = String.format("%s年-%s月-%s日-%s时-%s分", gameTime.getYear(), gameTime.getMonth(), gameTime.getDay(), gameTime.getHour(), gameTime.getMinute());
+        String format = String.format("%s年-%s月-%s日-%s时-%s分", gameTime.getYear(), gameTime.getMonth(),
+                                      gameTime.getDay(), gameTime.getHour(), gameTime.getMinute());
         label.setText(format);
 
     }
+
 }

@@ -7,5 +7,4 @@ package com.symaster.mrd.game.entity;
 public enum HumanBodyType {
 
 
-
 }

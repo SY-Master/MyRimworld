@@ -156,4 +156,5 @@ public class TimeController extends GameUIItem {
         play10.setSize(width, 30);
         play10.setPosition(width * 6, 0);
     }
+
 }

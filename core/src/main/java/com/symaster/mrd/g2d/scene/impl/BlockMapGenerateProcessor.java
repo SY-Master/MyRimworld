@@ -11,5 +11,7 @@ import java.util.Set;
  * @since 2024/12/28
  */
 public interface BlockMapGenerateProcessor {
+
     Set<Node> generate(Scene scene, Block take);
+
 }

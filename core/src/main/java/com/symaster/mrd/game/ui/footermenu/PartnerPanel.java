@@ -10,8 +10,8 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.Human;
 
-import java.util.List;
 import java.util.*;
+import java.util.List;
 
 /**
  * 伙伴面板
@@ -20,6 +20,7 @@ import java.util.*;
  * @since 2025/1/1
  */
 public class PartnerPanel extends Group implements Disposable {
+
     private final PartnerMenu partnerMenu;
     private final Image background;
     private final SolidColorDrawable solidColorDrawable;
@@ -103,6 +104,7 @@ public class PartnerPanel extends Group implements Disposable {
     }
 
     private static class Item extends Group {
+
         private final Node node;
         private final Label label;
 
@@ -118,5 +120,7 @@ public class PartnerPanel extends Group implements Disposable {
                 label.setText(((Human) node).getName());
             }
         }
+
     }
+
 }

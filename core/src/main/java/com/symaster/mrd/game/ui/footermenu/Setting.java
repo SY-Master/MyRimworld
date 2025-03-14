@@ -15,6 +15,7 @@ import com.symaster.mrd.util.GdxText;
  * @since 2024/12/16
  */
 public class Setting extends GameUIItem {
+
     private TextButton textButton;
 
     @Override

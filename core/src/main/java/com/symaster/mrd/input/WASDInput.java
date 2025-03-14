@@ -11,6 +11,7 @@ import com.symaster.mrd.g2d.InputNode;
  * @since 2024/12/26
  */
 public class WASDInput extends InputNode {
+
     private final Vector2 vector2;
 
     public WASDInput() {
@@ -106,4 +107,5 @@ public class WASDInput extends InputNode {
 
         vector2.limit(1);
     }
+
 }

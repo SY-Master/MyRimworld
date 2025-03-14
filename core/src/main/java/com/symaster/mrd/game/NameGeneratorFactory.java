@@ -16,7 +16,8 @@ public class NameGeneratorFactory {
 
     private static final Map<Race, NameGenerator> nameGenerators = new HashMap<>();
 
-    private static NameGenerator newGenerator(Race race) throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
+    private static NameGenerator newGenerator(Race race)
+            throws NoSuchMethodException, InstantiationException, IllegalAccessException, InvocationTargetException {
         Class<? extends NameGenerator> nameGenerator1 = race.getNameGenerator();
 
         Constructor<? extends NameGenerator> constructor = nameGenerator1.getConstructor();
@@ -31,7 +32,9 @@ public class NameGeneratorFactory {
 
             try {
                 return newGenerator(race);
-            } catch (NoSuchMethodException | InstantiationException | IllegalAccessException |
+            } catch (NoSuchMethodException |
+                     InstantiationException |
+                     IllegalAccessException |
                      InvocationTargetException e) {
                 throw new RuntimeException(e);
             }

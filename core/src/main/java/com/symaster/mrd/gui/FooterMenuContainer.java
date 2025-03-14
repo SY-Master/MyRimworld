@@ -8,6 +8,7 @@ import com.symaster.mrd.game.ui.GameUIItem;
  * @since 2024/12/16
  */
 public class FooterMenuContainer {
+
     private final GameUIItem gameUIItem;
     private final Actor menuBtn;
     private MenuActor menuActor;
@@ -32,4 +33,5 @@ public class FooterMenuContainer {
     public Actor getMenuBtn() {
         return menuBtn;
     }
+
 }

@@ -54,7 +54,11 @@ public class SceneUtil {
      * @param radius    圆半径
      * @param inactBlks 是否包括未激活区块
      */
-    public static List<Node> findNodesByCircle(Scene scene, float centerX, float centerY, float radius, boolean inactBlks) {
+    public static List<Node> findNodesByCircle(Scene scene,
+                                               float centerX,
+                                               float centerY,
+                                               float radius,
+                                               boolean inactBlks) {
         int blockSize = (int) Math.ceil(radius / scene.getBlockSize()) + 2;
 
         int blockIndexX = scene.getBlockIndex(centerX);
@@ -101,4 +105,5 @@ public class SceneUtil {
             }
         }
     }
+
 }

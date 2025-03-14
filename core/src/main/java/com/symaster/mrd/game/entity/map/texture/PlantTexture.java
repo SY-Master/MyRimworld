@@ -21,4 +21,5 @@ public class PlantTexture extends TileMapTexture {
     public TextureRegion getTextureRegion() {
         return textureRegion;
     }
+
 }

@@ -5,4 +5,5 @@ package com.symaster.mrd.game.entity.path;
  * @since 2025/1/13
  */
 public class Path {
+
 }

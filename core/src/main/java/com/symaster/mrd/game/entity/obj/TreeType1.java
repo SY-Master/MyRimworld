@@ -12,4 +12,5 @@ public class TreeType1 extends Tree {
     public TreeType1(AssetManager assetManager) {
         super(assetManager, 24, 14, 114, 140, UnitUtil.ofM(3));
     }
+
 }

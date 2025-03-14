@@ -8,6 +8,7 @@ import java.util.LinkedList;
 import java.util.List;
 
 public final class Cache implements Serializable {
+
     private static final long serialVersionUID = 1L;
 
     public final List<Node> nodes = new LinkedList<>();
@@ -16,4 +17,5 @@ public final class Cache implements Serializable {
      */
     public final List<MoveNodeCache> moveNodes = new LinkedList<>();
     public Block cacheBlock;
+
 }

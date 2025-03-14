@@ -25,4 +25,5 @@ public class GameSingleData {
     public static LoadingType loadingType;
 
     public static PositionConverter positionConverter;
+
 }

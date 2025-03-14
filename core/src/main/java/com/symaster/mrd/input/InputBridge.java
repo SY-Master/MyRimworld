@@ -12,6 +12,7 @@ import java.util.stream.Collectors;
  * @since 2024/12/27
  */
 public class InputBridge implements InputProcessor, Serializable {
+
     private static final long serialVersionUID = 1L;
 
     private final List<BridgeInputProcessor> listeners = new LinkedList<>();
@@ -25,14 +26,13 @@ public class InputBridge implements InputProcessor, Serializable {
     }
 
     private List<BridgeInputProcessor> updateSort() {
-        return listeners.stream().filter(BridgeInputProcessor::actionEnable)
-                .sorted((o1, o2) -> {
-                    if (o1.uiLayer() == o2.uiLayer()) {
-                        return Integer.compare(o1.uiSort(), o2.uiSort());
-                    } else {
-                        return Integer.compare(o1.uiLayer(), o2.uiLayer());
-                    }
-                }).collect(Collectors.toList());
+        return listeners.stream().filter(BridgeInputProcessor::actionEnable).sorted((o1, o2) -> {
+            if (o1.uiLayer() == o2.uiLayer()) {
+                return Integer.compare(o1.uiSort(), o2.uiSort());
+            } else {
+                return Integer.compare(o1.uiLayer(), o2.uiLayer());
+            }
+        }).collect(Collectors.toList());
     }
 
     @Override
@@ -136,13 +136,18 @@ public class InputBridge implements InputProcessor, Serializable {
     }
 
     private static final class SortCacheItem {
+
         BridgeInputProcessor processor;
         int layer;
         int sort;
+
     }
 
     private static final class SortConfig {
+
         int layer;
         int sort;
+
     }
+
 }

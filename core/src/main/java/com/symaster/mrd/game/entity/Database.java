@@ -1,11 +1,13 @@
 package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.game.service.ai.HumanAction;
+import com.symaster.mrd.game.core.ai.AiResponse;
 import com.symaster.mrd.game.service.ai.TimeAllocation;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Queue;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * 数据库
@@ -15,21 +17,33 @@ import java.util.Map;
  */
 public class Database extends Node {
 
-    /**
-     * 某个生物当前的动作
-     */
-    private final Map<Long, HumanAction> humanActionMap;
+    private final Map<Long, Queue<NodeActionData>> nodeActionDataMap;
+
     /**
      * 时间分配
      */
     private final Map<Integer, TimeAllocation> periodMap;
 
+    private final Map<Long, NodeStatusEnum> nodeStatusMap;
+
+    private final Map<Long, AiResponse> aiResponseMap;
+
     private final SelectData selectData;
 
     public Database() {
         this.periodMap = new HashMap<>();
-        this.humanActionMap = new HashMap<>();
         this.selectData = new SelectData();
+        this.aiResponseMap = new HashMap<>();
+        this.nodeStatusMap = new HashMap<>();
+        this.nodeActionDataMap = new HashMap<>();
+    }
+
+    public AiResponse getAiResponse(long nodeId) {
+        return aiResponseMap.get(nodeId);
+    }
+
+    public void setAiResponse(long nodeId, AiResponse aiResponse) {
+        aiResponseMap.put(nodeId, aiResponse);
     }
 
     /**
@@ -48,13 +62,33 @@ public class Database extends Node {
         periodMap.put(hour, timeAllocation);
     }
 
-    public HumanAction getHumanAction(long id) {
-        return humanActionMap.get(id);
+    public Queue<NodeActionData> getNodeActionData(long id) {
+        Queue<NodeActionData> nodeActionData = nodeActionDataMap.get(id);
+        if (nodeActionData == null) {
+            LinkedBlockingQueue<NodeActionData> rtn = new LinkedBlockingQueue<>();
+            nodeActionDataMap.put(id, rtn);
+            return rtn;
+        }
+
+        return nodeActionData;
     }
 
-    public void setHumanAction(long id, HumanAction humanAction) {
-        humanActionMap.put(id, humanAction);
+    public void clearNodeActionData(long id) {
+        nodeActionDataMap.remove(id);
     }
+
+    public void putNodeActionData(long id, NodeActionData nodeActionData) {
+        nodeActionDataMap.computeIfAbsent(id, k -> new LinkedBlockingQueue<>()).add(nodeActionData);
+    }
+
+    public NodeStatusEnum getNodeStatus(long id) {
+        return nodeStatusMap.get(id);
+    }
+
+    public void setNodeStatus(long id, NodeStatusEnum nodeStatus) {
+        nodeStatusMap.put(id, nodeStatus);
+    }
+
 
     public SelectData getSelectData() {
         return selectData;

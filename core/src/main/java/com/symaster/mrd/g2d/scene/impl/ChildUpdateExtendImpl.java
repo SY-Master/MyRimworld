@@ -9,6 +9,7 @@ import com.symaster.mrd.g2d.scene.Scene;
  * @since 2024/12/27
  */
 public class ChildUpdateExtendImpl implements ChildUpdateExtend {
+
     private final Scene scene;
 
     public ChildUpdateExtendImpl(Scene scene) {
@@ -36,4 +37,5 @@ public class ChildUpdateExtendImpl implements ChildUpdateExtend {
 
         scene.extScene(child);
     }
+
 }

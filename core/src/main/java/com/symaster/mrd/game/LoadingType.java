@@ -23,6 +23,8 @@ public enum LoadingType {
     }
 
     private interface RenderProxy {
+
         void render(Main main, float delta);
+
     }
 }

@@ -84,4 +84,5 @@ public class Loading extends Stage {
 
         log.setPosition(i, j);
     }
+
 }

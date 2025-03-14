@@ -79,4 +79,5 @@ public class PartnerMenu extends GameUIItem {
             partnerPanel.dispose();
         }
     }
+
 }

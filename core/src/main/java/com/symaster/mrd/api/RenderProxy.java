@@ -14,4 +14,5 @@ public interface RenderProxy {
      * @param delta 上一帧耗时 s
      */
     void render(float delta);
+
 }

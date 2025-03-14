@@ -21,7 +21,8 @@ public enum TimeAllocation {
      * 6. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
      * 7. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
      */
-    Work(HumanAction.Eating, HumanAction.CommandWork, HumanAction.OrdinaryWork, HumanAction.Interaction, HumanAction.Entertainment, HumanAction.StrollingAround, HumanAction.LostInThought),
+    Work(HumanAction.Eating, HumanAction.CommandWork, HumanAction.OrdinaryWork, HumanAction.Interaction,
+         HumanAction.Entertainment, HumanAction.StrollingAround, HumanAction.LostInThought),
     /**
      * 娱乐
      * 1. 吃东西：最高优先级。当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
@@ -30,7 +31,8 @@ public enum TimeAllocation {
      * 4. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
      * 5. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
      */
-    Entertainment(HumanAction.Eating, HumanAction.Interaction, HumanAction.Entertainment, HumanAction.StrollingAround, HumanAction.LostInThought),
+    Entertainment(HumanAction.Eating, HumanAction.Interaction, HumanAction.Entertainment, HumanAction.StrollingAround,
+                  HumanAction.LostInThought),
     /**
      * 1. 吃东西：当饱食度低于20%时会寻找食物，每次都会把饱食度吃满。
      * 2. 睡觉：当休息值小于20%时会睡觉。
@@ -41,7 +43,9 @@ public enum TimeAllocation {
      * 7. 闲逛：每次会闲逛一定的时间，时间范围5-20s。
      * 8. 发呆：啥事都没有发生时，生物会发呆，时间范围5-20s。
      */
-    FreeActivities(HumanAction.Eating, HumanAction.Sleep, HumanAction.Interaction, HumanAction.Entertainment, HumanAction.CommandWork, HumanAction.OrdinaryWork, HumanAction.StrollingAround, HumanAction.LostInThought),
+    FreeActivities(HumanAction.Eating, HumanAction.Sleep, HumanAction.Interaction, HumanAction.Entertainment,
+                   HumanAction.CommandWork, HumanAction.OrdinaryWork, HumanAction.StrollingAround,
+                   HumanAction.LostInThought),
     ;
 
     private final HumanAction[] actions;

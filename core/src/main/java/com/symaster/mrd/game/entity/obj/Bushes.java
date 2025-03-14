@@ -70,4 +70,5 @@ public class Bushes extends Node {
         this.scale = scale;
         updateSize();
     }
+
 }

@@ -10,7 +10,9 @@ public interface ProgressProcessor {
 
     /**
      * 进度条更新
+     *
      * @param progress 新进度 [0-1]
      */
     void update(float progress);
+
 }

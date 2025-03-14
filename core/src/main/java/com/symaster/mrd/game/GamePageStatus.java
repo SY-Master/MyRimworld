@@ -27,6 +27,8 @@ public enum GamePageStatus {
     }
 
     private interface RenderProxy {
+
         void render(Main main, float delta);
+
     }
 }

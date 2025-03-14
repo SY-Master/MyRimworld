@@ -12,6 +12,7 @@ import java.io.Serializable;
  * @since 2024/12/27
  */
 public class Save implements Serializable, Disposable {
+
     private static final long serialVersionUID = 1L;
 
     private Scene scene;
@@ -33,4 +34,5 @@ public class Save implements Serializable, Disposable {
             scene.dispose();
         }
     }
+
 }

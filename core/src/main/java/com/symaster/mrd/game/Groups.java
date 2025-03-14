@@ -30,4 +30,5 @@ public class Groups {
      * 相机
      */
     public static final String CAMERA = "camera";
+
 }

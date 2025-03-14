@@ -11,6 +11,7 @@ import com.symaster.mrd.game.GameSingleData;
  * @since 2024/12/31
  */
 public class RollerDragInput extends InputNode {
+
     private final Vector2 cache_vector2 = new Vector2();
     private final Node target;
 
@@ -77,4 +78,5 @@ public class RollerDragInput extends InputNode {
         this.nodeStartY = target.getPositionY();
         this.dragging = true;
     }
+
 }

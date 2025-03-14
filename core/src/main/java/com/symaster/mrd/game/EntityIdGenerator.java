@@ -11,4 +11,5 @@ public class EntityIdGenerator {
     public static synchronized long nextId() {
         return thatId++;
     }
+
 }

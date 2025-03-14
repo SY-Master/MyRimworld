@@ -28,6 +28,7 @@ import java.util.stream.Collectors;
  * @since 2024/12/22
  */
 public class Scene implements Serializable, Disposable {
+
     private static final long serialVersionUID = 1L;
 
     /**
@@ -424,7 +425,8 @@ public class Scene implements Serializable, Disposable {
                 nodes.computeIfAbsent(newIndex, k -> new HashSet<>()).add(moveNode.node);
 
                 if (activityBlockMap.get(moveNode.node) != null) {
-                    activityBlockMap.put(moveNode.node, getNodeActivityBlocks(moveNode.node, moveNode.node.getActivityBlockSize()));
+                    activityBlockMap.put(moveNode.node,
+                                         getNodeActivityBlocks(moveNode.node, moveNode.node.getActivityBlockSize()));
                     updateActivityBlockSize();
                 }
             }
@@ -437,7 +439,13 @@ public class Scene implements Serializable, Disposable {
         findNodes(worldRect.x, worldRect.y, worldRect.width, worldRect.height, result, limitVisible, blockExtend);
     }
 
-    public void findNodes(float worldX, float worldY, float worldW, float worldH, List<Node> result, boolean limitVisible, int blockExtend) {
+    public void findNodes(float worldX,
+                          float worldY,
+                          float worldW,
+                          float worldH,
+                          List<Node> result,
+                          boolean limitVisible,
+                          int blockExtend) {
         int xIndex = getBlockIndex(worldX);
         int yIndex = getBlockIndex(worldY);
 
@@ -446,26 +454,36 @@ public class Scene implements Serializable, Disposable {
 
         int i = blockExtend * 2;
 
-        findNodesByBlock(blockXNumber + i, blockYNumber + i, xIndex - blockExtend, yIndex - blockExtend, result, limitVisible);
+        findNodesByBlock(blockXNumber + i, blockYNumber + i, xIndex - blockExtend, yIndex - blockExtend, result,
+                         limitVisible);
     }
 
-    public void findNodesByBlock(int blockXNumber, int blockYNumber, int x, int y, List<Node> result, boolean limitVisible) {
+    public void findNodesByBlock(int blockXNumber,
+                                 int blockYNumber,
+                                 int x,
+                                 int y,
+                                 List<Node> result,
+                                 boolean limitVisible) {
         for (int i = 0; i < blockXNumber; i++) {
             for (int j = 0; j < blockYNumber; j++) {
                 renderCache.cacheBlock = new Block(x + i, y + j);
-                if (activeBlocks.contains(renderCache.cacheBlock)) {
-                    Set<Node> nodes1 = nodes.get(renderCache.cacheBlock);
-                    if (nodes1 != null) {
-                        if (limitVisible) {
-                            for (Node node : nodes1) {
-                                if (node.isVisible()) {
-                                    result.add(node);
-                                }
-                            }
-                        } else {
-                            result.addAll(nodes1);
+                findNodesByBlock(renderCache.cacheBlock, result, limitVisible);
+            }
+        }
+    }
+
+    public void findNodesByBlock(Block cacheBlock, List<Node> result, boolean limitVisible) {
+        if (activeBlocks.contains(cacheBlock)) {
+            Set<Node> nodes1 = nodes.get(cacheBlock);
+            if (nodes1 != null) {
+                if (limitVisible) {
+                    for (Node node : nodes1) {
+                        if (node.isVisible()) {
+                            result.add(node);
                         }
                     }
+                } else {
+                    result.addAll(nodes1);
                 }
             }
         }
@@ -482,4 +500,5 @@ public class Scene implements Serializable, Disposable {
     public void dispose() {
         blockMapGenerate.dispose();
     }
+
 }

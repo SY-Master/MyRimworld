@@ -29,4 +29,5 @@ public class SpriteNode extends Node {
     public void draw(SpriteBatch spriteBatch) {
         sprite.draw(spriteBatch);
     }
+
 }

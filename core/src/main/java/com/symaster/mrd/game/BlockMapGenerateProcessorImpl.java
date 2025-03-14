@@ -32,7 +32,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         this.assetManager = assetManager;
     }
 
-    private Set<Node> getTileSet(float tileSize, TileMapFactory tileMapFactory, float startX, float startY, Noise noise, float blockSize) {
+    private Set<Node> getTileSet(float tileSize,
+                                 TileMapFactory tileMapFactory,
+                                 float startX,
+                                 float startY,
+                                 Noise noise,
+                                 float blockSize) {
         Set<Node> rtn = new HashSet<>();
 
         TileSet tileSet = new TileSet();
@@ -73,7 +78,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         return rtn;
     }
 
-    private void flower(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+    private void flower(TileMapFactory tileMapFactory,
+                        Set<Node> rtn,
+                        TileSet tileSet,
+                        float worldX,
+                        float worldY,
+                        float tileSize) {
         TileMap tileMap;
 
         float v = random.nextFloat();
@@ -119,7 +129,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         }
     }
 
-    private void bushes(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+    private void bushes(TileMapFactory tileMapFactory,
+                        Set<Node> rtn,
+                        TileSet tileSet,
+                        float worldX,
+                        float worldY,
+                        float tileSize) {
         Bushes bushes;
         float v1 = random.nextFloat();
         if (v1 < 0.33f) {
@@ -135,7 +150,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         rtn.add(bushes);
     }
 
-    private void tree(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+    private void tree(TileMapFactory tileMapFactory,
+                      Set<Node> rtn,
+                      TileSet tileSet,
+                      float worldX,
+                      float worldY,
+                      float tileSize) {
         Tree tree;
         float v1 = random.nextFloat();
         if (v1 < 0.33f) {
@@ -154,7 +174,12 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         rtn.add(tree);
     }
 
-    private void water(TileMapFactory tileMapFactory, Set<Node> rtn, TileSet tileSet, float worldX, float worldY, float tileSize) {
+    private void water(TileMapFactory tileMapFactory,
+                       Set<Node> rtn,
+                       TileSet tileSet,
+                       float worldX,
+                       float worldY,
+                       float tileSize) {
         TileMap tileMap = new TileMap(tileMapFactory.getWaterTexture());
         tileMap.setSize(tileSize, tileSize);
         tileMap.setPosition(worldX, worldY);
@@ -188,4 +213,5 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
 
         return getTileSet(tileSize, tileMapFactory, startX, startY, noise, blockSize);
     }
+
 }

@@ -2,7 +2,6 @@ package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.game.service.DSS;
-import com.symaster.mrd.game.service.ai.AI;
 
 /**
  * 生物实体
@@ -144,4 +143,5 @@ public class Creature extends Node {
     public int getZIndex() {
         return (int) -getPositionY();
     }
+
 }

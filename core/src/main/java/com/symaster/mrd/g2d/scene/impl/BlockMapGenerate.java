@@ -72,8 +72,10 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
     }
 
     public static final class Result {
+
         public Block block;
         public Set<Node> nodes;
+
     }
 
     public static final class Processor implements AsyncTask<Object> {
@@ -83,7 +85,10 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
         private final Scene scene;
         private final BlockMapGenerateProcessor blockMapGenerateProcessor;
 
-        public Processor(Block take, ConcurrentLinkedQueue<Result> res, Scene scene, BlockMapGenerateProcessor blockMapGenerateProcessor) {
+        public Processor(Block take,
+                         ConcurrentLinkedQueue<Result> res,
+                         Scene scene,
+                         BlockMapGenerateProcessor blockMapGenerateProcessor) {
             this.take = take;
             this.res = res;
             this.scene = scene;
@@ -101,5 +106,7 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
 
             return null;
         }
+
     }
+
 }

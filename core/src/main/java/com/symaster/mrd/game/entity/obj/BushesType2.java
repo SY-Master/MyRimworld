@@ -12,4 +12,5 @@ public class BushesType2 extends Bushes {
     public BushesType2(AssetManager assetManager) {
         super(assetManager, 98, 194, 30, 30, UnitUtil.ofM(1.2f));
     }
+
 }

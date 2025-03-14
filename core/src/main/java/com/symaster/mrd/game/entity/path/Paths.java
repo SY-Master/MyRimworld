@@ -7,4 +7,5 @@ import java.util.ArrayList;
  * @since 2025/1/13
  */
 public class Paths extends ArrayList<Path> {
+
 }

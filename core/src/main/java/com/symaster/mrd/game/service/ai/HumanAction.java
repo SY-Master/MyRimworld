@@ -145,8 +145,10 @@ public enum HumanAction {
     }
 
     private interface Action {
+
         boolean available(Scene scene, Database database, GameTime gameTime, Creature nodes, float delta);
 
         void logic(Scene scene, Database database, GameTime gameTime, Creature nodes, float delta);
+
     }
 }

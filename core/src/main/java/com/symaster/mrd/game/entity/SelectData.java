@@ -12,6 +12,7 @@ import java.util.Set;
  * @since 2025/1/10
  */
 public class SelectData extends Node {
+
     private final Set<Node> nodes;
     private final Set<Node> preSelection;
 
@@ -64,4 +65,5 @@ public class SelectData extends Node {
     public void clearSelection() {
         nodes.clear();
     }
+
 }

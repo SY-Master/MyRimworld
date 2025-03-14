@@ -75,4 +75,5 @@ public class MainMenuBtn extends Group {
     public Image getLog() {
         return log;
     }
+
 }

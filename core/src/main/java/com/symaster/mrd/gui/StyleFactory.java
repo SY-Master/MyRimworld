@@ -13,6 +13,7 @@ import com.badlogic.gdx.utils.Disposable;
  * @since 2024/12/20
  */
 public class StyleFactory implements Disposable {
+
     private boolean setup = false;
     private BitmapFont font = null;
     private NinePatch ninePatch;
@@ -38,7 +39,8 @@ public class StyleFactory implements Disposable {
         }
 
         if (defaultTextButtonStyle == null) {
-            defaultTextButtonStyle = new TextButton.TextButtonStyle(ninePatchDrawable, ninePatchDrawable, ninePatchDrawable, font);
+            defaultTextButtonStyle = new TextButton.TextButtonStyle(ninePatchDrawable, ninePatchDrawable,
+                                                                    ninePatchDrawable, font);
         }
 
         return defaultTextButtonStyle;
@@ -54,4 +56,5 @@ public class StyleFactory implements Disposable {
             setup = false;
         }
     }
+
 }

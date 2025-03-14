@@ -21,4 +21,5 @@ public class WaterTexture extends TileMapTexture {
     public TextureRegion getTextureRegion() {
         return textureRegion;
     }
+
 }

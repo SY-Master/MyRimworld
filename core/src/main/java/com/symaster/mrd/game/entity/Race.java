@@ -11,7 +11,7 @@ import com.symaster.mrd.game.service.NameGenerator;
  */
 public enum Race {
 
-    Human("人类", com.symaster.mrd.game.entity.Human.class, HumanNameGenerator.class),
+    Human("人", com.symaster.mrd.game.entity.Human.class, HumanNameGenerator.class),
 
     ;
 

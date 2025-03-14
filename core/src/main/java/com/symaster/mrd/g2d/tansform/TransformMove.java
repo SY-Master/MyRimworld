@@ -8,6 +8,7 @@ import com.symaster.mrd.g2d.Node;
  * @version 2023/11/16
  */
 public class TransformMove extends Node {
+
     /**
      * 设定每秒移动距离
      */
