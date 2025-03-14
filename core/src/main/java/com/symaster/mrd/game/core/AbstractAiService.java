@@ -7,7 +7,9 @@ import com.symaster.mrd.game.core.ai.AiResponse;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.*;
+import java.util.concurrent.LinkedBlockingQueue;
+import java.util.concurrent.ThreadPoolExecutor;
+import java.util.concurrent.TimeUnit;
 
 /**
  * @author yinmiao
@@ -15,7 +17,8 @@ import java.util.concurrent.*;
  */
 public abstract class AbstractAiService implements AiService {
 
-    private static final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS, new LinkedBlockingQueue<>());
+    private static final ThreadPoolExecutor threadPool = new ThreadPoolExecutor(1, 1, 1, TimeUnit.SECONDS,
+                                                                                new LinkedBlockingQueue<>());
 
     public List<AiMessage> buildPrompt(List<AiMessage> prePrompt,
                                        List<AiMessage> mainPrompt,

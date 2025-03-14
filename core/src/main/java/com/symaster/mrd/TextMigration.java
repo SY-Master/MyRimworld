@@ -4,13 +4,11 @@ import com.symaster.mrd.game.core.AiService;
 import com.symaster.mrd.game.core.AliyunAiService;
 import com.symaster.mrd.game.core.ai.AiResponse;
 import com.symaster.mrd.game.core.ai.SystemAiMessage;
-import com.symaster.mrd.game.core.ai.UserAiMessage;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
-import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -33,7 +31,9 @@ public class TextMigration {
         aiResponse.setReasoningContent(new StringBuilder());
 
         logger.info("end");
-        aiService.blockStream(aiResponse, Arrays.asList(new SystemAiMessage("你是王小强，你发现你正处于一个完全陌生的世界，你的视线范围内有森林、海滩还有草地，你觉得此处应该是一个岛屿，你该选择做什么？")), "qwen-max-2025-01-25");
+        aiService.blockStream(aiResponse, Collections.singletonList(new SystemAiMessage(
+                                      "你是王小强，你发现你正处于一个完全陌生的世界，你的视线范围内有森林、海滩还有草地，你觉得此处应该是一个岛屿，你该选择做什么？")),
+                              "qwen-max-2025-01-25");
 
         logger.info("start while");
         System.out.println(aiResponse.getContent());

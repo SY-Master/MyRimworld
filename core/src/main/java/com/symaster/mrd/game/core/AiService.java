@@ -35,4 +35,5 @@ public interface AiService extends Closeable {
      * @param model      大模型
      */
     void stream(AiResponse aiResponse, List<AiMessage> contexts, String model);
+
 }

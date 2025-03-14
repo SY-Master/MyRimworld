@@ -65,7 +65,6 @@ public class CameraZoomView extends GameUIItem {
 
         GameUI gameUI = getMainStageUI();
         if (gameUI == null) {
-            return;
         }
 
 

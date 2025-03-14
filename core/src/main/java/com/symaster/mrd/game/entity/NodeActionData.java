@@ -1,7 +1,5 @@
 package com.symaster.mrd.game.entity;
 
-import com.badlogic.gdx.math.Vector2;
-
 /**
  * @author yinmiao
  * @since 2025/3/14

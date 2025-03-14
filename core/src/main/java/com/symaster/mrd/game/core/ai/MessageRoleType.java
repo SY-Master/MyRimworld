@@ -1,7 +1,5 @@
 package com.symaster.mrd.game.core.ai;
 
-import lombok.Getter;
-
 /**
  * @author yinmiao
  * @since 2025/3/13

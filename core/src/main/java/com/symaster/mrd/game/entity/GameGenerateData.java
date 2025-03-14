@@ -4,7 +4,6 @@ import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.service.ai.AI;
 
 /**
  * @author yinmiao
@@ -32,9 +31,5 @@ public class GameGenerateData {
      * 皮肤
      */
     public Skin skin;
-    /**
-     * ai
-     */
-    public AI ai;
 
 }
