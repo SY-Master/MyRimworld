@@ -161,7 +161,7 @@ public class DSS extends Node {
         aiService.stream(aiResponse1, messages, "qwen-max");
         database.setThinkCooling(gameTime.getTimeByMinute(15));
         database.setAiResponse(nodes.getId(), aiResponse1);
-        database.putNodeActionData(nodes.getId(), new NodeActionData(THINK, aiResponse1));
+        database.addNodeActionData(nodes.getId(), new NodeActionData(THINK, aiResponse1));
         database.setNodeStatus(nodes.getId(), NodeStatusEnum.THINK);
     }
 
@@ -187,33 +187,30 @@ public class DSS extends Node {
      * @param nodes     移动目标节点
      * @param dssVector 移动向量
      */
-    private void moveTo(Creature nodes, DSSVector dssVector) {
+    public void moveTo(Creature nodes, DSSVector dssVector) {
         if (dssVector == null) {
-            // 指令错误，执行等待指令
-            nodeWaitAction(nodes);
+            // 指令错误
             return;
         }
 
         if (dssVector.getX() == null && dssVector.getY() == null) {
-            // 指令错误，执行等待指令
-            nodeWaitAction(nodes);
+            // 指令错误
             return;
         }
 
         Node topParent = SceneUtil.getTopParent(nodes);
 
         // 发起移动指令
-        database.putNodeActionData(nodes.getId(),
+        database.addNodeActionData(nodes.getId(),
                                    new NodeActionData(NodeActionEnum.MOVE, topParent.getPositionX() + dssVector.getX(),
                                                       topParent.getPositionY() + dssVector.getY()));
-        // 最后添加等待指令
-        nodeWaitAction(nodes);
+
+        logger.info("发布移动指令 {}, vector(x:{}, y:{})", nodes.getName(), dssVector.getX(), dssVector.getY());
     }
 
-    private void interaction(Creature nodes, DSSResult dssResult) {
+    public void interaction(Creature nodes, DSSResult dssResult) {
         Long dstId = dssResult.getDstId();
         if (dstId == null) {
-            nodeWaitAction(nodes);
             return;
         }
 
@@ -232,21 +229,18 @@ public class DSS extends Node {
 
         // 距离大于两米，需要先发起移动指令
         if (GeomUtil.distance(nodes.getPositionX(), nodes.getPositionY(), positionX, positionY) > ofM(2)) {
-            database.putNodeActionData(nodes.getId(),
+            database.addNodeActionData(nodes.getId(),
                                        new NodeActionData(NodeActionEnum.MOVE, positionX + ofM(0.5f), positionY));
         }
 
         // 发起交互指令
-        database.putNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.INTERACTION, dssResult));
+        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.INTERACTION, dssResult));
 
         String memory = String.format("[%s年%s月%s日 %s时%s分] 你和%s交互，你%s\"%s\"", gameTime.getYear(),
                                       gameTime.getMonth(), gameTime.getDay(), gameTime.getHour(), gameTime.getMinute(),
                                       dstName, dssResult.getInteractionContent().getType(),
                                       dssResult.getInteractionContent().getVal());
-        database.putNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
-
-        // 最后添加等待指令
-        nodeWaitAction(nodes);
+        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
     }
 
     /**
@@ -256,7 +250,7 @@ public class DSS extends Node {
      */
     private void nodeWaitAction(Creature nodes) {
         // 等待15分钟（游戏时间）
-        database.putNodeActionData(nodes.getId(),
+        database.addNodeActionData(nodes.getId(),
                                    new NodeActionData(NodeActionEnum.WAIT, gameTime.getTimeByMinute(15)));
     }
 
@@ -393,7 +387,7 @@ public class DSS extends Node {
         try {
             aiResponseStrHandler(nodes, aiResult);
         } catch (Exception e) {
-            nodeWaitAction(nodes);
+            logger.error(e.getMessage());
         }
 
         return true;
@@ -407,9 +401,6 @@ public class DSS extends Node {
         } else if (dssResult.getType().equalsIgnoreCase("move_to")) {
             // 移动到指定位置
             moveTo(nodes, dssResult.getMoveVector());
-        } else {
-            // 等待
-            nodeWaitAction(nodes);
         }
     }
 
@@ -439,18 +430,24 @@ public class DSS extends Node {
     private boolean actionMove(NodeActionData peek, Creature nodes, float delta) {
         if (peek.getMoveToX() == null || peek.getMoveToY() == null) {
             // 未给出明确坐标，指令执行完成
+            logger.info("移动指令错误结束 {}", nodes.getName());
             return true;
         }
 
         List<TransformInput> node = nodes.getNode(TransformInput.class);
         if (node.isEmpty()) {
             // 指定节点不存在，指令无法完成
-            return false;
+            logger.info("移动指令错误结束，不存在移动输入组件 {}", nodes.getName());
+            return true;
         }
 
         if (GeomUtil.distance(nodes.getPositionX(), nodes.getPositionY(), peek.getMoveToX(), peek.getMoveToY()) <
                 ofM(0.1f)) {
             // 如果与目标坐标小于0.1米，则认为已经到达目标位置，指令执行完成
+
+            node.get(0).getVector2().set(0, 0);
+
+            logger.info("移动指令完成 {}", nodes.getName());
             return true;
         }
 
@@ -458,6 +455,9 @@ public class DSS extends Node {
         node.get(0)
             .getVector2()
             .set(peek.getMoveToX() - nodes.getPositionX(), peek.getMoveToY() - nodes.getPositionY());
+
+        node.get(0).getVector2().nor();
+
         return false;
     }
 
@@ -467,7 +467,19 @@ public class DSS extends Node {
      * @return 是否不可用
      */
     public boolean dssNotAvailable() {
-        return getScene() == null || gameTime == null || database == null || aiService == null;
+        if (getScene() == null) {
+            return true;
+        }
+
+        if (gameTime == null) {
+            return true;
+        }
+
+        if (database == null) {
+            return true;
+        }
+
+        return enableAi && aiService == null;
     }
 
     /**

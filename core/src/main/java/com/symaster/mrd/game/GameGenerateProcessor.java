@@ -70,10 +70,20 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         Scene scene = new Scene(gameGenerateData.assetManager, gameGenerateData.mapSeed);
 
-        scene.add(new DSS());
+        // DSS
+        DSS dss = new DSS();
+
+        scene.add(dss);
+
+        FrameSelector frameSelector = new FrameSelector(gameGenerateData.assetManager);
 
         // 选择器
-        scene.add(new FrameSelector(gameGenerateData.assetManager));
+        scene.add(frameSelector);
+
+        // Dss测试工具
+        DSSTestMouse dssTestMouse = new DSSTestMouse();
+        dssTestMouse.setDss(dss);
+        scene.add(dssTestMouse);
 
         // 噪声算法
         scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
@@ -90,8 +100,6 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         // 初始化区块
         initBlock(scene);
 
-        DSS dss = new DSS();
-
         Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
         maleHuman.add(new SelectNode(gameGenerateData.assetManager));
         maleHuman.setZIndex(100);
@@ -101,9 +109,10 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         maleHuman.setDss(dss);
 
         TransformInput nodes1 = new TransformInput();
-        TransformMove transformMove = new TransformMove(nodes1.getVector2());
-        transformMove.setSpeed(5);
         maleHuman.add(nodes1);
+
+        TransformMove transformMove = new TransformMove(nodes1.getVector2(), maleHuman);
+        transformMove.setSpeed(30);
         maleHuman.add(transformMove);
 
         // maleHuman.setAi(gameGenerateData.ai);
@@ -118,9 +127,10 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.setGender(Gender.FEMALE);
 
         TransformInput nodes = new TransformInput();
-        TransformMove transformMove1 = new TransformMove(nodes.getVector2());
-        transformMove1.setSpeed(5);
         human.add(nodes);
+
+        TransformMove transformMove1 = new TransformMove(nodes.getVector2(), human);
+        transformMove1.setSpeed(30);
         human.add(transformMove1);
 
         // human.setAi(gameGenerateData.ai);

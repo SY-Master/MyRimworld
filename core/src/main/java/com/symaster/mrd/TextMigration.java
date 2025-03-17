@@ -9,6 +9,7 @@ import org.slf4j.LoggerFactory;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.LinkedBlockingQueue;
 import java.util.stream.Collectors;
 
 /**
@@ -24,6 +25,18 @@ public class TextMigration {
     private static final String flag = "GdxText.val(";
 
     public static void main(String[] args) throws InterruptedException {
+        // _m202503172048();
+
+        HashMap<Integer, LinkedBlockingQueue<Integer>> objectObjectHashMap = new HashMap<>();
+
+        objectObjectHashMap.computeIfAbsent(1, k -> new LinkedBlockingQueue<>()).add(1);
+
+        System.out.println(objectObjectHashMap.get(1).peek());
+
+
+    }
+
+    private static void _m202503172048() {
         AiService aiService = new AliyunAiService();
 
         AiResponse aiResponse = new AiResponse();

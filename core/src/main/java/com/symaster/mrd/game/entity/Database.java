@@ -97,7 +97,7 @@ public class Database extends Node {
         nodeActionDataMap.remove(id);
     }
 
-    public void putNodeActionData(long id, NodeActionData nodeActionData) {
+    public void addNodeActionData(long id, NodeActionData nodeActionData) {
         nodeActionDataMap.computeIfAbsent(id, k -> new LinkedBlockingQueue<>()).add(nodeActionData);
     }
 
