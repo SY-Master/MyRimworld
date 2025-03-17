@@ -13,8 +13,40 @@ public class DSSResult {
      * interaction：交互、move_to：向某个方向移动多少米，每次移动最少1米，最大100米
      */
     private String type;
-    private int dstId;
+    private Long dstId;
     private DSSInteractionContent interactionContent;
     private DSSVector moveVector;
+
+    public Long getDstId() {
+        return dstId;
+    }
+
+    public void setDstId(Long dstId) {
+        this.dstId = dstId;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
+    }
+
+    public DSSInteractionContent getInteractionContent() {
+        return interactionContent;
+    }
+
+    public void setInteractionContent(DSSInteractionContent interactionContent) {
+        this.interactionContent = interactionContent;
+    }
+
+    public DSSVector getMoveVector() {
+        return moveVector;
+    }
+
+    public void setMoveVector(DSSVector moveVector) {
+        this.moveVector = moveVector;
+    }
 
 }

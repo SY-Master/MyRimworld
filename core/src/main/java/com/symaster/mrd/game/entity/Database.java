@@ -29,6 +29,16 @@ public class Database extends Node {
     private final Map<Long, AiResponse> aiResponseMap;
 
     private final SelectData selectData;
+    /**
+     * 节点之间沟通的桥梁
+     */
+    private final MessageQueue messageQueue;
+    /**
+     * 节点的私有内存
+     */
+    private final NodeMemory nodeMemory;
+
+    private Double thinkCooling;
 
     public Database() {
         this.periodMap = new HashMap<>();
@@ -36,6 +46,16 @@ public class Database extends Node {
         this.aiResponseMap = new HashMap<>();
         this.nodeStatusMap = new HashMap<>();
         this.nodeActionDataMap = new HashMap<>();
+        this.nodeMemory = new NodeMemory();
+        this.messageQueue = new MessageQueue();
+    }
+
+    public NodeMemory getNodeMemory() {
+        return nodeMemory;
+    }
+
+    public MessageQueue getMessageQueue() {
+        return messageQueue;
     }
 
     public AiResponse getAiResponse(long nodeId) {
@@ -89,9 +109,16 @@ public class Database extends Node {
         nodeStatusMap.put(id, nodeStatus);
     }
 
-
     public SelectData getSelectData() {
         return selectData;
+    }
+
+    public Double getThinkCooling() {
+        return thinkCooling;
+    }
+
+    public void setThinkCooling(Double thinkCooling) {
+        this.thinkCooling = thinkCooling;
     }
 
 }

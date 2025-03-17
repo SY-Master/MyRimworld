@@ -15,4 +15,14 @@ public class UnitUtil {
         return m * 10f;
     }
 
+    /**
+     * 将游戏空间单位转换成米
+     *
+     * @param scene 空间单位
+     * @return 米
+     */
+    public static float ofScene(float scene) {
+        return scene / 10f;
+    }
+
 }

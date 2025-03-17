@@ -25,6 +25,21 @@ public class GameTime extends Node {
         return time;
     }
 
+    /**
+     * 获取当前时间加上秒数
+     */
+    public double getTimeBySecond(double second) {
+        return time + second;
+    }
+
+    public double getTimeByMinute(double minute) {
+        return time + minute * config.second;
+    }
+
+    public double getTimeByHour(double hour) {
+        return time + hour * config.minute * config.second;
+    }
+
     public GameTimeConfig getConfig() {
         return config;
     }
