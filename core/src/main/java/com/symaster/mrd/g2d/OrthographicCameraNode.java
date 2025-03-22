@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
+import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.g2d.scene.Scene;
 

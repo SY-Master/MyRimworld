@@ -46,10 +46,7 @@ public class DSSTestMouse extends InputNode {
                 Creature nodes = (Creature) node;
                 flag = true;
 
-                DSSVector dssVector = new DSSVector();
-                dssVector.setX(cache.x - nodes.getPositionX());
-                dssVector.setY(cache.y - nodes.getPositionY());
-                dss.moveTo(nodes, dssVector);
+                dss.moveTo(nodes, cache.x - nodes.getPositionX(), cache.y - nodes.getPositionY());
             }
         }
 

@@ -36,20 +36,21 @@ public class Scene implements Serializable, Disposable {
      */
     private final float blockSize;
     /**
-     * 分区块Node表
+     * 分区块Node表，区块映射
      */
     private final BlockArrayList<Set<Node>> nodes;
     /**
      * 激活区块的节点
      */
     private final Map<Node, Set<Block>> activityBlockMap;
-
+    /**
+     * 节点分组映射
+     */
     private final Map<String, Set<Node>> nodeGroups;
 
     private final Map<Long, Node> nodeMap;
 
     private final Set<Node> forceLogicNodes;
-
     /**
      * 激活的区块
      */
@@ -62,13 +63,11 @@ public class Scene implements Serializable, Disposable {
      * 区块生成器
      */
     private final BlockMapGenerate blockMapGenerate;
-
-    private int logicId = 0;
-
     private final NodePropertiesChangeExtend nodePropertiesChangeExtend;
     private final PositionUpdateExtend positionUpdateExtend;
     private final ChildUpdateExtend childUpdateExtend;
     private final Cache renderCache;
+    private int logicId = 0;
 
     public Scene(AssetManager assetManager) {
         this(assetManager, null, UnitUtil.ofM(SystemConfig.BLOCK_SIZE)); // 默认区块边长10米
@@ -117,7 +116,8 @@ public class Scene implements Serializable, Disposable {
     /**
      * 同步初始化区块
      *
-     * @param initBlocks 指定区块
+     * @param initBlocks        指定区块
+     * @param progressProcessor 进度回调
      */
     public void initBlocks(List<Block> initBlocks, ProgressProcessor progressProcessor) {
 
@@ -201,14 +201,16 @@ public class Scene implements Serializable, Disposable {
     }
 
     /**
-     * 添加节点，只能添加跟节点
+     * 添加节点，只能添加根节点
      */
     public void add(Node node) {
         add(node, null);
     }
 
     /**
-     * 添加节点，只能添加跟节点
+     * 添加节点，只能添加根节点，因为添加子节点会出现不可预估的情况
+     *
+     * @param group 设置节点分组名称
      */
     public void add(Node node, String group) {
         if (node.getParent() != null) {
@@ -216,32 +218,39 @@ public class Scene implements Serializable, Disposable {
         }
 
         if (group != null && !group.isEmpty()) {
+            // 如果设置了分组名称，则添加到分组映射中
             nodeGroups.computeIfAbsent(group, k -> new HashSet<>()).add(node);
         }
 
         Block blockIndex = getBlockIndex(node.getPositionX(), node.getPositionY());
 
+        // 如果该区块不存在，则添加区块生成事件
         if (!nodes.containsKey(blockIndex)) {
             blockMapGenerate.addGenerateQueue(blockIndex);
             nodes.put(blockIndex, new HashSet<>());
         }
 
+        // 将该节点添加到区块映射表里面
         nodes.computeIfAbsent(blockIndex, x -> new HashSet<>()).add(node);
 
+        // 设置节点属性改变事件
         node.setChangeExtend(nodePropertiesChangeExtend);
+
+        // 设置节点位置更新事件。位置更新后需要计算该节点所在区块，然后移动到新的区块中
         node.setPue(positionUpdateExtend);
 
+        // 给该节点以及该节点下的所有节点添加“节点添加与删除事件”
         addExtendEvent(node);
 
+        // 如果节点设置了活动区块大小，则添加到活动区块映射表里面
         if (node.getActivityBlockSize() > 0) {
             activityBlockMap.put(node, getNodeActivityBlocks(node, node.getActivityBlockSize()));
+
+            // 更新活动区块大小
             updateActivityBlockSize();
         }
 
-        // if (node instanceof OrthographicCameraNode) {
-        //     orthographicCameraNodes.add(((OrthographicCameraNode) node));
-        // }
-
+        // 触发该节点以及该节点下的所有节点的onScene事件
         onScene(node);
     }
 
@@ -434,8 +443,7 @@ public class Scene implements Serializable, Disposable {
                 nodes.computeIfAbsent(newIndex, k -> new HashSet<>()).add(moveNode.node);
 
                 if (activityBlockMap.get(moveNode.node) != null) {
-                    activityBlockMap.put(moveNode.node,
-                                         getNodeActivityBlocks(moveNode.node, moveNode.node.getActivityBlockSize()));
+                    activityBlockMap.put(moveNode.node, getNodeActivityBlocks(moveNode.node, moveNode.node.getActivityBlockSize()));
                     updateActivityBlockSize();
                 }
             }
@@ -463,8 +471,8 @@ public class Scene implements Serializable, Disposable {
 
         int i = blockExtend * 2;
 
-        findNodesByBlock(blockXNumber + i, blockYNumber + i, xIndex - blockExtend, yIndex - blockExtend, result,
-                         limitVisible);
+        findNodesByBlock(
+                blockXNumber + i, blockYNumber + i, xIndex - blockExtend, yIndex - blockExtend, result, limitVisible);
     }
 
     public void findNodesByBlock(int blockXNumber,

@@ -17,6 +17,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.symaster.mrd.api.SkinProxy;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.g2d.tansform.TransformMove;
@@ -71,6 +72,7 @@ public class Main extends ApplicationAdapter {
 
     public void loadSkin() {
         skin = buildSkin(assetManager);
+        GameSingleData.skinProxy = new SkinProxy(skin);
     }
 
     /**
@@ -81,20 +83,18 @@ public class Main extends ApplicationAdapter {
     public Skin buildSkin(AssetManager assetManager) {
         Skin skin = new Skin();
 
-        for (int fontSize : SystemConfig.FONT_SIZES) {
+        for (int fontSize : SystemConfig.FONT_SIZES.getFontSizes()) {
             BitmapFont font = buildFont(SystemConfig.TEXT_PATH, SystemConfig.FONT_PATH, fontSize);
-            skin.add("font-" + fontSize, font);
+            skin.add(SystemConfig.FONT_SIZES.getFontName(fontSize), font);
         }
 
+        skin.add("default", new Color(1f, 1f, 1f, 1f));
+
         /// Drawables
-        NinePatchDrawable nDChecked = new NinePatchDrawable(
-                new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable nDFocused = new NinePatchDrawable(
-                new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable nDUp = new NinePatchDrawable(
-                new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2));
-        NinePatchDrawable border0 = new NinePatchDrawable(
-                new NinePatch(assetManager.get("border0.png", Texture.class), 1, 1, 1, 1));
+        NinePatchDrawable nDChecked = new NinePatchDrawable(new NinePatch(assetManager.get("default-checked.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDFocused = new NinePatchDrawable(new NinePatch(assetManager.get("default-focused.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable nDUp = new NinePatchDrawable(new NinePatch(assetManager.get("default-up.9.png", Texture.class), 2, 2, 2, 2));
+        NinePatchDrawable border0 = new NinePatchDrawable(new NinePatch(assetManager.get("border0.png", Texture.class), 1, 1, 1, 1));
         SolidColorDrawable back_05 = new SolidColorDrawable(new Color(0, 0, 0, 0.5f));
         SolidColorDrawable white = new SolidColorDrawable(new Color(1, 1, 1, 1));
 
@@ -106,6 +106,7 @@ public class Main extends ApplicationAdapter {
         skin.add("default", textButtonStyle);
 
         Label.LabelStyle style = new Label.LabelStyle(font16, new Color(1f, 1f, 1f, 1f));
+
         style.background = back_05;
         skin.add("nameLabel", style);
 
@@ -134,6 +135,7 @@ public class Main extends ApplicationAdapter {
         }
 
         FreeTypeFontGenerator generator = new FreeTypeFontGenerator(Gdx.files.internal(fontPath));
+
         FreeTypeFontGenerator.FreeTypeFontParameter parameter = new FreeTypeFontGenerator.FreeTypeFontParameter();
         parameter.size = size;
         parameter.characters = collect;
@@ -246,10 +248,11 @@ public class Main extends ApplicationAdapter {
         assetManager.load("select.png", Texture.class);
         assetManager.load("select-1.png", Texture.class);
 
-        // this.ai = new AI();
         this.loading = new Loading();
         this.asyncExecutor = new AsyncExecutor(1);
         this.camera = buildCamera();
+
+        GameSingleData.rootCamZoom = new OrthographicCameraRootCamZoomImpl(camera.getCamera());
         GameSingleData.positionConverter = camera.getPositionConverter();
     }
 
@@ -324,7 +327,12 @@ public class Main extends ApplicationAdapter {
         transformMove.setSpeed(UnitUtil.ofM(18));
         transformMove.setIgnoreTimeScale(true);
 
-        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(960, 540);
+        float i = 1080f / 1920f;
+
+        float w = UnitUtil.ofM(13);
+        float h = w * i;
+
+        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(w, h);
 
         RollerDragInput rollerDragInput = new RollerDragInput(camera);
 

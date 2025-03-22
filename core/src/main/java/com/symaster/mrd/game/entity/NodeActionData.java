@@ -1,7 +1,6 @@
 package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.game.core.ai.AiResponse;
-import com.symaster.mrd.game.service.DSSInteractionContent;
 import com.symaster.mrd.game.service.DSSResult;
 
 /**
@@ -30,6 +29,10 @@ public class NodeActionData {
      * 记录节点记忆
      */
     private String nodeMemory;
+    /**
+     * 开始会话
+     */
+    private StartSessionObj startSessionObj;
 
     public NodeActionData(NodeActionEnum nodeActionEnum, AiResponse aiResponse) {
         this.nodeActionEnum = nodeActionEnum;
@@ -55,6 +58,19 @@ public class NodeActionData {
     public NodeActionData(NodeActionEnum nodeActionEnum, String nodeMemory) {
         this.nodeActionEnum = nodeActionEnum;
         this.nodeMemory = nodeMemory;
+    }
+
+    public NodeActionData(NodeActionEnum nodeActionEnum, StartSessionObj startSessionObj) {
+        this.nodeActionEnum = nodeActionEnum;
+        this.startSessionObj = startSessionObj;
+    }
+
+    public StartSessionObj getStartSessionObj() {
+        return startSessionObj;
+    }
+
+    public void setStartSessionObj(StartSessionObj startSessionObj) {
+        this.startSessionObj = startSessionObj;
     }
 
     public String getNodeMemory() {

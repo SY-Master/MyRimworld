@@ -7,12 +7,17 @@ package com.symaster.mrd.util;
 public class UnitUtil {
 
     /**
+     * 一米等于多少空间单位
+     */
+    private static final float SIZE = 100;
+
+    /**
      * 将米转换成游戏空间单位
      *
      * @param m 值
      */
     public static float ofM(float m) {
-        return m * 10f;
+        return m * SIZE;
     }
 
     /**
@@ -22,7 +27,7 @@ public class UnitUtil {
      * @return 米
      */
     public static float ofScene(float scene) {
-        return scene / 10f;
+        return scene / SIZE;
     }
 
 }

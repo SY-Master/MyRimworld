@@ -20,13 +20,13 @@ import com.symaster.mrd.util.UnitUtil;
 public class Human extends Creature {
 
     private final SpriteNode nodes;
-    private final Label label;
-    private float fontScale;
+    private final LabelNode label;
+    // private float fontScale;
     private HumanBodyType bodyType;
 
-    public Human(AssetManager assetManager, Skin skin, float fontScale) {
+    public Human(AssetManager assetManager) {
         setRace(Race.Human);
-        this.fontScale = fontScale;
+        // this.fontScale = fontScale;
         Texture texture = assetManager.get("user.png", Texture.class);
 
         float iconW = UnitUtil.ofM(0.7f);
@@ -40,16 +40,17 @@ public class Human extends Creature {
         add((nodes = new SpriteNode(sprite)));
 
         float labelW = UnitUtil.ofM(1.5f);
-        label = new Label(getName(), skin.get("nameLabel", Label.LabelStyle.class));
-        label.setAlignment(Align.center);
-        label.setFontScale(fontScale);
-        label.setSize(labelW, 5f);
+        // label = new Label(getName(), skin.get("nameLabel", Label.LabelStyle.class));
 
         float x = iconW / 2f - labelW / 2f;
 
-        LabelNode nodes1 = new LabelNode(label);
-        nodes1.setPosition(x, -8);
-        add(nodes1);
+        label = new LabelNode(getName(), 16);
+        label.setLabelAlignment(Align.center);
+        label.setLabelSize(labelW, 5f);
+        label.setPosition(x, iconH + UnitUtil.ofM(0.1f));
+        add(label);
+
+        // label = node.getLabel();
 
         setVisible(true);
         setFusionRender(true);
@@ -77,24 +78,16 @@ public class Human extends Creature {
         return nodes;
     }
 
-    public Label getLabel() {
-        return label;
-    }
-
-    public float getFontScale() {
-        return fontScale;
-    }
-
-    public void setFontScale(float fontScale) {
-        this.fontScale = fontScale;
-    }
+    // public float getFontScale() {
+    //     return fontScale;
+    // }
+    //
+    // public void setFontScale(float fontScale) {
+    //     this.fontScale = fontScale;
+    // }
 
     private void updateSpriteColor() {
-        if (getGender() == Gender.FEMALE) {
-            nodes.getSprite().setColor(new Color(1f, 0, 0, 0.8f));
-        } else {
-            nodes.getSprite().setColor(new Color(0f, 0f, 1f, 0.8f));
-        }
+        nodes.getSprite().setColor(new Color(0.7f, 0.7f, 0.7f, 1f));
     }
 
     @Override

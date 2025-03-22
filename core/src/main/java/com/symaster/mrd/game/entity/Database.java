@@ -24,8 +24,6 @@ public class Database extends Node {
      */
     private final Map<Integer, TimeAllocation> periodMap;
 
-    private final Map<Long, NodeStatusEnum> nodeStatusMap;
-
     private final Map<Long, AiResponse> aiResponseMap;
 
     private final SelectData selectData;
@@ -44,7 +42,6 @@ public class Database extends Node {
         this.periodMap = new HashMap<>();
         this.selectData = new SelectData();
         this.aiResponseMap = new HashMap<>();
-        this.nodeStatusMap = new HashMap<>();
         this.nodeActionDataMap = new HashMap<>();
         this.nodeMemory = new NodeMemory();
         this.messageQueue = new MessageQueue();
@@ -101,13 +98,13 @@ public class Database extends Node {
         nodeActionDataMap.computeIfAbsent(id, k -> new LinkedBlockingQueue<>()).add(nodeActionData);
     }
 
-    public NodeStatusEnum getNodeStatus(long id) {
-        return nodeStatusMap.get(id);
-    }
-
-    public void setNodeStatus(long id, NodeStatusEnum nodeStatus) {
-        nodeStatusMap.put(id, nodeStatus);
-    }
+    // public NodeStatusEnum getNodeStatus(long id) {
+    //     return nodeStatusMap.get(id);
+    // }
+    //
+    // public void setNodeStatus(long id, NodeStatusEnum nodeStatus) {
+    //     nodeStatusMap.put(id, nodeStatus);
+    // }
 
     public SelectData getSelectData() {
         return selectData;

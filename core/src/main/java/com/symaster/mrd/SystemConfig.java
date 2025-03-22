@@ -1,5 +1,7 @@
 package com.symaster.mrd;
 
+import com.symaster.mrd.game.FontSizes;
+
 /**
  * @author yinmiao
  * @since 2024/12/16
@@ -13,13 +15,13 @@ public class SystemConfig {
     /**
      * 使用字体
      */
-    public static String FONT_PATH = "fonts/SweiDelLunaSansCJKsc-Black.ttf";
+    public static String FONT_PATH = "fonts/black.ttf";
     /**
      * 字体大小
      */
-    public static int[] FONT_SIZES = new int[]{14, 16, 18, 20};
+    public static FontSizes FONT_SIZES = new FontSizes();
     /**
-     * 区块大小（米）默认10米
+     * 区块大小，设定一个区块边长多大（米）
      */
     public static float BLOCK_SIZE = 20f;
     /**

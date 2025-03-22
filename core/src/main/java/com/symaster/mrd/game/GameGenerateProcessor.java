@@ -12,6 +12,7 @@ import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
 import com.symaster.mrd.game.service.DSS;
+import com.symaster.mrd.util.UnitUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -72,10 +73,12 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
 
         // DSS
         DSS dss = new DSS();
+        dss.create();
 
         scene.add(dss);
 
         FrameSelector frameSelector = new FrameSelector(gameGenerateData.assetManager);
+        frameSelector.create();
 
         // 选择器
         scene.add(frameSelector);
@@ -83,16 +86,23 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         // Dss测试工具
         DSSTestMouse dssTestMouse = new DSSTestMouse();
         dssTestMouse.setDss(dss);
+        dssTestMouse.create();
         scene.add(dssTestMouse);
 
         // 噪声算法
-        scene.add(new Noise(gameGenerateData.mapSeed.hashCode()), Groups.NOISE);
+        Noise noise = new Noise(gameGenerateData.mapSeed.hashCode());
+        noise.create();
+        scene.add(noise, Groups.NOISE);
 
         // 地图工厂
-        scene.add(new TileMapFactory(gameGenerateData.assetManager), Groups.TILEMAP_FACTORY);
+        TileMapFactory tileMapFactory = new TileMapFactory(gameGenerateData.assetManager);
+        tileMapFactory.create();
+        scene.add(tileMapFactory, Groups.TILEMAP_FACTORY);
 
         // 游戏时间
-        scene.add(new GameTime(new Random().nextFloat() * 9999999 + 2000000), Groups.TIMER);
+        GameTime gameTime = new GameTime(new Random().nextFloat() * 9999999 + 2000000);
+        gameTime.create();
+        scene.add(gameTime, Groups.TIMER);
 
         // scene.add(new DSS(), );
         // scene.add(new GameTime(), Groups.TIMER);
@@ -100,7 +110,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         // 初始化区块
         initBlock(scene);
 
-        Human maleHuman = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
+        Human maleHuman = new Human(gameGenerateData.assetManager);
         maleHuman.add(new SelectNode(gameGenerateData.assetManager));
         maleHuman.setZIndex(100);
         maleHuman.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
@@ -108,18 +118,19 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         maleHuman.setGender(Gender.MALE);
         maleHuman.setDss(dss);
 
-        TransformInput nodes1 = new TransformInput();
-        maleHuman.add(nodes1);
+        TransformInput transformInput = new TransformInput();
+        transformInput.create();
+        maleHuman.add(transformInput);
 
-        TransformMove transformMove = new TransformMove(nodes1.getVector2(), maleHuman);
-        transformMove.setSpeed(30);
+        TransformMove transformMove = new TransformMove(transformInput.getVector2(), maleHuman);
+        transformMove.setSpeed(UnitUtil.ofM(5));
+        transformMove.create();
         maleHuman.add(transformMove);
-
-        // maleHuman.setAi(gameGenerateData.ai);
         maleHuman.setName(NameGeneratorFactory.getNameGenerator(maleHuman.getRace()).generateName(Gender.MALE));
+        maleHuman.create();
         scene.add(maleHuman, Groups.PARTNER);
 
-        Human human = new Human(gameGenerateData.assetManager, gameGenerateData.skin, 0.2f);
+        Human human = new Human(gameGenerateData.assetManager);
         human.add(new SelectNode(gameGenerateData.assetManager));
         human.setZIndex(100);
         human.setActivityBlockSize(SystemConfig.PARTNER_ACTIVE_SIZE);
@@ -130,13 +141,12 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         human.add(nodes);
 
         TransformMove transformMove1 = new TransformMove(nodes.getVector2(), human);
-        transformMove1.setSpeed(30);
+        transformMove1.setSpeed(UnitUtil.ofM(5));
         human.add(transformMove1);
-
-        // human.setAi(gameGenerateData.ai);
         human.setDss(dss);
         human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName(Gender.FEMALE));
-        human.setPosition(20, 0);
+        human.setPosition(UnitUtil.ofM(2), 0);
+        human.create();
         scene.add(human, Groups.PARTNER);
 
         Save save = new Save();

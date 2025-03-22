@@ -27,7 +27,6 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
     private final Scene scene;
     private final BlockMapGenerateProcessor blockMapGenerateProcessor;
 
-
     public BlockMapGenerate(Scene scene, AssetManager assetManager) {
         this(scene, new BlockMapGenerateProcessorImpl(assetManager));
     }

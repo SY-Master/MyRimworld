@@ -87,6 +87,10 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     private boolean fusionRender;
 
     public Node() {
+        this(false);
+    }
+
+    public Node(boolean triggerCreate) {
         this.positionX = 0.0f;
         this.positionY = 0.0f;
         this.visible = true;
@@ -98,6 +102,9 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.id = EntityIdGenerator.nextId();
         this.layer = Layer.OBJECT.getLayer();
         this.fusionRender = false;
+        if (triggerCreate) {
+            create();
+        }
     }
 
     public boolean isFusionRender() {

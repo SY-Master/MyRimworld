@@ -58,7 +58,7 @@ public class TransformZoom extends InputNode {
         } else if (amountY < 0) {
             camera.zoom /= zoomFactor;
         }
-        camera.zoom = MathUtils.clamp(camera.zoom, 0.1f, 5.0f);
+        camera.zoom = MathUtils.clamp(camera.zoom, 0.08f, 4.0f);
 
         // 更新相机以应用缩放
         camera.update();

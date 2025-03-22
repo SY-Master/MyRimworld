@@ -1,6 +1,8 @@
 package com.symaster.mrd.game;
 
 import com.symaster.mrd.api.PositionConverter;
+import com.symaster.mrd.api.RootCamZoom;
+import com.symaster.mrd.api.SkinProxy;
 import com.symaster.mrd.input.InputBridge;
 
 /**
@@ -25,5 +27,9 @@ public class GameSingleData {
     public static LoadingType loadingType;
 
     public static PositionConverter positionConverter;
+
+    public static RootCamZoom rootCamZoom;
+
+    public static SkinProxy skinProxy;
 
 }
