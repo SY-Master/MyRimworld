@@ -1,0 +1,7 @@
+<STATUS>
+当前所在位置：{{position}}
+对话中：{{dialogue}}
+对话对象：{{user}}
+正在跟随：{{follow}}
+正在跟随你的人：{{followMe}}
+</STATUS>
