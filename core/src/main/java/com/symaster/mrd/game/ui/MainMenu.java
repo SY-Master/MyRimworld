@@ -1,16 +1,12 @@
 package com.symaster.mrd.game.ui;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.symaster.mrd.game.GamePageStatus;
-import com.symaster.mrd.game.GameSingleData;
+import com.symaster.mrd.api.BaseStage;
 import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.game.ui.page.MainMenuBtn;
 import com.symaster.mrd.game.ui.page.PlayGameSetting;
@@ -22,20 +18,21 @@ import com.symaster.mrd.input.BridgeInputProcessor;
  * @author yinmiao
  * @since 2024/12/28
  */
-public class MainMenu extends Stage implements BridgeInputProcessor {
+public class MainMenu extends BaseStage implements BridgeInputProcessor {
 
-    private final Image bg;
-    private final MainMenuBtn mainMenuBtn;
-    private final PlayGameSetting playGameSetting;
+    private Image bg;
+    private MainMenuBtn mainMenuBtn;
+    private PlayGameSetting playGameSetting;
 
-    public MainMenu(Skin skin, AssetManager assetManager) {
-        super(new ScreenViewport());
+    @Override
+    public void created() {
+        super.setViewport(new ScreenViewport());
 
-        bg = new Image(assetManager.get("white.png", Texture.class));
+        bg = new Image(getAsset("white", Texture.class));
         bg.setColor(0.19f, 0.56f, 0.79f, 1f);
         addActor(bg);
 
-        mainMenuBtn = new MainMenuBtn(skin, assetManager);
+        mainMenuBtn = new MainMenuBtn();
         mainMenuBtn.getPlayGameBtn().addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -44,7 +41,7 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
         });
         addActor(mainMenuBtn);
 
-        addActor((playGameSetting = new PlayGameSetting(skin, assetManager)));
+        addActor((playGameSetting = new PlayGameSetting()));
         playGameSetting.setVisible(false);
         playGameSetting.getBackBtn().addListener(new ClickListener() {
             @Override
@@ -101,11 +98,13 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
 
     @Override
     public int uiSort() {
-        if (GameSingleData.gamePageStatus == GamePageStatus.Menu) {
-            return 0;
-        } else {
-            return 99;
-        }
+        // if (GameSingleData.gamePageStatus == GamePageStatus.Menu) {
+        //     return 0;
+        // } else {
+        //     return 99;
+        // }
+
+        return 0;
     }
 
     /**
@@ -113,7 +112,8 @@ public class MainMenu extends Stage implements BridgeInputProcessor {
      */
     @Override
     public boolean actionEnable() {
-        return GameSingleData.gamePageStatus == GamePageStatus.Menu;
+        // return GameSingleData.gamePageStatus == GamePageStatus.Menu;
+        return true;
     }
 
 }

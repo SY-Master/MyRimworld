@@ -2,17 +2,18 @@ package com.symaster.mrd.game.service;
 
 import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
+import com.symaster.ai.AiRequestType;
+import com.symaster.ai.AiResponse;
+import com.symaster.ai.AiService;
+import com.symaster.ai.OpenaiAiService;
+import com.symaster.ai.message.AiMessage;
+import com.symaster.ai.message.SystemAiMessage;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.g2d.tansform.TransformInput;
+import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.Groups;
-import com.symaster.mrd.game.core.AiService;
-import com.symaster.mrd.game.core.AliyunAiService;
-import com.symaster.mrd.game.core.ai.AiMessage;
-import com.symaster.mrd.game.core.ai.AiRequestType;
-import com.symaster.mrd.game.core.ai.AiResponse;
-import com.symaster.mrd.game.core.ai.SystemAiMessage;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.util.GeomUtil;
 import com.symaster.mrd.util.SceneUtil;
@@ -39,6 +40,14 @@ public class DSS extends Node {
 
     private static final Logger logger = LoggerFactory.getLogger(DSS.class);
     private final List<Node> nodeList = new ArrayList<>();
+    /**
+     * 选择大模型
+     */
+    public String aiModel = "qwen-max";
+    /**
+     * 是否启用AI
+     */
+    public boolean enableAi = false;
     private AiService aiService;
     /**
      * 当前场景的数据库
@@ -49,52 +58,9 @@ public class DSS extends Node {
      */
     private GameTime gameTime;
     /**
-     * 选择大模型
+     * 主角
      */
-    public String aiModel = "qwen-max";
-    /**
-     * 是否启用AI
-     */
-    public boolean enableAi = false;
-
-    private String getResultTemplate() {
-        return "请选择你的行动，回复Json格式，不要回复说明或注释，下面是结构的说明：JSON结构如下所示： ```json " +
-                "{\n" +
-                "\"type\": // 行动类型，行动类型可选：interaction（交互）、move_to（移动）\n" +
-                "\"actionAgree\": // 用来发出是否同意的指令，true为同意，false为不同意\n" +
-                "\"interactionContent\": { // 如果选择了交互，则需填写此部分\n" +
-                "\"dstId\": // 交互目标ID\n" +
-                "\"type\": // 说或做\n" +
-                "\"status\": // 说的状态（会话状态，如果你要结束会话则此处为‘end’，如果你要开始和某个角色说话则此处为“start”），“start”、“in_session”、“end”\n" +
-                "\"val\": // 具体内容\n" +
-                "},\n" +
-                "\"moveVector\": { // 如果选择了移动，则需填写此部分，单位米 \n" +
-                "\"x\": Double,\n" +
-                "\"y\": Double\n" +
-                "}\n" +
-                "}";
-
-
-        // "{ " +
-        // "\"type\": \"行动类型\", // 行动类型可选：interaction（交互）、move_to（移动） " +
-        // "\"actionAgree\": 用来发出是否同意的指令，true为同意，false为不同意" +
-        // "\"interactionContent\": { // 如果选择了交互，则需填写此部分 " +
-        // "\"dstId\": 交互目标ID " +
-        // "\"type\": 说或做 " +
-        // "\"status\": 说的状态（会话状态，如果你要结束会话则此处为‘end’，如果你要开始和某个角色说话则此处为“start”），“start”、“in_session”、“end”" +
-        // "\"val\": 具体内容 " +
-        // "}, " +
-        // "\"moveVector\": { // 如果选择了移动，则需填写此部分，单位米 " +
-        // "\"x\": Double, " +
-        // "\"y\": Double " +
-        // "} " +
-        // "}" +
-        // " ```";
-    }
-
-    private String getAiTips() {
-        return "提示：如果你要和某个实体交互，你可直接发起交互指令，不需要先发起移动指令再发起交互指令";
-    }
+    private Node player;
 
     /**
      * 小人每帧会调用该方法
@@ -177,25 +143,25 @@ public class DSS extends Node {
 
         String memoryPrompt = getMemoryPrompt(nodes);
 
-        String prompt = getMainPrompt(nodes) + "\n" + getResultTemplate() + "\n" + getAiTips() + "\n" +
-                        memoryPrompt;
+        String prompt = getMainPrompt(nodes) + "\n" + /*getResultTemplate() + "\n" + getAiTips() +*/ "\n" + memoryPrompt;
 
-        List<AiMessage> messages = Collections.singletonList(new SystemAiMessage(prompt));
+        List<AiMessage<?>> messages = Collections.singletonList(new SystemAiMessage<>(prompt));
 
         logger.info("{} 开始思考回复", nodes.getName());
         aiThink(nodes, messages);
         return true;
     }
 
-    private void aiThink(Creature nodes, List<AiMessage> messages) {
-        AiResponse aiResponse1 = new AiResponse();
-        aiResponse1.setContent(new StringBuilder());
-        aiResponse1.setReasoningContent(new StringBuilder());
+    private void aiThink(Creature nodes, List<AiMessage<?>> messages) {
+        // AiResponse aiResponse1 = new AiResponse();
+        // aiResponse1.setContent(new StringBuilder());
+        // aiResponse1.setReasoningContent(new StringBuilder());
 
-        aiService.stream(aiResponse1, messages, "qwen-max");
+        AiResponse stream = aiService.stream(messages, "qwen-max");
         setThinkCooling();
-        database.setAiResponse(nodes.getId(), aiResponse1);
-        database.addNodeActionData(nodes.getId(), new NodeActionData(THINK, aiResponse1));
+
+        database.setAiResponse(nodes.getId(), stream);
+        database.addNodeActionData(nodes.getId(), new NodeActionData(THINK, stream));
         // database.setNodeStatus(nodes.getId(), NodeStatusEnum.THINK);
     }
 
@@ -222,9 +188,9 @@ public class DSS extends Node {
     /**
      * 发去移动指令
      *
-     * @param nodes     移动目标节点
-     * @param vectorX   移动向量
-     * @param vectorY   移动向量
+     * @param nodes   移动目标节点
+     * @param vectorX 移动向量
+     * @param vectorY 移动向量
      */
     public void moveTo(Creature nodes, float vectorX, float vectorY) {
 
@@ -297,9 +263,14 @@ public class DSS extends Node {
                                    new NodeActionData(NodeActionEnum.WAIT, gameTime.getTimeByMinute(15)));
     }
 
-    private List<AiMessage> getParam(Creature nodes) {
-        ArrayList<AiMessage> rtn = new ArrayList<>();
-        rtn.add(new SystemAiMessage(getMainPrompt(nodes) + "\n" + getResultTemplate() + "\n" + getAiTips()));
+    private List<AiMessage<?>> getParam(Creature nodes) {
+        ArrayList<AiMessage<?>> rtn = new ArrayList<>();
+
+        String mainPrompt = GameSingleData.promptService.buildPrompt(nodes.getName(), nodes.getGender().getName(), "20",
+                                                                     nodes.getHp().desc(), nodes.getEnergy().desc(),
+                                                                     "23", nodes.getRoleDesc(), "false", "无");
+
+        rtn.add(new SystemAiMessage<>(getMainPrompt(nodes)));
         return rtn;
     }
 
@@ -422,7 +393,7 @@ public class DSS extends Node {
             return true;
         }
 
-        if (aiResponse.getAiRequestType() != AiRequestType.FINISH) {
+        if (aiResponse.getAiRequestType() != AiRequestType.END) {
             // 未思考结束
             return false;
         }
@@ -494,22 +465,26 @@ public class DSS extends Node {
             return true;
         }
 
+        TransformInput transformInput = node.get(0);
+
         if (GeomUtil.distance(nodes.getPositionX(), nodes.getPositionY(), peek.getMoveToX(), peek.getMoveToY()) <
                 ofM(0.1f)) {
             // 如果与目标坐标小于0.1米，则认为已经到达目标位置，指令执行完成
 
-            node.get(0).getVector2().set(0, 0);
+            transformInput.getVector2().set(0, 0);
 
             logger.info("移动指令完成 {}", nodes.getName());
             return true;
         }
 
         // 否则，设置移动向量
-        node.get(0)
-            .getVector2()
-            .set(peek.getMoveToX() - nodes.getPositionX(), peek.getMoveToY() - nodes.getPositionY());
+        transformInput.getVector2()
+                      .set(peek.getMoveToX() - nodes.getPositionX(), peek.getMoveToY() - nodes.getPositionY());
 
-        node.get(0).getVector2().nor();
+        // 长度大于1才归一化，否则归一化角色移动会出现震荡
+        if (transformInput.getVector2().len() > 1) {
+            transformInput.getVector2().nor();
+        }
 
         return false;
     }
@@ -544,7 +519,8 @@ public class DSS extends Node {
     public void onScene(Scene scene) {
         super.onScene(scene);
 
-        this.aiService = new AliyunAiService();
+        this.aiService = new OpenaiAiService("https://dashscope.aliyuncs.com/compatible-mode/v1",
+                                             "sk-00020fc401b44687ac66d5a0ff933a2e");
 
         Set<Node> byGroup = getScene().getByGroup(Groups.DATABASE);
         if (byGroup == null) {
@@ -577,6 +553,10 @@ public class DSS extends Node {
             } catch (IOException ignored) {
             }
         }
+    }
+
+    public void setPlayer(Node player) {
+        this.player = player;
     }
 
 }

@@ -24,10 +24,11 @@ public class Human extends Creature {
     // private float fontScale;
     private HumanBodyType bodyType;
 
-    public Human(AssetManager assetManager) {
+    public Human() {
         setRace(Race.Human);
         // this.fontScale = fontScale;
-        Texture texture = assetManager.get("user.png", Texture.class);
+
+        Texture texture = getAsset("user", Texture.class);
 
         float iconW = UnitUtil.ofM(0.7f);
         float iconH = UnitUtil.ofM(1f);
@@ -44,7 +45,7 @@ public class Human extends Creature {
 
         float x = iconW / 2f - labelW / 2f;
 
-        label = new LabelNode(getName(), 16);
+        label = new LabelNode(getName(), 35);
         label.setLabelAlignment(Align.center);
         label.setLabelSize(labelW, 5f);
         label.setPosition(x, iconH + UnitUtil.ofM(0.1f));
@@ -95,5 +96,7 @@ public class Human extends Creature {
         super.setGender(gender);
         updateSpriteColor();
     }
+
+
 
 }

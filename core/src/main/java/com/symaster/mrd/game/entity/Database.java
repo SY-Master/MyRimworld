@@ -1,7 +1,7 @@
 package com.symaster.mrd.game.entity;
 
+import com.symaster.ai.AiResponse;
 import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.game.core.ai.AiResponse;
 import com.symaster.mrd.game.service.ai.TimeAllocation;
 
 import java.util.HashMap;

@@ -46,9 +46,11 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         for (int x = 0; x < SystemConfig.MAP_NUMBER; x++) {
             for (int y = 0; y < SystemConfig.MAP_NUMBER; y++) {
 
+                // 世界坐标
                 float worldX = tileSize * x + startX;
                 float worldY = tileSize * y + startY;
 
+                // 噪声值[-1, 1]
                 float noiseValue = noise.interpolatedNoise(worldX / tileSize / 60, worldY / tileSize / 60);
 
                 TileMap tileMap;
@@ -193,22 +195,29 @@ public class BlockMapGenerateProcessorImpl implements BlockMapGenerateProcessor 
         if (grassSet == null || grassSet.isEmpty()) {
             return Collections.emptySet();
         }
-        TileMapFactory tileMapFactory = (TileMapFactory) grassSet.iterator().next();
 
         Set<Node> noiseGroup = scene.getByGroup(Groups.NOISE);
         if (noiseGroup == null || noiseGroup.isEmpty()) {
             return Collections.emptySet();
         }
 
+        // 地图工厂
+        TileMapFactory tileMapFactory = (TileMapFactory) grassSet.iterator().next();
+
+        // 噪声算法
         Noise noise = (Noise) noiseGroup.iterator().next();
 
+        // 地图种子
         String mapSeed = scene.getMapSeed();
 
+        // 区块尺寸
         float blockSize = scene.getBlockSize();
 
+        // 区块开始的世界坐标
         float startX = take.getX() * blockSize;
         float startY = take.getY() * blockSize;
 
+        // 瓦片尺寸
         float tileSize = blockSize / SystemConfig.MAP_NUMBER;
 
         return getTileSet(tileSize, tileMapFactory, startX, startY, noise, blockSize);

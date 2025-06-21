@@ -1,12 +1,15 @@
 package com.symaster.mrd.game.ui.page;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Group;
-import com.badlogic.gdx.scenes.scene2d.ui.*;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.symaster.mrd.drawable.SolidColorDrawable;
+import com.symaster.mrd.game.GameSingleData;
 
 /**
  * @author yinmiao
@@ -19,12 +22,11 @@ public class PlayGameSetting extends Group {
     private final Table table;
     private final ScrollPane scrollPane;
 
-    public PlayGameSetting(Skin skin, AssetManager assetManager) {
-        Texture left = assetManager.get("left.png", Texture.class);
+    public PlayGameSetting() {
+        Texture left = GameSingleData.mrAssetManager.getGlobal("left", Texture.class);
 
         SolidColorDrawable up = new SolidColorDrawable(new TextureRegion(left), new Color(0, 0, 0, 1));
         SolidColorDrawable dn = new SolidColorDrawable(new TextureRegion(left), new Color(0.1f, 0.1f, 0.1f, 1));
-
         ImageButton.ImageButtonStyle style = new ImageButton.ImageButtonStyle(up, dn, up, up, up, up);
 
         // 返回按钮
@@ -34,7 +36,7 @@ public class PlayGameSetting extends Group {
 
         addActor((scrollPane = new ScrollPane((table = new Table()))));
 
-        table.add((playGame = new TextButton("开始游戏", skin)));
+        table.add((playGame = new TextButton("开始游戏", GameSingleData.skinProxy.getSkin())));
     }
 
     public void resize(int width, int height) {

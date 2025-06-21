@@ -1,0 +1,48 @@
+{
+    "com.symaster.mrd.game.ui.MainMenu": [
+    ],
+    "global": [
+        {
+            "name": "log",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "log.png"
+        },
+        {
+            "name": "white",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "white.png"
+        },
+        {
+            "name": "checked",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "default-checked.9.png"
+        },
+        {
+            "name": "focused",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "default-focused.9.png"
+        },
+        {
+            "name": "up",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "default-up.9.png"
+        },
+        {
+            "name": "border",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "border0.png"
+        },
+        {
+            "name": "left",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "left.png"
+        }
+    ],
+    "com.symaster.mrd.game.entity.Human": [
+        {
+            "name": "user",
+            "type": "com.badlogic.gdx.graphics.Texture",
+            "path": "user.png"
+        }
+    ]
+}

@@ -73,7 +73,7 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
     public static final class Result {
 
         public Block block;
-        public Set<Node> nodes;
+        public Set<Node> blickMap;
 
     }
 
@@ -100,7 +100,7 @@ public class BlockMapGenerate extends AsyncExecutor implements Disposable {
             Set<Node> generate = blockMapGenerateProcessor.generate(scene, take);
             Result result = new Result();
             result.block = take;
-            result.nodes = generate;
+            result.blickMap = generate;
             res.add(result);
 
             return null;

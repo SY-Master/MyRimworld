@@ -2,6 +2,9 @@ package com.symaster.mrd.game.entity;
 
 import com.symaster.mrd.g2d.Node;
 
+/**
+ * 噪声算法
+ */
 public class Noise extends Node {
 
     private final int seed;

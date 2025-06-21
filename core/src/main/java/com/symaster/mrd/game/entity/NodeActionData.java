@@ -1,6 +1,6 @@
 package com.symaster.mrd.game.entity;
 
-import com.symaster.mrd.game.core.ai.AiResponse;
+import com.symaster.ai.AiResponse;
 import com.symaster.mrd.game.service.DSSResult;
 
 /**

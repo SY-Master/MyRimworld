@@ -1,9 +1,8 @@
 package com.symaster.mrd.g2d;
 
+import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.utils.Null;
-import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.game.GameSingleData;
 
 import static com.symaster.mrd.game.GameSingleData.skinProxy;
@@ -14,15 +13,21 @@ import static com.symaster.mrd.game.GameSingleData.skinProxy;
  */
 public class LabelNode extends Node {
 
-    private final Label label;
+    private Label label;
     private float parentAlpha = 1.0f;
 
-    public LabelNode(@Null CharSequence text, int fontSize) {
-        int cacheFontSize = SystemConfig.FONT_SIZES.getOptimalSize(fontSize);
-        String fontName = SystemConfig.FONT_SIZES.getFontName(cacheFontSize);
+    public LabelNode(String text, int fontSize) {
 
-        Label.LabelStyle aDefault = new Label.LabelStyle(skinProxy.getSkin().getFont(fontName), skinProxy.getSkin()
-                                                                                                         .getColor("default"));
+        if (text == null || text.isEmpty()) {
+            text = "EMPTY";
+        }
+
+        DynamicFontManager dynamicFontManager = skinProxy.getSkin().get(DynamicFontManager.class);
+
+        BitmapFont font = dynamicFontManager.getFont(FontEnum.BASE_FONT, fontSize);
+
+        Label.LabelStyle aDefault = new Label.LabelStyle(font,
+                                                         skinProxy.getSkin().getColor("default"));
 
         this.label = new Label(text, aDefault);
 

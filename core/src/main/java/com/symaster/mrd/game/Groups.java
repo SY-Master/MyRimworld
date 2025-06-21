@@ -30,5 +30,9 @@ public class Groups {
      * 相机
      */
     public static final String CAMERA = "camera";
+    /**
+     * 决策系统
+     */
+    public static final String DSS = "dss";
 
 }

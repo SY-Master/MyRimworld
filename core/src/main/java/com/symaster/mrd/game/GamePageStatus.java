@@ -12,7 +12,7 @@ public enum GamePageStatus {
     Loading((main, delta) -> {
         GameSingleData.loadingType.render(main, delta);
     }),
-    Menu(Main::menuRender),
+    // Menu(Main::menuRender),
     Game(Main::gameRender),
     ;
 

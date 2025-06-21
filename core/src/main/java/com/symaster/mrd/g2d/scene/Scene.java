@@ -237,7 +237,7 @@ public class Scene implements Serializable, Disposable {
         node.setChangeExtend(nodePropertiesChangeExtend);
 
         // 设置节点位置更新事件。位置更新后需要计算该节点所在区块，然后移动到新的区块中
-        node.setPue(positionUpdateExtend);
+        node.addPue(positionUpdateExtend);
 
         // 给该节点以及该节点下的所有节点添加“节点添加与删除事件”
         addExtendEvent(node);
@@ -314,7 +314,7 @@ public class Scene implements Serializable, Disposable {
      * @param delta Time in seconds since the last frame.
      */
     public void logic(float delta) {
-        // 添加新的地图
+        // 如果有新的区块生成完毕，则添加
         addToMap();
 
         // 调用所有激活区块内组件的逻辑方法
@@ -331,14 +331,15 @@ public class Scene implements Serializable, Disposable {
      * 将生成完成的地图加载进场景
      */
     private void addToMap() {
-        if (blockMapGenerate != null) {
-            BlockMapGenerate.Result result = blockMapGenerate.getResult();
-            if (result != null) {
-                Set<Node> nodes2 = nodes.computeIfAbsent(result.block, k -> new HashSet<>());
-                nodes2.addAll(result.nodes);
-                for (Node node : nodes2) {
-                    node.onScene(this);
-                }
+        BlockMapGenerate.Result result = blockMapGenerate.getResult();
+        if (result != null) {
+
+            // 将地图块添加到区块映射表
+            nodes.computeIfAbsent(result.block, k -> new HashSet<>()).addAll(result.blickMap);
+
+            // 触发所有节点的onScene事件
+            for (Node node : result.blickMap) {
+                node.onScene(this);
             }
         }
     }
@@ -363,7 +364,7 @@ public class Scene implements Serializable, Disposable {
             return;
         }
 
-        node.setPue(null);
+        node.addPue(null);
         node.setChangeExtend(null);
         removeExtendEvent(node);
 

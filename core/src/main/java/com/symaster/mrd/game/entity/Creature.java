@@ -51,6 +51,18 @@ public class Creature extends Node {
      * 决策系统
      */
     private DSS dss;
+    /**
+     * 角色描述
+     */
+    private String roleDesc;
+
+    public String getRoleDesc() {
+        return roleDesc;
+    }
+
+    public void setRoleDesc(String roleDesc) {
+        this.roleDesc = roleDesc;
+    }
 
     public DSS getDss() {
         return dss;

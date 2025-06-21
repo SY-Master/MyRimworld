@@ -117,6 +117,18 @@ tasks.register('dist') {
     dependsOn 'jar'
 }
 
+repositories {
+    mavenLocal()
+    // 其他仓库...
+}
+
+
+tasks.register('printRepositories') {
+    repositories.each { repo ->
+        println "Repository: ${repo.name}, URL: ${repo.url}"
+    }
+}
+
 distributions {
     main {
         contents {

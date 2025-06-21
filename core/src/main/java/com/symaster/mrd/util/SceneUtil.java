@@ -3,6 +3,8 @@ package com.symaster.mrd.util;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
+import com.symaster.mrd.g2d.tansform.TransformInput;
+import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.Database;
 import com.symaster.mrd.game.entity.SelectData;
@@ -16,6 +18,23 @@ import java.util.Set;
  * @since 2024/12/26
  */
 public class SceneUtil {
+
+    /**
+     * 给指定组件添加移动套装
+     *
+     * @param node  指定组件
+     * @param speed 设定移动速度
+     */
+    public static void addMoveSuit(Node node, float speed) {
+        TransformInput transformInput = new TransformInput();
+        transformInput.create();
+        node.add(transformInput);
+
+        TransformMove transformMove = new TransformMove(transformInput.getVector2(), node);
+        transformMove.setSpeed(speed);
+        transformMove.create();
+        node.add(transformMove);
+    }
 
     public static Node getTopParent(Node child) {
         if (child.getParent() == null) {

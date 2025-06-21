@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.util.GdxText;
 
 /**
@@ -23,9 +24,13 @@ public class MainMenuBtn extends Group {
     private final TextButton extBtn;
     private final Image log;
 
-    public MainMenuBtn(Skin skin, AssetManager assetManager) {
-        log = new Image(assetManager.get("log.png", Texture.class));
+    public MainMenuBtn(/*Skin skin, AssetManager assetManager*/) {
+        Texture log1 = GameSingleData.mrAssetManager.getGlobal("log", Texture.class);
+
+        log = new Image(log1);
         addActor(log);
+
+        Skin skin = GameSingleData.skinProxy.getSkin();
 
         playGameBtn = new TextButton(GdxText.val("开始新游戏"), skin);
         playGameBtn.setSize(200, 45);

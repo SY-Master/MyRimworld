@@ -35,4 +35,8 @@ public class Measure {
         this.max = max;
     }
 
+    public String desc() {
+        return String.format("%.2f/%.2f", value * max, max);
+    }
+
 }

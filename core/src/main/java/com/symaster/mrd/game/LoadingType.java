@@ -8,7 +8,7 @@ import com.symaster.mrd.Main;
  */
 public enum LoadingType {
 
-    ApplicationRunnerLoading(Main::applicationRunnerLoading),
+    // ApplicationRunnerLoading(Main::applicationRunnerLoading),
     GamePlayLoading(Main::gamePlayLoading),
     ;
 

@@ -7,12 +7,10 @@ import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.EntityIdGenerator;
+import com.symaster.mrd.game.GameSingleData;
 
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.function.Predicate;
 
 /**
@@ -26,11 +24,22 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     private static final long serialVersionUID = 1L;
 
     private final long id;
-    private float positionY;
-    private float width;
-    private float height;
-    /// 节点基本信息
+    /**
+     * 节点本地坐标x
+     */
     private float positionX;
+    /**
+     * 节点本地坐标y
+     */
+    private float positionY;
+    /**
+     * 节点的宽度
+     */
+    private float width;
+    /**
+     * 节点的高度
+     */
+    private float height;
     /**
      * 当前组件的父级节点
      */
@@ -40,13 +49,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      */
     private boolean visible;
     /**
-     * 激活附近区块半径，0表示不激活区块，1表示激活当前组件所在区域，2表示记过当前组件周围一圈，以此类推
+     * 激活附近区块半径，0表示不激活区块，1表示激活当前组件所在区块，2表示记过当前组件周围一圈，以此类推
      */
     private int activityBlockSize;
     /**
      * 坐标更新扩展
      */
-    private PositionUpdateExtend pue;
+    private Set<PositionUpdateExtend> pue;
     /**
      * 激活附近区块半径更新扩展
      */
@@ -77,6 +86,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     private boolean ignoreTimeScale;
     /**
      * 渲染层
+     * @see Layer
      */
     private int layer;
 
@@ -179,12 +189,17 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.changeExtend = changeExtend;
     }
 
-    public PositionUpdateExtend getPue() {
-        return pue;
+    public void removePue(PositionUpdateExtend pue) {
+        if (this.pue != null) {
+            this.pue.remove(pue);
+        }
     }
 
-    public void setPue(PositionUpdateExtend pue) {
-        this.pue = pue;
+    public void addPue(PositionUpdateExtend pue) {
+        if (this.pue == null) {
+            this.pue = new HashSet<>();
+        }
+        this.pue.add(pue);
     }
 
     public ChildUpdateExtend getCue() {
@@ -276,12 +291,25 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         float oldX = this.positionX;
         float oldY = this.positionY;
 
-        if (pue == null || pue.beforeUpdate(this, oldX, oldY, x, y)) {
+        boolean moveOn = true;
+
+        if (pue != null) {
+            for (PositionUpdateExtend positionUpdateExtend : pue) {
+                boolean b = positionUpdateExtend.beforeUpdate(this, oldX, oldY, x, y);
+                if (!b) {
+                    moveOn = false;
+                }
+            }
+        }
+
+        if (moveOn) {
             this.positionX = x;
             this.positionY = y;
+        }
 
-            if (pue != null) {
-                pue.afterUpdate(this, oldX, oldY, x, y);
+        if (pue != null) {
+            for (PositionUpdateExtend positionUpdateExtend : pue) {
+                positionUpdateExtend.afterUpdate(this, oldX, oldY, x, y);
             }
         }
     }
@@ -308,17 +336,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
             return;
         }
 
-        float oldX = this.positionX;
-        float oldY = this.positionY;
-
-        if (pue == null || pue.beforeUpdate(this, oldX, oldY, positionX + x, positionY + y)) {
-            this.positionX += x;
-            this.positionY += y;
-
-            if (pue != null) {
-                pue.afterUpdate(this, oldX, oldY, this.positionX, this.positionY);
-            }
-        }
+        setPosition(positionX + x, positionY + y);
     }
 
     public <T> List<T> getNode(Class<T> clazz) {
@@ -475,14 +493,14 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     /**
-     * 如果子节点需要绘制
+     * 绘制该节点
      */
     public void draw(SpriteBatch spriteBatch) {
 
     }
 
     /**
-     * 如果子节点需要释放资源
+     * 释放该节点的资源
      */
     @Override
     public void dispose() {
@@ -516,6 +534,14 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     @Override
     public void create() {
 
+    }
+
+    public <T> T getAsset(String key, Class<T> clazz) {
+        return GameSingleData.mrAssetManager.get(getClass().getName(), key, clazz);
+    }
+
+    public <T> T getGlobalAsset(String key, Class<T> clazz) {
+        return GameSingleData.mrAssetManager.getGlobal(key, clazz);
     }
 
 }
