@@ -48,7 +48,7 @@ public class Scene implements Serializable, Disposable {
      */
     private final Map<String, Set<Node>> nodeGroups;
 
-    private final Map<Long, Node> nodeMap;
+    private final Map<String, Node> nodeMap;
 
     private final Set<Node> forceLogicNodes;
     /**
@@ -260,7 +260,7 @@ public class Scene implements Serializable, Disposable {
 
     public void onScene(Node node) {
         node.onScene(this);
-        nodeMap.put(node.getId(), node);
+        nodeMap.put(node.getGlobalId(), node);
 
         for (Node node1 : node) {
             onScene(node1);
@@ -269,14 +269,14 @@ public class Scene implements Serializable, Disposable {
 
     public void extScene(Node node) {
         node.extScene(this);
-        nodeMap.remove(node.getId());
+        nodeMap.remove(node.getGlobalId());
 
         for (Node node1 : node) {
             extScene(node1);
         }
     }
 
-    public Node getNodeById(long id) {
+    public Node getNodeById(String id) {
         return nodeMap.get(id);
     }
 

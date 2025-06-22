@@ -27,12 +27,12 @@ public class SceneUtil {
      */
     public static void addMoveSuit(Node node, float speed) {
         TransformInput transformInput = new TransformInput();
-        transformInput.create();
+        transformInput.created();
         node.add(transformInput);
 
-        TransformMove transformMove = new TransformMove(transformInput.getVector2(), node);
+        TransformMove transformMove = new TransformMove(transformInput, node);
         transformMove.setSpeed(speed);
-        transformMove.create();
+        transformMove.created();
         node.add(transformMove);
     }
 

@@ -11,18 +11,18 @@ public class MessageResult {
     /**
      * 发送者ID
      */
-    private long srcId;
+    private String srcId;
 
     /**
      * 消息
      */
     private DSSInteractionContent dssInteractionContent;
 
-    public long getSrcId() {
+    public String getSrcId() {
         return srcId;
     }
 
-    public void setSrcId(long srcId) {
+    public void setSrcId(String srcId) {
         this.srcId = srcId;
     }
 

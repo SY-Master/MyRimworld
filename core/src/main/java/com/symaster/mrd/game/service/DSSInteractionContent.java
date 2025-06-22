@@ -12,7 +12,7 @@ public class DSSInteractionContent {
      * 指定交互目标实体ID
      */
     @Command("指定交互目标实体ID")
-    private Long dstId;
+    private String dstId;
     /**
      * 指令交互类型
      */
@@ -37,11 +37,11 @@ public class DSSInteractionContent {
         this.status = status;
     }
 
-    public Long getDstId() {
+    public String getDstId() {
         return dstId;
     }
 
-    public void setDstId(Long dstId) {
+    public void setDstId(String dstId) {
         this.dstId = dstId;
     }
 

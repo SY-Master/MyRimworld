@@ -6,8 +6,9 @@ import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.EntityIdGenerator;
+import com.symaster.mrd.game.EntityManager;
 import com.symaster.mrd.game.GameSingleData;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.Serializable;
 import java.util.*;
@@ -23,7 +24,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
 
     private static final long serialVersionUID = 1L;
 
-    private final long id;
+    private final String globalId;
     /**
      * 节点本地坐标x
      */
@@ -100,7 +101,15 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this(false);
     }
 
+    public Node(String globalId) {
+        this(false, globalId);
+    }
+
     public Node(boolean triggerCreate) {
+        this(triggerCreate, null);
+    }
+
+    public Node(boolean triggerCreate, String globalId) {
         this.positionX = 0.0f;
         this.positionY = 0.0f;
         this.visible = true;
@@ -109,11 +118,21 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         this.width = 0.0f;
         this.height = 0.0f;
         this.zIndex = 0;
-        this.id = EntityIdGenerator.nextId();
+
+        if (StringUtils.isBlank(globalId)) {
+            this.globalId = EntityManager.nextId(this);
+        } else {
+            if (EntityManager.contains(globalId)) {
+                throw new IllegalArgumentException("全局ID冲突");
+            }
+            this.globalId = globalId;
+            EntityManager.put(this);
+        }
+
         this.layer = Layer.OBJECT.getLayer();
         this.fusionRender = false;
         if (triggerCreate) {
-            create();
+            created();
         }
     }
 
@@ -276,12 +295,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
             return;
         }
         setPosition(positionX, positionY);
-
-        // float oldX = this.positionX;
-        // this.positionX = positionX;
-        // if (pue != null) {
-        //     pue.afterUpdate(this, oldX, this.positionY, this.positionX, this.positionY);
-        // }
     }
 
     public void setPosition(float x, float y) {
@@ -324,11 +337,6 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         }
 
         setPosition(positionX, y);
-        // float oldY = this.positionY;
-        // this.positionY = y;
-        // if (pue != null) {
-        //     pue.afterUpdate(this, this.positionX, oldY, this.positionX, this.positionY);
-        // }
     }
 
     public void translate(float x, float y) {
@@ -377,8 +385,8 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         }
     }
 
-    public long getId() {
-        return id;
+    public String getGlobalId() {
+        return globalId;
     }
 
     public Scene getScene() {
@@ -504,6 +512,8 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
      */
     @Override
     public void dispose() {
+        EntityManager.remove(this);
+
     }
 
     @Override
@@ -516,13 +526,13 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
         }
 
         Node node = (Node) o;
-        return id == node.id;
+        return globalId == node.globalId;
     }
 
     @Override
     public int hashCode() {
         int result = super.hashCode();
-        result = 31 * result + Long.hashCode(id);
+        result = 31 * result + globalId.hashCode();
         return result;
     }
 
@@ -532,7 +542,7 @@ public class Node extends LinkedList<Node> implements Disposable, Serializable, 
     }
 
     @Override
-    public void create() {
+    public void created() {
 
     }
 

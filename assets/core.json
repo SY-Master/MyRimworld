@@ -1,0 +1,36 @@
+{
+    "core": {
+        "defaultHomePage": {
+            "type": "com.symaster.mrd.game.ui.MainMenu"
+        }
+    },
+    "nodes": {
+        "defaultCamera": {
+            "globalId": "custom-id-camera-000000000001",
+            "type": "com.symaster.mrd.g2d.ViewportNodeOrthographic",
+            "worldWidth": 1920.0,
+            "worldHeight": 1080.0,
+            "nodes": [
+                {
+                    "type": "com.symaster.mrd.input.WASDInput",
+                    "transformInput": {
+                        "globalId": "custom-id-0000000000001",
+                        "type": "com.symaster.mrd.g2d.tansform.TransformInput"
+                    }
+                },
+                {
+                    "type": "com.symaster.mrd.input.RollerDragInput"
+                },
+                {
+                    "type": "com.symaster.mrd.g2d.tansform.TransformMove",
+                    "speed": 0,
+                    "ignoreTimeScale": true,
+                    "transformInput": {
+                        "method": "get",
+                        "globalId": "custom-id-0000000000001"
+                    }
+                }
+            ]
+        }
+    }
+}

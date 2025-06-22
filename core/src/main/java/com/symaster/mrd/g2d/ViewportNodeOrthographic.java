@@ -14,22 +14,52 @@ import com.symaster.mrd.api.PositionConverter;
  */
 public class ViewportNodeOrthographic extends OrthographicCameraNode {
 
-    private final Viewport viewport;
+    private Viewport viewport;
+    private float worldWidth;
+    private float worldHeight;
+
     private final Vector2 topRight = new Vector2();
     private final Vector2 btnLeft = new Vector2();
     private final Rectangle worldRectangle = new Rectangle();
 
-    public ViewportNodeOrthographic(float worldWidth, float worldHeight, OrthographicCamera camera) {
-        this(new FillViewport(worldWidth, worldHeight, camera));
+    public ViewportNodeOrthographic(String globalId) {
+        super(globalId);
     }
 
-    public ViewportNodeOrthographic(float worldWidth, float worldHeight) {
-        this(new FillViewport(worldWidth, worldHeight));
+    public ViewportNodeOrthographic() {
     }
 
-    public ViewportNodeOrthographic(Viewport viewport) {
-        super((OrthographicCamera) viewport.getCamera(), new SpriteBatch());
-        this.viewport = viewport;
+    // public ViewportNodeOrthographic(float worldWidth, float worldHeight, OrthographicCamera camera) {
+    //     this(new FillViewport(worldWidth, worldHeight, camera));
+    // }
+    //
+    // public ViewportNodeOrthographic(float worldWidth, float worldHeight) {
+    //     this(new FillViewport(worldWidth, worldHeight));
+    // }
+
+    @Override
+    public void created() {
+        this.viewport = new FillViewport(worldWidth, worldHeight);
+        super.setCamera((OrthographicCamera) this.viewport.getCamera());
+        super.setSpriteBatch(new SpriteBatch());
+
+        super.created();
+    }
+
+    public float getWorldWidth() {
+        return worldWidth;
+    }
+
+    public void setWorldWidth(float worldWidth) {
+        this.worldWidth = worldWidth;
+    }
+
+    public float getWorldHeight() {
+        return worldHeight;
+    }
+
+    public void setWorldHeight(float worldHeight) {
+        this.worldHeight = worldHeight;
     }
 
     public Viewport getViewport() {

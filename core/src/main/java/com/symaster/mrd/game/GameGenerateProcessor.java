@@ -5,11 +5,7 @@ import com.badlogic.gdx.utils.async.AsyncTask;
 import com.badlogic.gdx.utils.async.ThreadUtils;
 import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.g2d.Block;
-import com.symaster.mrd.g2d.Node;
-import com.symaster.mrd.g2d.SelectNode;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.g2d.tansform.TransformInput;
-import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.game.entity.*;
 import com.symaster.mrd.game.entity.map.TileMapFactory;
 import com.symaster.mrd.game.service.DSS;
@@ -80,7 +76,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         // Dss测试工具
         DSSTestMouse dssTestMouse = new DSSTestMouse();
         dssTestMouse.setDss(dss);
-        dssTestMouse.create();
+        dssTestMouse.created();
         scene.add(dssTestMouse);
 
         // 噪声算法
@@ -103,7 +99,7 @@ public class GameGenerateProcessor implements AsyncTask<Save> {
         maleHuman.setGender(Gender.MALE);
         maleHuman.setDss(dss);
         maleHuman.setName("symaster");
-        maleHuman.create();
+        maleHuman.created();
         addMoveSuit(maleHuman, UnitUtil.ofM(5));
 
         dss.setPlayer(maleHuman);

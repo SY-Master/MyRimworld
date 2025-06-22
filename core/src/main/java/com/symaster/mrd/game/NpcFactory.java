@@ -34,13 +34,13 @@ public class NpcFactory {
         TransformInput nodes = new TransformInput();
         human.add(nodes);
 
-        TransformMove transformMove1 = new TransformMove(nodes.getVector2(), human);
+        TransformMove transformMove1 = new TransformMove(nodes, human);
         transformMove1.setSpeed(UnitUtil.ofM(5));
 
         human.add(transformMove1);
         human.setName(NameGeneratorFactory.getNameGenerator(human.getRace()).generateName(human.getGender()));
         human.setPosition(worldX, worldY);
-        human.create();
+        human.created();
 
         return human;
     }

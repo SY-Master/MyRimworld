@@ -5,7 +5,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.math.Vector3;
-import com.symaster.mrd.SystemConfig;
 import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.g2d.scene.Scene;
 
@@ -19,24 +18,44 @@ import java.util.List;
  */
 public class OrthographicCameraNode extends Node {
 
-    private final OrthographicCamera camera;
-    private final SpriteBatch spriteBatch;
+    private OrthographicCamera camera;
+    private SpriteBatch spriteBatch;
+    private PositionConverter positionConverter;
+    private Comparator<Node> comparator;
+
     private final List<Node> caches = new LinkedList<>();
     private final List<Node> caches2 = new LinkedList<>();
-    private final PositionConverter positionConverter;
-    private final Comparator<Node> comparator;
     private final Vector3 topRight = new Vector3();
     private final Vector3 bottomLeft = new Vector3();
     private final Rectangle worldRectangle = new Rectangle();
 
-    public OrthographicCameraNode() {
-        this(new OrthographicCamera(), new SpriteBatch());
+    public OrthographicCameraNode(String globalId) {
+        super(globalId);
     }
 
-    public OrthographicCameraNode(OrthographicCamera camera, SpriteBatch spriteBatch) {
-        this.camera = camera;
+    public OrthographicCameraNode() {
+    }
+
+    public void setSpriteBatch(SpriteBatch spriteBatch) {
         this.spriteBatch = spriteBatch;
+    }
+
+    public void setCamera(OrthographicCamera camera) {
+        this.camera = camera;
+    }
+
+    @Override
+    public void created() {
+        if (camera== null) {
+            this.camera = new OrthographicCamera();
+        }
+
+        if (this.spriteBatch == null) {
+            this.spriteBatch = new SpriteBatch();
+        }
+
         setForcedLogic(true);
+
         this.positionConverter = newConverter();
         this.comparator = (o1, o2) -> {
             if (o1.getLayer() == o2.getLayer()) {
@@ -44,6 +63,8 @@ public class OrthographicCameraNode extends Node {
             }
             return Integer.compare(o1.getLayer(), o2.getLayer());
         };
+
+        super.created();
     }
 
     public PositionConverter newConverter() {
@@ -66,10 +87,6 @@ public class OrthographicCameraNode extends Node {
                 world.set(vector3.x, vector3.y);
             }
         };
-    }
-
-    public OrthographicCameraNode(SpriteBatch spriteBatch) {
-        this(new OrthographicCamera(), spriteBatch);
     }
 
     public PositionConverter getPositionConverter() {

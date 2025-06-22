@@ -8,14 +8,14 @@ import java.util.List;
  */
 public class StartSessionObj {
 
-    private List<Long> dstIds;
+    private List<String> dstIds;
     private String sessionId;
 
-    public List<Long> getDstIds() {
+    public List<String> getDstIds() {
         return dstIds;
     }
 
-    public void setDstIds(List<Long> dstIds) {
+    public void setDstIds(List<String> dstIds) {
         this.dstIds = dstIds;
     }
 

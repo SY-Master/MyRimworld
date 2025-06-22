@@ -11,6 +11,13 @@ public class TransformInput extends Node {
 
     private final Vector2 vector2 = new Vector2();
 
+    public TransformInput(String globalId) {
+        super(globalId);
+    }
+
+    public TransformInput() {
+    }
+
     public Vector2 getVector2() {
         return vector2;
     }

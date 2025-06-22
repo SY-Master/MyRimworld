@@ -109,12 +109,12 @@ public class DSS extends Node {
      */
     private boolean messageHandler(Creature nodes) {
         // 是否有消息
-        if (database.getMessageQueue().peek(nodes.getId()) == null) {
+        if (database.getMessageQueue().peek(nodes.getGlobalId()) == null) {
             return false;
         }
 
         // 接收到消息
-        MessageResult msg = database.getMessageQueue().poll(nodes.getId());
+        MessageResult msg = database.getMessageQueue().poll(nodes.getGlobalId());
 
         // DSS消息内容
         DSSInteractionContent dssInteractionContent = msg.getDssInteractionContent();
@@ -132,14 +132,11 @@ public class DSS extends Node {
             srvName = null;
         }
 
-        // String optionPrompt = String.format("%s向你互动，%s%s：\"%s\"", srvName, srcGender == Gender.MALE ? "他" : "她",
-        //                                     dssInteractionContent.getType(), dssInteractionContent.getVal());
-
         String memory = String.format("[%s年%s月%s日 %s时%s分] %s和你交互，%s%s：\"%s\"", gameTime.getYear(),
                                       gameTime.getMonth(), gameTime.getDay(), gameTime.getHour(), gameTime.getMinute(),
                                       srvName, srvName, dssInteractionContent.getType(),
                                       dssInteractionContent.getVal());
-        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
+        database.addNodeActionData(nodes.getGlobalId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
 
         String memoryPrompt = getMemoryPrompt(nodes);
 
@@ -153,15 +150,11 @@ public class DSS extends Node {
     }
 
     private void aiThink(Creature nodes, List<AiMessage<?>> messages) {
-        // AiResponse aiResponse1 = new AiResponse();
-        // aiResponse1.setContent(new StringBuilder());
-        // aiResponse1.setReasoningContent(new StringBuilder());
-
         AiResponse stream = aiService.stream(messages, "qwen-max");
         setThinkCooling();
 
-        database.setAiResponse(nodes.getId(), stream);
-        database.addNodeActionData(nodes.getId(), new NodeActionData(THINK, stream));
+        database.setAiResponse(nodes.getGlobalId(), stream);
+        database.addNodeActionData(nodes.getGlobalId(), new NodeActionData(THINK, stream));
         // database.setNodeStatus(nodes.getId(), NodeStatusEnum.THINK);
     }
 
@@ -171,7 +164,7 @@ public class DSS extends Node {
 
     private String getMemoryPrompt(Creature nodes) {
         // 获取该节点的所有记忆
-        String nodeMemory = String.join("\n", database.getNodeMemory().getAll(nodes.getId()));
+        String nodeMemory = String.join("\n", database.getNodeMemory().getAll(nodes.getGlobalId()));
 
         // 记忆信息
         String memoryPrompt;
@@ -197,7 +190,7 @@ public class DSS extends Node {
         Node topParent = SceneUtil.getTopParent(nodes);
 
         // 发起移动指令
-        database.addNodeActionData(nodes.getId(),
+        database.addNodeActionData(nodes.getGlobalId(),
                                    new NodeActionData(NodeActionEnum.MOVE, topParent.getPositionX() + vectorX,
                                                       topParent.getPositionY() + vectorY));
 
@@ -210,7 +203,7 @@ public class DSS extends Node {
             return;
         }
 
-        Long dstId = interactionContent.getDstId();
+        String dstId = interactionContent.getDstId();
 
         if (dstId == null) {
             return;
@@ -231,7 +224,7 @@ public class DSS extends Node {
 
         // 距离大于两米，需要先发起移动指令
         if (GeomUtil.distance(nodes.getPositionX(), nodes.getPositionY(), positionX, positionY) > ofM(2)) {
-            database.addNodeActionData(nodes.getId(),
+            database.addNodeActionData(nodes.getGlobalId(),
                                        new NodeActionData(NodeActionEnum.MOVE, positionX + ofM(0.5f), positionY));
         }
 
@@ -240,16 +233,17 @@ public class DSS extends Node {
         startSessionObj.setSessionId(UUID.randomUUID().toString());
 
         // 发起会话指令
-        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.START_SESSION, startSessionObj));
+        database.addNodeActionData(nodes.getGlobalId(),
+                                   new NodeActionData(NodeActionEnum.START_SESSION, startSessionObj));
 
         // 发起交互指令
-        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.INTERACTION, dssResult));
+        database.addNodeActionData(nodes.getGlobalId(), new NodeActionData(NodeActionEnum.INTERACTION, dssResult));
 
         String memory = String.format("[%s年%s月%s日 %s时%s分] 你和%s交互，你%s\"%s\"", gameTime.getYear(),
                                       gameTime.getMonth(), gameTime.getDay(), gameTime.getHour(), gameTime.getMinute(),
                                       dstName, dssResult.getInteractionContent().getType(),
                                       dssResult.getInteractionContent().getVal());
-        database.addNodeActionData(nodes.getId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
+        database.addNodeActionData(nodes.getGlobalId(), new NodeActionData(NodeActionEnum.SAVE_MEMORY, memory));
     }
 
     /**
@@ -259,7 +253,7 @@ public class DSS extends Node {
      */
     private void nodeWaitAction(Creature nodes) {
         // 等待15分钟（游戏时间）
-        database.addNodeActionData(nodes.getId(),
+        database.addNodeActionData(nodes.getGlobalId(),
                                    new NodeActionData(NodeActionEnum.WAIT, gameTime.getTimeByMinute(15)));
     }
 
@@ -303,7 +297,7 @@ public class DSS extends Node {
         }
 
         for (Node node : nodeList) {
-            if (node.getId() == nodes.getId()) {
+            if (node.getGlobalId().equals(nodes.getGlobalId())) {
                 continue;
             }
 
@@ -311,7 +305,7 @@ public class DSS extends Node {
                 Creature creature = (Creature) node;
 
                 JSONObject jsonObject = new JSONObject();
-                jsonObject.put("id", creature.getId());
+                jsonObject.put("id", creature.getGlobalId());
                 jsonObject.put("name", creature.getName());
                 jsonObject.put("position", String.format("{x:%.2f,y%.2f}", UnitUtil.ofScene(creature.getPositionX()),
                                                          UnitUtil.ofScene(creature.getPositionY())));
@@ -328,7 +322,7 @@ public class DSS extends Node {
      * @return 返回是否还有指令未处理
      */
     private boolean action(Creature nodes, float delta) {
-        Queue<NodeActionData> nodeActionData = database.getNodeActionData(nodes.getId());
+        Queue<NodeActionData> nodeActionData = database.getNodeActionData(nodes.getGlobalId());
 
         // 如果没有指令，则返回false
         NodeActionData peek = nodeActionData.peek();
@@ -382,7 +376,7 @@ public class DSS extends Node {
     }
 
     private boolean actionSaveMemory(NodeActionData peek, Creature nodes, float delta) {
-        database.getNodeMemory().add(nodes.getId(), peek.getNodeMemory());
+        database.getNodeMemory().add(nodes.getGlobalId(), peek.getNodeMemory());
         logger.info("{} 增加记忆 {} ", nodes.getName(), peek.getNodeMemory());
         return true;
     }
@@ -435,7 +429,7 @@ public class DSS extends Node {
                 !peek.getDssResult().getInteractionContent().getType().isEmpty()) {
 
             MessageQueue messageQueue = database.getMessageQueue();
-            messageQueue.send(nodes.getId(), peek.getDssResult().getInteractionContent().getDstId(),
+            messageQueue.send(nodes.getGlobalId(), peek.getDssResult().getInteractionContent().getDstId(),
                               peek.getDssResult().getInteractionContent());
         }
 

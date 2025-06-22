@@ -3,6 +3,7 @@ package com.symaster.mrd.input;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.math.Vector2;
 import com.symaster.mrd.g2d.InputNode;
+import com.symaster.mrd.g2d.tansform.TransformInput;
 
 /**
  * WASD 的输入
@@ -12,18 +13,17 @@ import com.symaster.mrd.g2d.InputNode;
  */
 public class WASDInput extends InputNode {
 
-    private final Vector2 vector2;
+    private TransformInput transformInput;
 
     public WASDInput() {
-        this(new Vector2());
     }
 
-    public WASDInput(Vector2 vector2) {
-        this.vector2 = vector2;
+    public TransformInput getTransformInput() {
+        return transformInput;
     }
 
-    public Vector2 getVector2() {
-        return vector2;
+    public void setTransformInput(TransformInput transformInput) {
+        this.transformInput = transformInput;
     }
 
     private boolean W = false;
@@ -89,6 +89,12 @@ public class WASDInput extends InputNode {
     }
 
     private void update() {
+        if (transformInput == null) {
+            return;
+        }
+
+        Vector2 vector2 = transformInput.getVector2();
+
         vector2.x = 0;
         vector2.y = 0;
 

@@ -6,6 +6,6 @@ package com.symaster.mrd.g2d;
  */
 public interface Creation {
 
-    void create();
+    void created();
 
 }

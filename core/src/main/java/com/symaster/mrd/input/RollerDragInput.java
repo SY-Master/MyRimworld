@@ -13,7 +13,7 @@ import com.symaster.mrd.game.GameSingleData;
 public class RollerDragInput extends InputNode {
 
     private final Vector2 cache_vector2 = new Vector2();
-    private final Node target;
+    private Node target;
 
     private float nodeStartX;
     private float nodeStartY;
@@ -21,7 +21,22 @@ public class RollerDragInput extends InputNode {
     private float startY;
     private boolean dragging;
 
+    public RollerDragInput(String globalId) {
+        super(globalId);
+    }
+
+    public RollerDragInput() {
+    }
+
     public RollerDragInput(Node target) {
+        this.target = target;
+    }
+
+    public Node getTarget() {
+        return target;
+    }
+
+    public void setTarget(Node target) {
         this.target = target;
     }
 
@@ -44,7 +59,7 @@ public class RollerDragInput extends InputNode {
             float desX = nodeStartX - xOffset;
             float desY = nodeStartY - yOffset;
 
-            target.setPosition(desX, desY);
+            getDraggedTarget().setPosition(desX, desY);
             return true;
         }
 
@@ -74,9 +89,17 @@ public class RollerDragInput extends InputNode {
         this.startX = screenX;
         this.startY = screenY;
 
-        this.nodeStartX = target.getPositionX();
-        this.nodeStartY = target.getPositionY();
+        this.nodeStartX = getDraggedTarget().getPositionX();
+        this.nodeStartY = getDraggedTarget().getPositionY();
         this.dragging = true;
+    }
+
+    private Node getDraggedTarget() {
+        if (target != null) {
+            return target;
+        }
+
+        return getParent();
     }
 
 }

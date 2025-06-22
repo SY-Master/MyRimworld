@@ -13,20 +13,20 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class MessageQueue {
 
-    private final Map<Long, Queue<MessageResult>> messageResultMap;
+    private final Map<String, Queue<MessageResult>> messageResultMap;
 
     public MessageQueue() {
         this.messageResultMap = new HashMap<>();
     }
 
-    public void send(long id, long dstId, DSSInteractionContent interactionContent) {
+    public void send(String id, String dstId, DSSInteractionContent interactionContent) {
         MessageResult messageResult = new MessageResult();
         messageResult.setSrcId(id);
         messageResult.setDssInteractionContent(interactionContent);
         messageResultMap.computeIfAbsent(dstId, k -> new LinkedBlockingQueue<>()).add(messageResult);
     }
 
-    public MessageResult peek(long id) {
+    public MessageResult peek(String id) {
         Queue<MessageResult> messageResults = messageResultMap.get(id);
         if (messageResults == null) {
             return null;
@@ -35,7 +35,7 @@ public class MessageQueue {
         return messageResults.peek();
     }
 
-    public MessageResult poll(long id) {
+    public MessageResult poll(String id) {
         Queue<MessageResult> messageResults = messageResultMap.get(id);
         if (messageResults == null) {
             return null;

@@ -1,14 +1,13 @@
 package com.symaster.mrd;
 
+import com.alibaba.fastjson2.JSONArray;
 import com.alibaba.fastjson2.JSONObject;
 import com.badlogic.gdx.ApplicationAdapter;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.NinePatch;
 import com.badlogic.gdx.graphics.g2d.freetype.FreeTypeFontGenerator;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -17,36 +16,34 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
+import com.symaster.mrd.api.BaseStage;
 import com.symaster.mrd.api.SkinProxy;
 import com.symaster.mrd.drawable.SolidColorDrawable;
-import com.symaster.mrd.g2d.DynamicFontManager;
-import com.symaster.mrd.g2d.FontEnum;
-import com.symaster.mrd.g2d.LazyBitmapFont;
-import com.symaster.mrd.g2d.ViewportNodeOrthographic;
+import com.symaster.mrd.exception.EmptyException;
+import com.symaster.mrd.g2d.*;
 import com.symaster.mrd.g2d.tansform.TransformMove;
 import com.symaster.mrd.g2d.tansform.TransformZoom;
 import com.symaster.mrd.game.*;
 import com.symaster.mrd.game.entity.GameGenerateData;
 import com.symaster.mrd.game.entity.Save;
 import com.symaster.mrd.game.service.PromptService;
-import com.symaster.mrd.api.BaseStage;
 import com.symaster.mrd.game.ui.GameUI;
 import com.symaster.mrd.game.ui.Loading;
 import com.symaster.mrd.input.InputBridge;
 import com.symaster.mrd.input.RollerDragInput;
 import com.symaster.mrd.input.WASDInput;
 import com.symaster.mrd.util.GdxText;
-import com.symaster.mrd.util.UnitUtil;
 import org.apache.commons.configuration2.INIConfiguration;
-import org.apache.commons.configuration2.SubnodeConfiguration;
 import org.apache.commons.configuration2.builder.fluent.Configurations;
+import org.apache.commons.lang3.StringUtils;
 
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
+import java.lang.reflect.Method;
+import java.lang.reflect.Parameter;
 import java.nio.charset.StandardCharsets;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -56,32 +53,15 @@ import java.util.stream.Stream;
 public class Main extends ApplicationAdapter {
 
     private Save save;
-    // private MainMenu mainMenu;
     private GameUI gui;
 
     private BaseStage homePage;
 
     private Skin skin;
-    // private AssetManager assetManager;
     private Loading loading;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
     private ViewportNodeOrthographic camera;
-
-    // public void applicationRunnerLoading(float delta) {
-    //     if (!assetManager.update(17)) {
-    //         loading.setProgressValue(assetManager.getProgress());
-    //     } else {
-    //         loadSkin();
-    //         // loadMainMenu();
-    //         loadGUI();
-    //         loading.setProgressValue(1f);
-    //         // GameSingleData.gamePageStatus = GamePageStatus.Menu;
-    //     }
-    //
-    //     loading.logic(delta);
-    //     loading.render();
-    // }
 
     public SkinProxy loadSkin() {
         skin = buildSkin();
@@ -98,17 +78,22 @@ public class Main extends ApplicationAdapter {
 
         FileHandle internal = Gdx.files.internal("fonts/font.ini");
 
-        skin.add("default", new LazyBitmapFont(new FreeTypeFontGenerator(internal), 16));
-        skin.add("18", new LazyBitmapFont(new FreeTypeFontGenerator(internal), 18));
-        skin.add("20", new LazyBitmapFont(new FreeTypeFontGenerator(internal), 20));
-        skin.add("22", new LazyBitmapFont(new FreeTypeFontGenerator(internal), 22));
+        INIConfiguration iniConfiguration = loadINIConfiguration(internal);
+        String baseFontPath = iniConfiguration.getSection("fontMap").get(String.class, "baseFont");
+
+        FileHandle internal1 = Gdx.files.internal("fonts/" + baseFontPath);
+
+        skin.add("default", new LazyBitmapFont(new FreeTypeFontGenerator(internal1), 16));
+        skin.add("18", new LazyBitmapFont(new FreeTypeFontGenerator(internal1), 18));
+        skin.add("20", new LazyBitmapFont(new FreeTypeFontGenerator(internal1), 20));
+        skin.add("22", new LazyBitmapFont(new FreeTypeFontGenerator(internal1), 22));
         skin.add("default", new Color(1f, 1f, 1f, 1f));
 
         // GameSingleData.mrAssetManager.getGlobal("")
         Texture checked = GameSingleData.mrAssetManager.getGlobal("checked", Texture.class);
         Texture focused = GameSingleData.mrAssetManager.getGlobal("focused", Texture.class);
         Texture up = GameSingleData.mrAssetManager.getGlobal("up", Texture.class);
-        Texture border0 = GameSingleData.mrAssetManager.getGlobal("border0", Texture.class);
+        Texture border0 = GameSingleData.mrAssetManager.getGlobal("border", Texture.class);
 
         /// Drawables
         NinePatchDrawable nDChecked = new NinePatchDrawable(new NinePatch(checked, 2, 2, 2, 2));
@@ -142,13 +127,6 @@ public class Main extends ApplicationAdapter {
         return skin;
     }
 
-    // private DynamicFontManager loadFontManager() {
-    //     DynamicFontManager dynamicFontManager = DynamicFontManager.create();
-    //     append(dynamicFontManager);
-    //
-    //     return dynamicFontManager;
-    // }
-
     public void append(DynamicFontManager dynamicFontManager) {
         List<String> values = GdxText.values();
 
@@ -178,18 +156,6 @@ public class Main extends ApplicationAdapter {
         //
         // return font;
     }
-
-    // public void loadMainMenu() {
-    //     mainMenu = new MainMenu(skin, assetManager);
-    //     mainMenu.act();
-    //     mainMenu.getPlayGameSetting().getPlayGame().addListener(new ClickListener() {
-    //         @Override
-    //         public void clicked(InputEvent event, float x, float y) {
-    //             playGameClick();
-    //         }
-    //     });
-    //     GameSingleData.inputBridge.add(mainMenu);
-    // }
 
     /**
      * 开始游戏
@@ -238,11 +204,6 @@ public class Main extends ApplicationAdapter {
         loading.render();
     }
 
-    // public void menuRender(float delta) {
-    //     mainMenu.logic(delta);
-    //     mainMenu.render();
-    // }
-
     public void gameRender(float delta) {
         // 处理场景的逻辑
         save.getScene().logic(delta);
@@ -259,60 +220,20 @@ public class Main extends ApplicationAdapter {
     public void create() {
         GameSingleData.mrAssetManager = MrAssetManager.create(loadJson(Gdx.files.internal("assets.json")));
 
-        // 界面状态为加载界面
-        // GameSingleData.loadingType = LoadingType.ApplicationRunnerLoading;
-        // GameSingleData.gamePageStatus = GamePageStatus.Loading;
         GameSingleData.inputBridge = new InputBridge();
         GameSingleData.promptService = new PromptService();
+        GameSingleData.skinProxy = loadSkin();
 
         Gdx.input.setInputProcessor(GameSingleData.inputBridge);
 
-        // assetManager = new AssetManager();
-        // GameSingleData.assetManagerProxy = new AssetManagerProxy(assetManager);
 
-        // INIConfiguration texture = loadINIConfiguration(Gdx.files.internal("assets.ini"));
+        JSONObject coreJson = loadJson(Gdx.files.internal("core.json"));
 
-        GameSingleData.skinProxy = loadSkin();
+        homePage = loadHomePage(coreJson);
 
-        // Set<String> sections = texture.getSections();
-        // for (String sectionName : sections) {
-        //     if ("linkConfig".equals(sectionName)) {
-        //         continue;
-        //     }
-        //
-        //     SubnodeConfiguration section = texture.getSection(sectionName);
-        //
-        //     section.getKeys().forEachRemaining(key -> {
-        //         assetManager.load(key, Texture.class);
-        //     });
-        // }
-
-        // assetManager.load("TX Tileset Grass.png", Texture.class);
-        // assetManager.load("user.png", Texture.class);
-        // assetManager.load("default-checked.9.png", Texture.class);
-        // assetManager.load("default-focused.9.png", Texture.class);
-        // assetManager.load("default-up.9.png", Texture.class);
-        // assetManager.load("log.png", Texture.class);
-        // assetManager.load("white.png", Texture.class);
-        // assetManager.load("left.png", Texture.class);
-        // assetManager.load("Water.png", Texture.class);
-        // assetManager.load("TX Plant.png", Texture.class);
-        // assetManager.load("TX Shadow Plant.png", Texture.class);
-        // assetManager.load("border0.png", Texture.class);
-        // assetManager.load("select.png", Texture.class);
-        // assetManager.load("select-1.png", Texture.class);
-
-
-        INIConfiguration core = loadINIConfiguration(Gdx.files.internal("core.ini"));
-
-        homePage = loadHomePage(core);
-        // homePage.setSkin(skin);
-        // homePage.setAssetManager(assetManager);
-
-
-        this.loading = new Loading();
-        this.asyncExecutor = new AsyncExecutor(1);
-        this.camera = buildCamera();
+        // this.loading = new Loading();
+        // this.asyncExecutor = new AsyncExecutor(1);
+        this.camera = buildCamera(coreJson);
 
         GameSingleData.rootCamZoom = new OrthographicCameraRootCamZoomImpl(camera.getCamera());
         GameSingleData.positionConverter = camera.getPositionConverter();
@@ -382,17 +303,30 @@ public class Main extends ApplicationAdapter {
         return JSONObject.parseObject(configStr);
     }
 
-    private BaseStage loadHomePage(INIConfiguration core) {
-        SubnodeConfiguration subnodeConfiguration = core.getSection("core");
+    private BaseStage loadHomePage(JSONObject coreJson) {
+        JSONObject core = coreJson.getJSONObject("core");
+
+        JSONObject defaultHomePageJson = core.getJSONObject("defaultHomePage");
+
+        if (defaultHomePageJson == null) {
+            throw new IllegalArgumentException("defaultHomePage Is Empty");
+        }
+
+        String type = defaultHomePageJson.getString("type");
 
         try {
-            Class<?> aClass = Class.forName(subnodeConfiguration.get(String.class, "homePage"));
-            if (!aClass.isAssignableFrom(BaseStage.class)) {
+            Class<?> aClass = Class.forName(type);
+
+            if (!BaseStage.class.isAssignableFrom(aClass)) {
                 throw new RuntimeException("HomePage 加载失败...");
             }
 
             Constructor<?> constructor = aClass.getConstructor();
-            return (BaseStage) constructor.newInstance();
+            BaseStage baseStage = (BaseStage) constructor.newInstance();
+
+            baseStage.created();
+
+            return baseStage;
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -423,42 +357,181 @@ public class Main extends ApplicationAdapter {
      *
      * @return 相机
      */
-    public ViewportNodeOrthographic buildCamera() {
-        WASDInput wasdInput = new WASDInput();
+    public ViewportNodeOrthographic buildCamera(JSONObject coreJson) {
 
-        TransformMove transformMove = new TransformMove(wasdInput.getVector2());
-        transformMove.setSpeed(UnitUtil.ofM(18));
-        transformMove.setIgnoreTimeScale(true);
+        JSONObject nodes = coreJson.getJSONObject("nodes");
 
-        float i = 1080f / 1920f;
+        JSONObject defaultCameraJson = nodes.getJSONObject("defaultCamera");
 
-        float w = UnitUtil.ofM(13);
-        float h = w * i;
+        try {
+            return createNode(defaultCameraJson, ViewportNodeOrthographic.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
 
-        ViewportNodeOrthographic camera = new ViewportNodeOrthographic(w, h);
 
-        RollerDragInput rollerDragInput = new RollerDragInput(camera);
+        // WASDInput wasdInput = new WASDInput();
+        // wasdInput.setTransformInput(new TransformInput());
+        //
+        // TransformMove transformMove = new TransformMove();
+        // transformMove.setSpeed(UnitUtil.ofM(18));
+        // transformMove.setIgnoreTimeScale(true);
+        //
+        // float i = 1080f / 1920f;
+        //
+        // float w = UnitUtil.ofM(13);
+        // float h = w * i;
+        //
+        // ViewportNodeOrthographic camera = new ViewportNodeOrthographic(w, h);
+        //
+        // RollerDragInput rollerDragInput = new RollerDragInput(camera);
+        //
+        // camera.add(rollerDragInput);
+        // camera.add(wasdInput);
+        // camera.add(transformMove);
+        //
+        // TransformZoom nodes = new TransformZoom(camera.getCamera(), camera) {
+        //     @Override
+        //     public boolean scrolled(float amountX, float amountY) {
+        //         boolean scrolled = super.scrolled(amountX, amountY);
+        //
+        //         // 相机越高，移动越快
+        //         if (camera.getWorldRectangle().getWidth() > 0 && scrolled) {
+        //             transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
+        //         }
+        //
+        //         return scrolled;
+        //     }
+        // };
+        //
+        // camera.add(nodes);
+        // return camera;
+    }
 
-        camera.add(rollerDragInput);
-        camera.add(wasdInput);
-        camera.add(transformMove);
+    private <T extends Node> T createNode(JSONObject json, Class<T> clazz) throws Exception {
+        String method = json.getString("method");
+        String globalId = json.getString("globalId");
+        String type = json.getString("type");
 
-        TransformZoom nodes = new TransformZoom(camera.getCamera(), camera) {
-            @Override
-            public boolean scrolled(float amountX, float amountY) {
-                boolean scrolled = super.scrolled(amountX, amountY);
+        System.out.println(type);
 
-                // 相机越高，移动越快
-                if (camera.getWorldRectangle().getWidth() > 0 && scrolled) {
-                    transformMove.setSpeed(camera.getWorldRectangle().getWidth() * 0.25f);
+        /// 获取节点
+        T node;
+        if ("get".equals(method)) {
+            if (StringUtils.isBlank(globalId)) {
+                throw new EmptyException("globalId");
+            }
+
+            Node n = EntityManager.get(globalId);
+            if (n == null) {
+                throw new EmptyException("globalId -> Node");
+            }
+
+            if (StringUtils.isNotBlank(type)) {
+                Class<?> aClass = Class.forName(type);
+                if (!clazz.isAssignableFrom(aClass)) {
+                    throw new EmptyException("globalId -> Node");
                 }
 
-                return scrolled;
+                if (!aClass.isAssignableFrom(n.getClass())) {
+                    throw new EmptyException("globalId -> Node");
+                }
+            } else {
+                if (!clazz.isAssignableFrom(n.getClass())) {
+                    throw new EmptyException("globalId -> Node");
+                }
             }
-        };
+            node = clazz.cast(n);
 
-        camera.add(nodes);
-        return camera;
+        } else {
+            if (StringUtils.isBlank(type)) {
+                throw new EmptyException("type");
+            }
+            Class<?> aClass = Class.forName(type);
+            if (!clazz.isAssignableFrom(aClass)) {
+                throw new EmptyException("type");
+            }
+
+            Object o;
+            if (StringUtils.isNotBlank(globalId)) {
+                Constructor<?> constructor = aClass.getConstructor(String.class);
+                o = constructor.newInstance(globalId);
+            } else {
+                Constructor<?> constructor = aClass.getConstructor();
+                o = constructor.newInstance();
+            }
+
+            node = clazz.cast(o);
+        }
+
+        /// 参数
+        Set<String> continueKeys = new HashSet<>();
+        continueKeys.add("method");
+        continueKeys.add("globalId");
+        continueKeys.add("type");
+        continueKeys.add("nodes");
+        for (String key : json.keySet()) {
+            if (continueKeys.contains(key)) {
+                continue;
+            }
+
+            String methodName = key.replaceAll("^[a-z_]", "set" + String.valueOf(key.toCharArray()[0]).toUpperCase());
+
+            Method[] methods = node.getClass().getMethods();
+
+            Method method2 = Arrays.stream(methods)
+                                   .filter(e -> e.getName().equals(methodName))
+                                   .findFirst()
+                                   .orElse(null);
+
+            if (method2 != null) {
+                Parameter[] parameters = method2.getParameters();
+                if (parameters != null && parameters.length > 1) {
+                    Object[] args = new Object[parameters.length];
+
+                    for (int i = 0; i < parameters.length; i++) {
+                        Parameter parameter = parameters[i];
+                        Class<?> type1 = parameter.getType();
+
+                        if (Node.class.isAssignableFrom(type1)) {
+                            JSONObject jsonObject = json.getJSONObject(key);
+
+                            Node node1 = createNode(jsonObject, Node.class);
+                            args[i] = type1.cast(node1);
+                        } else {
+                            args[i] = json.getObject(key, type1);
+                        }
+                    }
+
+                    method2.invoke(node, args);
+
+                } else if (parameters != null && parameters.length == 1) {
+                    Parameter parameter = parameters[0];
+                    Class<?> type1 = parameter.getType();
+                    if (Node.class.isAssignableFrom(type1)) {
+                        JSONObject jsonObject = json.getJSONObject(key);
+                        Node node1 = createNode(jsonObject, Node.class);
+                        method2.invoke(node, type1.cast(node1));
+                    } else {
+                        method2.invoke(node, json.getObject(key, type1));
+                    }
+                }
+            }
+        }
+
+        /// 子节点
+        JSONArray nodes = json.getJSONArray("nodes");
+        if (nodes != null && !nodes.isEmpty()) {
+            for (int i = 0; i < nodes.size(); i++) {
+                JSONObject jsonObject = nodes.getJSONObject(i);
+                Node node1 = createNode(jsonObject, Node.class);
+                node.add(node1);
+            }
+        }
+
+        node.created();
+
+        return node;
     }
 
 }

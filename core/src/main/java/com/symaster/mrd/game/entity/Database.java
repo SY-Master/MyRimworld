@@ -17,14 +17,14 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 public class Database extends Node {
 
-    private final Map<Long, Queue<NodeActionData>> nodeActionDataMap;
+    private final Map<String, Queue<NodeActionData>> nodeActionDataMap;
 
     /**
      * 时间分配
      */
     private final Map<Integer, TimeAllocation> periodMap;
 
-    private final Map<Long, AiResponse> aiResponseMap;
+    private final Map<String, AiResponse> aiResponseMap;
 
     private final SelectData selectData;
     /**
@@ -55,11 +55,11 @@ public class Database extends Node {
         return messageQueue;
     }
 
-    public AiResponse getAiResponse(long nodeId) {
+    public AiResponse getAiResponse(String nodeId) {
         return aiResponseMap.get(nodeId);
     }
 
-    public void setAiResponse(long nodeId, AiResponse aiResponse) {
+    public void setAiResponse(String nodeId, AiResponse aiResponse) {
         aiResponseMap.put(nodeId, aiResponse);
     }
 
@@ -79,7 +79,7 @@ public class Database extends Node {
         periodMap.put(hour, timeAllocation);
     }
 
-    public Queue<NodeActionData> getNodeActionData(long id) {
+    public Queue<NodeActionData> getNodeActionData(String id) {
         Queue<NodeActionData> nodeActionData = nodeActionDataMap.get(id);
         if (nodeActionData == null) {
             LinkedBlockingQueue<NodeActionData> rtn = new LinkedBlockingQueue<>();
@@ -90,11 +90,11 @@ public class Database extends Node {
         return nodeActionData;
     }
 
-    public void clearNodeActionData(long id) {
+    public void clearNodeActionData(String id) {
         nodeActionDataMap.remove(id);
     }
 
-    public void addNodeActionData(long id, NodeActionData nodeActionData) {
+    public void addNodeActionData(String id, NodeActionData nodeActionData) {
         nodeActionDataMap.computeIfAbsent(id, k -> new LinkedBlockingQueue<>()).add(nodeActionData);
     }
 

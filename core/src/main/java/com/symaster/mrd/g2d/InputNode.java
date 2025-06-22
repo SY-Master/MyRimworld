@@ -12,6 +12,13 @@ import com.symaster.mrd.input.BridgeInputProcessor;
  */
 public class InputNode extends Node implements BridgeInputProcessor {
 
+    public InputNode(String globalId) {
+        super(globalId);
+    }
+
+    public InputNode() {
+    }
+
     @Override
     public boolean keyDown(int keycode) {
         return false;

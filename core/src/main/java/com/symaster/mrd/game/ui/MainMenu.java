@@ -28,7 +28,7 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
     public void created() {
         super.setViewport(new ScreenViewport());
 
-        bg = new Image(getAsset("white", Texture.class));
+        bg = new Image(getGlobalAsset("white", Texture.class));
         bg.setColor(0.19f, 0.56f, 0.79f, 1f);
         addActor(bg);
 
