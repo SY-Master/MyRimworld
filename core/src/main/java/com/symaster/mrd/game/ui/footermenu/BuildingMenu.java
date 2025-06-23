@@ -19,9 +19,7 @@ public class BuildingMenu extends GameUIItem {
     private TextButton textButton;
 
     @Override
-    public void create() {
-        super.create();
-
+    public void created() {
         textButton = new TextButton(GdxText.val("建筑规划"), getSkin());
         textButton.addListener(new ClickListener() {
             @Override
@@ -29,6 +27,8 @@ public class BuildingMenu extends GameUIItem {
                 openPanel();
             }
         });
+
+        super.created();
     }
 
     @Override

@@ -21,8 +21,8 @@ public class PartnerMenu extends GameUIItem {
     private PartnerPanel partnerPanel;
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
 
         textButton = new TextButton(GdxText.val("伙伴列表"), getSkin());
         textButton.addListener(new ClickListener() {

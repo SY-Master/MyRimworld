@@ -77,6 +77,11 @@ public class InputNode extends Node implements BridgeInputProcessor {
     }
 
     @Override
+    public String group() {
+        return "NODE";
+    }
+
+    @Override
     public int uiLayer() {
         return UILayer.SceneNode.getLayer();
     }

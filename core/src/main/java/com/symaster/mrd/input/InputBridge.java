@@ -3,8 +3,7 @@ package com.symaster.mrd.input;
 import com.badlogic.gdx.InputProcessor;
 
 import java.io.Serializable;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 import java.util.stream.Collectors;
 
 /**
@@ -14,8 +13,25 @@ import java.util.stream.Collectors;
 public class InputBridge implements InputProcessor, Serializable {
 
     private static final long serialVersionUID = 1L;
-
     private final List<BridgeInputProcessor> listeners = new LinkedList<>();
+
+    /**
+     * 启用的组
+     */
+    private final Set<String> ENABLE_GROUP = new HashSet<>();
+
+    /**
+     * 是否启用事件处理
+     */
+    private boolean enable = true;
+
+    public boolean isEnable() {
+        return enable;
+    }
+
+    public void setEnable(boolean enable) {
+        this.enable = enable;
+    }
 
     public void add(BridgeInputProcessor inputProcessor) {
         listeners.add(inputProcessor);
@@ -26,13 +42,25 @@ public class InputBridge implements InputProcessor, Serializable {
     }
 
     private List<BridgeInputProcessor> updateSort() {
-        return listeners.stream().filter(BridgeInputProcessor::actionEnable).sorted((o1, o2) -> {
+        if (!enable) {
+            return Collections.emptyList();
+        }
+
+        return listeners.stream().filter(e -> ENABLE_GROUP.contains(e.group()) && e.actionEnable()).sorted((o1, o2) -> {
             if (o1.uiLayer() == o2.uiLayer()) {
                 return Integer.compare(o1.uiSort(), o2.uiSort());
             } else {
                 return Integer.compare(o1.uiLayer(), o2.uiLayer());
             }
         }).collect(Collectors.toList());
+    }
+
+    public void enableGroup(String group) {
+        ENABLE_GROUP.add(group);
+    }
+
+    public void disableGroup(String group) {
+        ENABLE_GROUP.remove(group);
     }
 
     @Override

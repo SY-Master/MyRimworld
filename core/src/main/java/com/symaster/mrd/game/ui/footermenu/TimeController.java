@@ -27,8 +27,8 @@ public class TimeController extends GameUIItem {
     private TextButton play10;
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
         setPanelNormallyOpen(true);
 
         group = new Group();

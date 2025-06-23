@@ -19,8 +19,8 @@ public class Setting extends GameUIItem {
     private TextButton textButton;
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
 
         textButton = new TextButton(GdxText.val("设置"), getSkin());
         textButton.addListener(new ClickListener() {

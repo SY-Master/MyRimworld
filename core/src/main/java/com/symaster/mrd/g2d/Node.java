@@ -3,6 +3,7 @@ package com.symaster.mrd.g2d;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.utils.Disposable;
 import com.symaster.mrd.api.ChildUpdateExtend;
+import com.symaster.mrd.api.Creation;
 import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.g2d.scene.Scene;

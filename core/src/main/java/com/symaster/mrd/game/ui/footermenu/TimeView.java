@@ -6,7 +6,7 @@ import com.symaster.mrd.g2d.Node;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.Groups;
 import com.symaster.mrd.game.entity.GameTime;
-import com.symaster.mrd.game.ui.GameUI;
+import com.symaster.mrd.game.ui.SceneUI;
 import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.UIPosition;
 
@@ -25,8 +25,8 @@ public class TimeView extends GameUIItem {
     }
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
 
         label = new Label("0000-00-00-00-00", getSkin().get("nameLabel", Label.LabelStyle.class));
     }
@@ -60,16 +60,16 @@ public class TimeView extends GameUIItem {
     public void logic(float delta) {
         super.logic(delta);
 
-        GameUI gameUI = getMainStageUI();
-        if (gameUI == null) {
+        SceneUI sceneUI = getMainStageUI();
+        if (sceneUI == null) {
             return;
         }
 
-        if (gameUI.getScene() == null) {
+        if (sceneUI.getScene() == null) {
             return;
         }
 
-        Scene scene = gameUI.getScene();
+        Scene scene = sceneUI.getScene();
 
         Set<Node> byGroup = scene.getByGroup(Groups.TIMER);
         if (byGroup == null) {

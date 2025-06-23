@@ -7,6 +7,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import com.symaster.mrd.api.BaseStage;
+import com.symaster.mrd.enums.BridgeInputProcessorEnum;
+import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.game.ui.page.MainMenuBtn;
 import com.symaster.mrd.game.ui.page.PlayGameSetting;
@@ -51,6 +53,8 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
         });
 
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        GameSingleData.inputBridge.add(this);
     }
 
     private void backClick() {
@@ -114,6 +118,11 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
     public boolean actionEnable() {
         // return GameSingleData.gamePageStatus == GamePageStatus.Menu;
         return true;
+    }
+
+    @Override
+    public String group() {
+        return BridgeInputProcessorEnum.PAGE.getCode();
     }
 
 }

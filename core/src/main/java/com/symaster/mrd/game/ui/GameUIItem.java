@@ -1,8 +1,10 @@
 package com.symaster.mrd.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.utils.Disposable;
+import com.symaster.mrd.api.Creation;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
 
@@ -14,14 +16,14 @@ import java.util.Set;
  * 游戏UI的一项
  *
  * @author yinmiao
- * @see GameUI#GameUI(Skin)
+ * @see SceneUI#GameUI(Skin)
  * @since 2024/12/16
  */
-public abstract class GameUIItem implements Disposable {
+public abstract class GameUIItem extends Group implements Disposable, Creation {
 
     private final Set<PanelOpenListener> panelOpenListeners;
     private Skin skin;
-    private GameUI gameUI;
+    private SceneUI sceneUI;
     /**
      * 边距
      */
@@ -37,7 +39,7 @@ public abstract class GameUIItem implements Disposable {
         this.insets = new Insets(0, 0, 0, 0);
     }
 
-    public void create() {
+    public void created() {
     }
 
     public boolean isPanelNormallyOpen() {
@@ -48,8 +50,8 @@ public abstract class GameUIItem implements Disposable {
         this.panelNormallyOpen = panelNormallyOpen;
     }
 
-    public void setMainStageUI(GameUI gameUI) {
-        this.gameUI = gameUI;
+    public void setMainStageUI(SceneUI sceneUI) {
+        this.sceneUI = sceneUI;
     }
 
     public Skin getSkin() {
@@ -60,8 +62,8 @@ public abstract class GameUIItem implements Disposable {
         this.skin = skin;
     }
 
-    public GameUI getMainStageUI() {
-        return gameUI;
+    public SceneUI getMainStageUI() {
+        return sceneUI;
     }
 
     public void openPanel() {

@@ -9,6 +9,11 @@ import com.badlogic.gdx.InputProcessor;
 public interface BridgeInputProcessor extends InputProcessor {
 
     /**
+     * @return 组
+     */
+    String group();
+
+    /**
      * @return 层
      */
     int uiLayer();

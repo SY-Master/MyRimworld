@@ -11,7 +11,6 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * @author yinmiao
@@ -55,14 +54,6 @@ public class MrAssetManager {
 
                 rtn.syncLoad(group, name, path, aClass);
             }
-        }
-
-        try {
-            while (!rtn.assetManager.update()) {
-                TimeUnit.MINUTES.sleep(15);
-            }
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
         }
 
         return rtn;

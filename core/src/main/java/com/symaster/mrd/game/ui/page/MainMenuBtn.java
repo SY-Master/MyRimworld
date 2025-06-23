@@ -1,6 +1,5 @@
 package com.symaster.mrd.game.ui.page;
 
-import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.scenes.scene2d.Group;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
@@ -24,7 +23,7 @@ public class MainMenuBtn extends Group {
     private final TextButton extBtn;
     private final Image log;
 
-    public MainMenuBtn(/*Skin skin, AssetManager assetManager*/) {
+    public MainMenuBtn() {
         Texture log1 = GameSingleData.mrAssetManager.getGlobal("log", Texture.class);
 
         log = new Image(log1);

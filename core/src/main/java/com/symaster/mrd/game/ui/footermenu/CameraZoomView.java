@@ -2,7 +2,7 @@ package com.symaster.mrd.game.ui.footermenu;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.ProgressBar;
-import com.symaster.mrd.game.ui.GameUI;
+import com.symaster.mrd.game.ui.SceneUI;
 import com.symaster.mrd.game.ui.GameUIItem;
 import com.symaster.mrd.gui.UIPosition;
 
@@ -19,8 +19,8 @@ public class CameraZoomView extends GameUIItem {
     ProgressBar progressBar;
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
 
         progressBar = new ProgressBar(0.1f, 5.0f, 0.1f, false,
                                       getSkin().get("default", ProgressBar.ProgressBarStyle.class));
@@ -63,8 +63,8 @@ public class CameraZoomView extends GameUIItem {
     public void logic(float delta) {
         super.logic(delta);
 
-        GameUI gameUI = getMainStageUI();
-        if (gameUI == null) {
+        SceneUI sceneUI = getMainStageUI();
+        if (sceneUI == null) {
         }
 
 

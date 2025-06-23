@@ -2,6 +2,12 @@
     "core": {
         "defaultHomePage": {
             "type": "com.symaster.mrd.game.ui.MainMenu"
+        },
+        "defaultSceneUi": {
+            "type": "com.symaster.mrd.game.ui.SceneUI"
+        },
+        "defaultScene": {
+            "type": "com.symaster.mrd.g2d.scene.Scene"
         }
     },
     "nodes": {

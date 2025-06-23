@@ -11,7 +11,7 @@ import com.symaster.mrd.game.GameSingleData;
  * @author yinmiao
  * @since 2025/6/21
  */
-public abstract class BaseStage extends Stage {
+public abstract class BaseStage extends Stage implements Creation {
 
     /**
      * Creates a stage with a {@link ScalingViewport} set to {@link Scaling#stretch}. The stage will use its own {@link Batch}
@@ -21,7 +21,6 @@ public abstract class BaseStage extends Stage {
     }
 
     public void created() {
-
     }
 
     public void logic(float delta) {

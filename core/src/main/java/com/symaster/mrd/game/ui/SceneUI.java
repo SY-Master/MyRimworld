@@ -1,15 +1,15 @@
 package com.symaster.mrd.game.ui;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
-import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+import com.symaster.mrd.api.BaseStage;
+import com.symaster.mrd.enums.BridgeInputProcessorEnum;
 import com.symaster.mrd.g2d.scene.Scene;
 import com.symaster.mrd.game.GamePageStatus;
 import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.UILayer;
-import com.symaster.mrd.game.ui.footermenu.*;
+import com.symaster.mrd.game.ui.footermenu.BuildingMenu;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.input.BridgeInputProcessor;
@@ -26,29 +26,36 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class GameUI extends Stage implements BridgeInputProcessor {
+public class SceneUI extends BaseStage implements BridgeInputProcessor {
 
-    private final Table table;
-    private final List<GameUIItem> footerMenus;
+    private final List<GameUIItem> footerMenus = new ArrayList<>();
+    private final Table table = new Table();
     private Scene scene;
-    private final Skin skin;
 
-    public GameUI(Skin skin) {
-        super(new ScreenViewport());
-        this.skin = skin;
-        this.table = new Table();
-        this.footerMenus = new ArrayList<>();
+    public SceneUI() {
+    }
 
-        addTo(new BuildingMenu());
-        addTo(new CreatureMenu());
-        addTo(new PartnerMenu());
-        addTo(new Setting());
-        addTo(new TimeView());
-        addTo(new TimeController());
-        addTo(new CameraZoomView());
-        addTo(new PartnerControllerPanel());
+    @Override
+    public void created() {
+        // BuildingMenu buildingMenu = new BuildingMenu();
+        // buildingMenu.created();
+        // addActor(buildingMenu);
+
+        // addTo(new BuildingMenu());
+        // addTo(new CreatureMenu());
+        // addTo(new PartnerMenu());
+        // addTo(new Setting());
+        // addTo(new TimeView());
+        // addTo(new TimeController());
+        // addTo(new CameraZoomView());
+        // addTo(new PartnerControllerPanel());
+
+        setViewport(new ScreenViewport());
 
         this.addActor(this.table);
+        super.created();
+
+        GameSingleData.inputBridge.add(this);
     }
 
     public Table getTable() {
@@ -59,10 +66,11 @@ public class GameUI extends Stage implements BridgeInputProcessor {
         return scene;
     }
 
-    private void addTo(GameUIItem o) {
-        o.setSkin(skin);
+    private void addActor(GameUIItem o) {
+        // o.setSkin(GameSingleData.skinProxy.getSkin());
+        // o.created();
+
         o.setMainStageUI(this);
-        o.create();
         if (!o.isPanelNormallyOpen()) {
             o.addPanelOpenListener((item) -> {
                 if (item.panel() == null) {
@@ -195,6 +203,11 @@ public class GameUI extends Stage implements BridgeInputProcessor {
         for (GameUIItem footerMenu : footerMenus) {
             footerMenu.dispose();
         }
+    }
+
+    @Override
+    public String group() {
+        return BridgeInputProcessorEnum.GAME_UI.getCode();
     }
 
     @Override

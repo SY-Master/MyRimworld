@@ -1,4 +1,4 @@
-package com.symaster.mrd.g2d;
+package com.symaster.mrd.api;
 
 /**
  * @author yinmiao

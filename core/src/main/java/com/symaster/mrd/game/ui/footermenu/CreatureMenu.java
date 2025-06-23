@@ -20,8 +20,8 @@ public class CreatureMenu extends GameUIItem {
     private Panel panel;
 
     @Override
-    public void create() {
-        super.create();
+    public void created() {
+        super.created();
 
         textButton = new TextButton(GdxText.val("野生动物"), getSkin());
         textButton.addListener(new ClickListener() {
