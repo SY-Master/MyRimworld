@@ -9,7 +9,7 @@ import com.symaster.mrd.Main;
 public enum LoadingType {
 
     // ApplicationRunnerLoading(Main::applicationRunnerLoading),
-    GamePlayLoading(Main::gamePlayLoading),
+    // GamePlayLoading(Main::gamePlayLoading),
     ;
 
     private final RenderProxy renderProxy;

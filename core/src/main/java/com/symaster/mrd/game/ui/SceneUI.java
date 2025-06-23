@@ -3,13 +3,11 @@ package com.symaster.mrd.game.ui;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.symaster.mrd.api.BaseStage;
 import com.symaster.mrd.enums.BridgeInputProcessorEnum;
+import com.symaster.mrd.g2d.StageProcessor;
 import com.symaster.mrd.g2d.scene.Scene;
-import com.symaster.mrd.game.GamePageStatus;
 import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.UILayer;
-import com.symaster.mrd.game.ui.footermenu.BuildingMenu;
 import com.symaster.mrd.gui.BTNPosition;
 import com.symaster.mrd.gui.UIPosition;
 import com.symaster.mrd.input.BridgeInputProcessor;
@@ -26,7 +24,7 @@ import java.util.Set;
  * @author yinmiao
  * @since 2024/12/16
  */
-public class SceneUI extends BaseStage implements BridgeInputProcessor {
+public class SceneUI extends StageProcessor implements BridgeInputProcessor {
 
     private final List<GameUIItem> footerMenus = new ArrayList<>();
     private final Table table = new Table();
@@ -225,7 +223,7 @@ public class SceneUI extends BaseStage implements BridgeInputProcessor {
      */
     @Override
     public boolean actionEnable() {
-        return GameSingleData.gamePageStatus == GamePageStatus.Game;
+        return true;
     }
 
 }

@@ -15,17 +15,18 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.NinePatchDrawable;
 import com.badlogic.gdx.utils.async.AsyncExecutor;
-import com.symaster.mrd.api.BaseStage;
+import com.symaster.mrd.api.BasePage;
+import com.symaster.mrd.api.ChangeListener;
 import com.symaster.mrd.api.SkinProxy;
 import com.symaster.mrd.drawable.SolidColorDrawable;
 import com.symaster.mrd.enums.BridgeInputProcessorEnum;
 import com.symaster.mrd.g2d.*;
-import com.symaster.mrd.game.*;
-import com.symaster.mrd.game.entity.GameGenerateData;
-import com.symaster.mrd.game.entity.Save;
+import com.symaster.mrd.game.GameGenerateProcessor;
+import com.symaster.mrd.game.GameSingleData;
+import com.symaster.mrd.game.OrthographicCameraRootCamZoomImpl;
 import com.symaster.mrd.game.service.PromptService;
 import com.symaster.mrd.game.ui.SceneUI;
-import com.symaster.mrd.game.ui.Loading;
+import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.input.InputBridge;
 import com.symaster.mrd.util.GdxText;
 import com.symaster.mrd.util.NodeUtil;
@@ -37,7 +38,6 @@ import java.io.InputStreamReader;
 import java.lang.reflect.Constructor;
 import java.nio.charset.StandardCharsets;
 import java.util.List;
-import java.util.UUID;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -46,20 +46,22 @@ import java.util.stream.Stream;
  */
 public class Main extends ApplicationAdapter {
 
-    private Save save;
-    private SceneUI gui;
+    // private Save save;
+    // private SceneUI gui;
 
-    private BaseStage homePage;
+    private BasePage homePage;
+    private BasePage viewPage;
 
-    private Skin skin;
-    private Loading loading;
+    // private Skin skin;
+    // private Loading loading;
     private GameGenerateProcessor gameGenerateProcessor;
     private AsyncExecutor asyncExecutor;
-    private ViewportNodeOrthographic camera;
+    private ChangeListener changeListener;
+    // private ViewportNodeOrthographic camera;
 
     public SkinProxy loadSkin() {
-        skin = buildSkin();
-        return new SkinProxy(skin);
+        Skin skin1 = buildSkin();
+        return new SkinProxy(skin1);
     }
 
     /**
@@ -153,67 +155,93 @@ public class Main extends ApplicationAdapter {
         // return font;
     }
 
-    /**
-     * 开始游戏
-     */
-    public void playGameClick() {
-        if (save != null) {
-            save.dispose();
-            save = null;
-        }
+    // /**
+    //  * 开始游戏
+    //  */
+    // public void playGameClick() {
+    //     if (save != null) {
+    //         save.dispose();
+    //         save = null;
+    //     }
+    //
+    //     GameGenerateData gameGenerateData = new GameGenerateData();
+    //     gameGenerateData.mapSeed = UUID.randomUUID().toString();
+    //     // gameGenerateData.assetManager = assetManager;
+    //     // gameGenerateData.skin = skin;
+    //     // gameGenerateData.ai = ai;
+    //     asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
+    //
+    //     // GameSingleData.loadingType = LoadingType.GamePlayLoading;
+    //     // GameSingleData.gamePageStatus = GamePageStatus.Loading;
+    // }
 
-        GameGenerateData gameGenerateData = new GameGenerateData();
-        gameGenerateData.mapSeed = UUID.randomUUID().toString();
-        // gameGenerateData.assetManager = assetManager;
-        // gameGenerateData.skin = skin;
-        // gameGenerateData.ai = ai;
-        asyncExecutor.submit((gameGenerateProcessor = new GameGenerateProcessor(gameGenerateData)));
+    // public void loadGUI() {
+    //     gui = new SceneUI();
+    //     gui.created();
+    // }
 
-        // GameSingleData.loadingType = LoadingType.GamePlayLoading;
-        // GameSingleData.gamePageStatus = GamePageStatus.Loading;
-    }
+    // public void gamePlayLoading(float delta) {
+    //     if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
+    //         loading.setProgressValue(gameGenerateProcessor.getProgress());
+    //     } else if (gameGenerateProcessor != null) {
+    //         this.save = gameGenerateProcessor.getSave();
+    //         this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    //         this.save.getScene().add(camera, Groups.CAMERA);
+    //         // this.ai.setScene(this.save.getScene());
+    //         this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    //         this.gui.setScene(save.getScene());
+    //
+    //         this.loading.setProgressValue(1f);
+    //         this.loading.logic(delta);
+    //         this.loading.render();
+    //
+    //         GameSingleData.gamePageStatus = GamePageStatus.Game;
+    //     }
+    //
+    //     loading.logic(delta);
+    //     loading.render();
+    // }
 
-    public void loadGUI() {
-        gui = new SceneUI();
-        gui.created();
-    }
-
-    public void gamePlayLoading(float delta) {
-        if (gameGenerateProcessor != null && !gameGenerateProcessor.update(17)) {
-            loading.setProgressValue(gameGenerateProcessor.getProgress());
-        } else if (gameGenerateProcessor != null) {
-            this.save = gameGenerateProcessor.getSave();
-            this.save.getScene().resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            this.save.getScene().add(camera, Groups.CAMERA);
-            // this.ai.setScene(this.save.getScene());
-            this.gui.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-            this.gui.setScene(save.getScene());
-
-            this.loading.setProgressValue(1f);
-            this.loading.logic(delta);
-            this.loading.render();
-
-            GameSingleData.gamePageStatus = GamePageStatus.Game;
-        }
-
-        loading.logic(delta);
-        loading.render();
-    }
-
-    public void gameRender(float delta) {
-        // 处理场景的逻辑
-        save.getScene().logic(delta);
-        // 处理GUI的逻辑
-        gui.logic(delta);
-
-        // 绘制相机
-        camera.render();
-        // 绘制GUI
-        gui.render();
-    }
+    // public void gameRender(float delta) {
+    //     // 处理场景的逻辑
+    //     save.getScene().logic(delta);
+    //     // 处理GUI的逻辑
+    //     gui.logic(delta);
+    //
+    //     // 绘制相机
+    //     camera.render();
+    //     // 绘制GUI
+    //     gui.render();
+    // }
 
     @Override
     public void create() {
+        changeListener = new ChangeListener() {
+            @Override
+            public void change(BasePage oldPage, BasePage newPage) {
+                for (BridgeInputProcessor inputProcessor : oldPage.getInputProcessors()) {
+                    GameSingleData.inputBridge.remove(inputProcessor);
+                }
+                for (BridgeInputProcessor inputProcessor : newPage.getInputProcessors()) {
+                    GameSingleData.inputBridge.add(inputProcessor);
+                }
+                viewPage = newPage;
+
+                update(oldPage, newPage);
+            }
+
+            @Override
+            public void toHome(BasePage oldPage) {
+                viewPage = homePage;
+                update(oldPage, homePage);
+            }
+
+            private void update(BasePage oldPage, BasePage newPage) {
+                oldPage.removeChangeListener(Main.this.changeListener);
+                newPage.addChangeListener(Main.this.changeListener);
+            }
+        };
+
         // 全局事件处理器
         GameSingleData.inputBridge = new InputBridge();
         Gdx.input.setInputProcessor(GameSingleData.inputBridge);
@@ -230,36 +258,47 @@ public class Main extends ApplicationAdapter {
         JSONObject coreJson = loadJson(Gdx.files.internal("core.json"));
 
         this.homePage = loadHomePage(coreJson);
+        viewPage = this.homePage;
+        this.homePage.addChangeListener(changeListener);
 
-        this.camera = defaultCamera(coreJson);
-        GameSingleData.rootCamZoom = new OrthographicCameraRootCamZoomImpl(this.camera.getCamera());
-        GameSingleData.positionConverter = this.camera.getPositionConverter();
+        for (BridgeInputProcessor inputProcessor : this.homePage.getInputProcessors()) {
+            GameSingleData.inputBridge.add(inputProcessor);
+        }
 
-        loadGUI();
+        GameSingleData.camera = defaultCamera(coreJson);
+        GameSingleData.sceneUI = new SceneUI();
+        GameSingleData.sceneUI.created();
+        GameSingleData.rootCamZoom = new OrthographicCameraRootCamZoomImpl(GameSingleData.camera.getCamera());
+        GameSingleData.positionConverter = GameSingleData.camera.getPositionConverter();
+
+        // this.camera = defaultCamera(coreJson);
+        // loadGUI();
     }
 
     @Override
     public void resize(int width, int height) {
-        if (loading != null) {
-            loading.resize(width, height);
-        }
-
-        homePage.resize(width, height);
-
-        // if (mainMenu != null) {
-        //     mainMenu.resize(width, height);
+        // if (loading != null) {
+        //     loading.resize(width, height);
         // }
 
-        if (gui != null) {
-            gui.resize(width, height);
-        }
+        // if (homePage != null) {
+        //     homePage.resize(width, height);
+        // }
 
-        if (save != null && save.getScene() != null) {
-            save.getScene().resize(width, height);
-        }
+        // if (gui != null) {
+        //     gui.resize(width, height);
+        // }
 
-        if (camera != null) {
-            camera.getViewport().update(width, height);
+        // if (save != null && save.getScene() != null) {
+        //     save.getScene().resize(width, height);
+        // }
+
+        // if (camera != null) {
+        //     camera.getViewport().update(width, height);
+        // }
+
+        if (viewPage != null) {
+            viewPage.resize(width, height);
         }
 
         // fillViewport.getViewport().update(width, height);
@@ -272,29 +311,35 @@ public class Main extends ApplicationAdapter {
         float delta = Gdx.graphics.getDeltaTime();
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
-        homePage.logic(delta);
-        homePage.render();
+        if (viewPage != null) {
+            viewPage.logic(delta);
+            viewPage.render();
+        }
     }
 
     @Override
     public void dispose() {
         homePage.dispose();
 
+        if (viewPage != null) {
+            viewPage.dispose();
+        }
+
         // if (assetManager != null) {
         //     assetManager.dispose();
         // }
-        if (skin != null) {
-            skin.dispose();
-        }
-        if (loading != null) {
-            loading.dispose();
-        }
+        // if (skin != null) {
+        //     skin.dispose();
+        // }
+        // if (loading != null) {
+        //     loading.dispose();
+        // }
         // if (mainMenu != null) {
         //     mainMenu.dispose();
         // }
-        if (gui != null) {
-            gui.dispose();
-        }
+        // if (gui != null) {
+        //     gui.dispose();
+        // }
     }
 
     private JSONObject loadJson(FileHandle internal) {
@@ -302,7 +347,7 @@ public class Main extends ApplicationAdapter {
         return JSONObject.parseObject(configStr);
     }
 
-    private BaseStage loadHomePage(JSONObject coreJson) {
+    private BasePage loadHomePage(JSONObject coreJson) {
         JSONObject core = coreJson.getJSONObject("core");
 
         JSONObject defaultHomePageJson = core.getJSONObject("defaultHomePage");
@@ -316,12 +361,12 @@ public class Main extends ApplicationAdapter {
         try {
             Class<?> aClass = Class.forName(type);
 
-            if (!BaseStage.class.isAssignableFrom(aClass)) {
+            if (!BasePage.class.isAssignableFrom(aClass)) {
                 throw new RuntimeException("HomePage 加载失败...");
             }
 
             Constructor<?> constructor = aClass.getConstructor();
-            BaseStage baseStage = (BaseStage) constructor.newInstance();
+            BasePage baseStage = (BasePage) constructor.newInstance();
 
             baseStage.created();
 

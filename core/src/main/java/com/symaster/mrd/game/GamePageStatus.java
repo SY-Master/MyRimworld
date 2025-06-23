@@ -13,7 +13,7 @@ public enum GamePageStatus {
         GameSingleData.loadingType.render(main, delta);
     }),
     // Menu(Main::menuRender),
-    Game(Main::gameRender),
+    // Game(Main::gameRender),
     ;
 
     private final RenderProxy renderProxy;

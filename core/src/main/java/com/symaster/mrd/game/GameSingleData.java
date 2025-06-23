@@ -5,7 +5,9 @@ import com.symaster.mrd.api.AssetManagerProxy;
 import com.symaster.mrd.api.PositionConverter;
 import com.symaster.mrd.api.RootCamZoom;
 import com.symaster.mrd.api.SkinProxy;
+import com.symaster.mrd.g2d.ViewportNodeOrthographic;
 import com.symaster.mrd.game.service.PromptService;
+import com.symaster.mrd.game.ui.SceneUI;
 import com.symaster.mrd.input.InputBridge;
 
 /**
@@ -48,5 +50,9 @@ public class GameSingleData {
     public static PromptService promptService;
 
     public static MrAssetManager mrAssetManager;
+
+    public static ViewportNodeOrthographic camera;
+
+    public static SceneUI sceneUI;
 
 }

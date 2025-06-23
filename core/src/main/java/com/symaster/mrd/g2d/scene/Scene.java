@@ -8,6 +8,7 @@ import com.symaster.mrd.api.ChildUpdateExtend;
 import com.symaster.mrd.api.NodePropertiesChangeExtend;
 import com.symaster.mrd.api.PositionUpdateExtend;
 import com.symaster.mrd.api.ProgressProcessor;
+import com.symaster.mrd.enums.BridgeInputProcessorEnum;
 import com.symaster.mrd.g2d.Block;
 import com.symaster.mrd.g2d.BlockArrayList;
 import com.symaster.mrd.g2d.Node;
@@ -15,6 +16,7 @@ import com.symaster.mrd.g2d.scene.impl.BlockMapGenerate;
 import com.symaster.mrd.g2d.scene.impl.ChildUpdateExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.NodePropertiesChangeExtendImpl;
 import com.symaster.mrd.g2d.scene.impl.PositionUpdateExtendImpl;
+import com.symaster.mrd.input.BridgeInputProcessor;
 import com.symaster.mrd.util.UnitUtil;
 
 import java.io.Serializable;
@@ -27,7 +29,7 @@ import java.util.stream.Collectors;
  * @author yinmiao
  * @since 2024/12/22
  */
-public class Scene implements Serializable, Disposable {
+public class Scene implements Serializable, Disposable, BridgeInputProcessor {
 
     private static final long serialVersionUID = 1L;
 
@@ -517,6 +519,77 @@ public class Scene implements Serializable, Disposable {
     @Override
     public void dispose() {
         blockMapGenerate.dispose();
+    }
+
+    /**
+     * @return 组
+     */
+    @Override
+    public String group() {
+        return BridgeInputProcessorEnum.SCENE.getCode();
+    }
+
+    /**
+     * @return 层
+     */
+    @Override
+    public int uiLayer() {
+        return 2;
+    }
+
+    @Override
+    public int uiSort() {
+        return 0;
+    }
+
+    @Override
+    public boolean actionEnable() {
+        return true;
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchCancelled(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
     }
 
 }

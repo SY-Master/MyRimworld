@@ -6,13 +6,17 @@ import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-import com.symaster.mrd.api.BaseStage;
+import com.symaster.mrd.api.BasePage;
 import com.symaster.mrd.enums.BridgeInputProcessorEnum;
+import com.symaster.mrd.g2d.StageProcessor;
 import com.symaster.mrd.game.GameSingleData;
 import com.symaster.mrd.game.UILayer;
 import com.symaster.mrd.game.ui.page.MainMenuBtn;
 import com.symaster.mrd.game.ui.page.PlayGameSetting;
 import com.symaster.mrd.input.BridgeInputProcessor;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * 主页
@@ -20,19 +24,24 @@ import com.symaster.mrd.input.BridgeInputProcessor;
  * @author yinmiao
  * @since 2024/12/28
  */
-public class MainMenu extends BaseStage implements BridgeInputProcessor {
+public class MainMenu extends BasePage {
 
+    private StageProcessor stage;
     private Image bg;
     private MainMenuBtn mainMenuBtn;
     private PlayGameSetting playGameSetting;
 
     @Override
     public void created() {
-        super.setViewport(new ScreenViewport());
+        this.stage = new StageProcessor();
+        this.stage.setViewport(new ScreenViewport());
+        this.stage.setUiLayer(UILayer.Gui.getLayer());
+        this.stage.setUiSort(0);
+        this.stage.setGroup(BridgeInputProcessorEnum.PAGE.getCode());
 
         bg = new Image(getGlobalAsset("white", Texture.class));
         bg.setColor(0.19f, 0.56f, 0.79f, 1f);
-        addActor(bg);
+        this.stage.addActor(bg);
 
         mainMenuBtn = new MainMenuBtn();
         mainMenuBtn.getPlayGameBtn().addListener(new ClickListener() {
@@ -41,9 +50,9 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
                 toPlayGameClick();
             }
         });
-        addActor(mainMenuBtn);
+        this.stage.addActor(mainMenuBtn);
 
-        addActor((playGameSetting = new PlayGameSetting()));
+        this.stage.addActor((playGameSetting = new PlayGameSetting()));
         playGameSetting.setVisible(false);
         playGameSetting.getBackBtn().addListener(new ClickListener() {
             @Override
@@ -53,8 +62,6 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
         });
 
         resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-
-        GameSingleData.inputBridge.add(this);
     }
 
     private void backClick() {
@@ -67,20 +74,20 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
         playGameSetting.setVisible(true);
     }
 
-    public void resize(int width, int height) {
-        getViewport().update(width, height, true);
-        bg.setSize(width, height);
-        mainMenuBtn.resize(width, height);
-        playGameSetting.resize(width, height);
-    }
-
     public void logic(float delta) {
 
     }
 
     public void render() {
-        getViewport().apply();
-        draw();
+        this.stage.getViewport().apply();
+        this.stage.draw();
+    }
+
+    public void resize(int width, int height) {
+        this.stage.getViewport().update(width, height, true);
+        bg.setSize(width, height);
+        mainMenuBtn.resize(width, height);
+        playGameSetting.resize(width, height);
     }
 
     public Image getBg() {
@@ -96,33 +103,16 @@ public class MainMenu extends BaseStage implements BridgeInputProcessor {
     }
 
     @Override
-    public int uiLayer() {
-        return UILayer.Gui.getLayer();
-    }
-
-    @Override
-    public int uiSort() {
-        // if (GameSingleData.gamePageStatus == GamePageStatus.Menu) {
-        //     return 0;
-        // } else {
-        //     return 99;
-        // }
-
-        return 0;
+    public List<BridgeInputProcessor> getInputProcessors() {
+        return Collections.singletonList(stage);
     }
 
     /**
-     * @return 是否启用输入事件
+     * Releases all resources of this object.
      */
     @Override
-    public boolean actionEnable() {
-        // return GameSingleData.gamePageStatus == GamePageStatus.Menu;
-        return true;
-    }
-
-    @Override
-    public String group() {
-        return BridgeInputProcessorEnum.PAGE.getCode();
+    public void dispose() {
+        stage.dispose();
     }
 
 }
