@@ -38,5 +38,14 @@
                 }
             ]
         }
-    }
+    },
+    "live2d": [
+        {
+            "globalId": "custom-id-camera-000000000002",
+            "type": "com.symaster.mrd.g2d.live2d.Live2D",
+            "nodes": [
+
+            ]
+        }
+    ]
 }
